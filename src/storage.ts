@@ -1,9 +1,11 @@
 import { createStore, get, setMany, getMany } from 'idb-keyval';
 import type { Lang, Place } from './cards';
 import type { DrawState } from './draw';
+import { emptySeabed, type Seabed } from './seabed';
 import { defaultCurrency, type Currency, type Treasure } from './treasure';
 
-export const SCHEMA_VERSION = 1;
+/** 2: the quit date moved out of the treasure (D44), and the seabed was added (D43). */
+export const SCHEMA_VERSION = 2;
 
 export interface CollectionEntry {
   count: number;
@@ -50,14 +52,21 @@ export interface AppData {
   hooks: HookEntry[];
   drawState: DrawState;
   settings: Settings;
-  /** Sunken Treasure; null until she sets it up (it's optional). */
+  /**
+   * The day she quit (YYYY-MM-DD), asked at the end of the intro (D44). Milestones, seabed decorations
+   * and the treasure all count from it. Null only until she has answered or skipped the question.
+   */
+  quitDate: string | null;
+  /** Sunken Treasure, the money part; null until she sets it up (it's optional). */
   treasure: Treasure | null;
+  /** Decorations earned at milestones (D43). */
+  seabed: Seabed;
 }
 
 let storeHandle: ReturnType<typeof createStore> | undefined;
 // Opened on first use, so this module can also be imported where IndexedDB doesn't exist (tests).
 const store = () => (storeHandle ??= createStore('off-the-hook', 'data'));
-const KEYS = ['collection', 'hooks', 'drawState', 'settings', 'treasure'] as const;
+const KEYS = ['collection', 'hooks', 'drawState', 'settings', 'quitDate', 'treasure', 'seabed'] as const;
 
 function defaultLang(): Lang {
   return navigator.language?.toLowerCase().startsWith('cs') ? 'cs' : 'en';
@@ -82,13 +91,17 @@ export function defaultData(): AppData {
       place: 'home',
       milestoneSeen: 0,
     },
+    quitDate: null,
     treasure: null,
+    seabed: emptySeabed(),
   };
 }
 
 /** Fill in anything missing, so older saves and backups keep working. */
 function normalise(raw: Partial<AppData>): AppData {
   const d = defaultData();
+  // Before D44 the quit date was the treasure's start date (schema 1, and older backups).
+  const legacy = raw.treasure as (Treasure & { startDate?: string }) | null | undefined;
   return {
     collection: raw.collection ?? d.collection,
     hooks: raw.hooks ?? d.hooks,
@@ -98,7 +111,9 @@ function normalise(raw: Partial<AppData>): AppData {
       ...raw.settings,
       currency: raw.settings?.currency ?? defaultCurrency(raw.settings?.lang ?? d.settings.lang),
     },
-    treasure: raw.treasure ?? null,
+    quitDate: raw.quitDate ?? legacy?.startDate ?? null,
+    treasure: legacy ? { rates: legacy.rates } : null,
+    seabed: { ...d.seabed, ...raw.seabed },
   };
 }
 
@@ -110,7 +125,7 @@ export async function loadData(): Promise<AppData> {
     KEYS.forEach((k, i) => {
       if (values[i] !== undefined) (raw as Record<string, unknown>)[k] = values[i];
     });
-    // Future schema migrations go here, keyed on `version`.
+    // Schema migrations happen in normalise(), based on what's there, so backups get them too.
     void version;
     return normalise(raw);
   } catch {

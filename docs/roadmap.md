@@ -12,6 +12,8 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 | **Where are you?** At home / Out and about, draws only cards she can do there | D39 | Deck v2 |
 | **11 new cards that work anywhere**; at least half the deck works out of the house | D40 | Deck v2 |
 | **Milestones** in the treasure: what to expect from quit day to one year | D41 | |
+| **Seabed decorations** at every milestone, sparkling the first time; after a year the coral keeps changing colour every month | D43 | |
+| **Quit date asked in the intro,** so milestones and decorations work without the money counter | D44 | |
 
 ## Next, ranked
 
@@ -24,9 +26,8 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 | 5 | **Messages in a bottle.** Her own reasons, written on good days, shown during hard ones. | Medium | Small | Phase 2. |
 | 6 | **Tuna facts as rewards** on the win screen. | Low | Small | Phase 2. |
 | 7 | **Dodge the hooks** mini-game. | Medium | Large | Phase 2. Visual distraction like Tetris measurably weakens cravings, but it's the biggest build here. |
-| 8 | **Tank decorations** unlocked by achievements (all sardines caught, 50 hooks beaten). | Low | Medium to large | A reason to keep opening the app once the collection fills up. Mostly artwork. |
-| 9 | **Navigation charts.** If-then plans (“If I'm at a party, then I'll…”). | Medium | Medium | Phase 3. Sits awkwardly with D29 (no trigger features); decide that first. |
-| 10 | **Bait insights.** When hooks hit and when slips happen, from times and bait notes. | Medium | Medium | Phase 3. Conflicts with D29 as it stands: needs a decision before building. |
+| 8 | **Navigation charts.** If-then plans (“If I'm at a party, then I'll…”). | Medium | Medium | Phase 3. Sits awkwardly with D29 (no trigger features); decide that first. |
+| 9 | **Bait insights.** When hooks hit and when slips happen, from times and bait notes. | Medium | Medium | Phase 3. Conflicts with D29 as it stands: needs a decision before building. |
 
 ## Ruled out
 
@@ -38,5 +39,5 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 
 ## Open before release
 
-- A native speaker's read of the Czech in the new cards and the milestones (D32).
+- A native speaker's read of the Czech in the new cards, the milestones, the decoration names and the quit-date question (D32).
 - A test on a real iPhone: sounds, vibrations and the install flow can't be checked in a desktop browser (see [qa-log.md](qa-log.md)).

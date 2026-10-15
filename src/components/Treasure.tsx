@@ -2,7 +2,8 @@ import { useEffect, useState } from 'preact/hooks';
 import { countOf, describeComparison, pickComparisons } from '../comparisons';
 import { fx } from '../feedback';
 import { useLang, useT } from '../i18n';
-import { daysSince, MILESTONES, milestoneProgress, reachedOn } from '../milestones';
+import { daysSince, isQuitDate, MILESTONES, milestoneProgress, reachedOn } from '../milestones';
+import { DECORATION_NAMES } from '../seabed';
 import { useApp } from '../state';
 import {
   CURRENCIES,
@@ -20,8 +21,10 @@ import {
   type Currency,
 } from '../treasure';
 import { Chest, chestFill } from './Chest';
+import { DateField, formatDay } from './DateField';
 import { Haptic } from './Haptic';
-import { Back, Calendar } from './Icons';
+import { Back } from './Icons';
+import { DecorationIcon } from './Seabed';
 
 const SYMBOL: Record<Currency, string> = { CZK: 'Kč', EUR: '€', USD: '$' };
 
@@ -30,6 +33,7 @@ export function Treasure({ onClose }: { onClose: () => void }) {
   const { data } = useApp();
   const [editing, setEditing] = useState(false);
   const treasure = data.treasure;
+  const quitDate = data.quitDate;
 
   return (
     <main class="screen treasure">
@@ -49,35 +53,36 @@ export function Treasure({ onClose }: { onClose: () => void }) {
         )}
       </header>
 
-      {editing || !treasure ? (
-        treasure || editing ? (
-          <TreasureForm onDone={() => setEditing(false)} />
-        ) : (
-          <section class="panel center">
-            <Chest fill={0} open={false} />
-            <p class="muted treasure-pitch">{t.treasureEmpty}</p>
-            <button class="primary big" onClick={() => { fx.tap(); setEditing(true); }}>
-              {t.startCounting}
-              <Haptic />
-            </button>
-          </section>
-        )
+      {editing ? (
+        <TreasureForm onDone={() => setEditing(false)} />
       ) : (
         <>
-          <Counter />
-          <Milestones />
+          {treasure && quitDate ? (
+            <Counter />
+          ) : (
+            // The money part is optional; the milestones show without it (D44).
+            <section class={`panel center${quitDate ? ' money-pitch' : ''}`}>
+              <Chest fill={0} open={false} size={quitDate ? 170 : 240} />
+              <p class="muted treasure-pitch">{t.treasureEmpty}</p>
+              <button class="primary big" onClick={() => { fx.tap(); setEditing(true); }}>
+                {t.startCounting}
+                <Haptic />
+              </button>
+            </section>
+          )}
+          {quitDate && <Milestones />}
         </>
       )}
     </main>
   );
 }
 
-/** What to expect, counted from the start date (D41). Kept out of Counter, which re-renders 10 times a second. */
+/** What to expect, counted from the quit date (D41). Kept out of Counter, which re-renders 10 times a second. */
 function Milestones() {
   const t = useT();
   const lang = useLang();
   const { data, update } = useApp();
-  const startDate = data.treasure!.startDate;
+  const startDate = data.quitDate!;
   const [now, setNow] = useState(() => new Date());
   // Milestones reached since she last looked get a NEW pill for this visit.
   const [seenBefore] = useState(data.settings.milestoneSeen);
@@ -98,6 +103,7 @@ function Milestones() {
   }, [current.day]);
 
   const locale = lang === 'cs' ? 'cs-CZ' : 'en-GB';
+  const today = todayKey(now);
 
   return (
     <section class="milestones">
@@ -105,6 +111,18 @@ function Milestones() {
       <p class="days-count">
         <strong>{days}</strong> <span>{t.daysSinceQuit(days)}</span>
       </p>
+      {/* The one quit date (D44). Decorations are only earned on the home screen, so scrolling
+          through dates here never earns anything by accident. */}
+      <DateField
+        compact
+        value={startDate}
+        max={today}
+        text={t.quitSince(formatDay(startDate, lang))}
+        label={t.quitDateLabel}
+        onChange={(value) => {
+          if (isQuitDate(value, today)) update((d) => ({ ...d, quitDate: value }));
+        }}
+      />
       <ol class="milestone-list">
         {MILESTONES.map((m) => {
           const state = m === current ? 'current' : m.day < days ? 'done' : m === next ? 'next' : 'future';
@@ -128,6 +146,7 @@ function Milestones() {
                   </span>
                 </summary>
                 <p>{m.body[lang]}</p>
+                <SeabedReward id={m.id} has={!!data.seabed.earned[m.id] || m.day <= days} />
               </details>
             </li>
           );
@@ -138,11 +157,28 @@ function Milestones() {
   );
 }
 
+/** The decoration a milestone leaves on the seabed (D43): in colour once it's there, a pale shape before. */
+function SeabedReward({ id, has }: { id: string; has: boolean }) {
+  const t = useT();
+  const lang = useLang();
+  const name = DECORATION_NAMES[id]?.[lang];
+  if (!name) return null;
+  return (
+    <p class={`milestone-deco${has ? ' has' : ''}`}>
+      <span class="milestone-deco-art">
+        <DecorationIcon id={id} box={30} silhouette={!has} />
+      </span>
+      <span>{has ? t.onYourSeabed(name) : t.comingToSeabed(name)}</span>
+    </p>
+  );
+}
+
 function Counter() {
   const t = useT();
   const lang = useLang();
   const { data } = useApp();
   const treasure = data.treasure!;
+  const quitDate = data.quitDate!;
   const currency = data.settings.currency;
   const [now, setNow] = useState(Date.now());
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1000));
@@ -152,11 +188,11 @@ function Counter() {
     return () => clearInterval(id);
   }, []);
 
-  const amount = savedAt(treasure, now);
+  const amount = savedAt(treasure, quitDate, now);
   const money = moneyParts(amount, currency, lang);
   const perWeek = currentRate(treasure);
   const { headline, others } = pickComparisons(amount, currency, seed);
-  const since = new Date(startTime(treasure)).toLocaleDateString(lang === 'cs' ? 'cs-CZ' : 'en-GB', {
+  const since = new Date(startTime(quitDate)).toLocaleDateString(lang === 'cs' ? 'cs-CZ' : 'en-GB', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -212,7 +248,10 @@ function TreasureForm({ onDone }: { onDone: () => void }) {
   const [currency, setCurrency] = useState<Currency>(data.settings.currency);
   const startAmount = existing ? currentRate(existing) : null;
   const [amountText, setAmountText] = useState(startAmount ? formatNumber(startAmount, lang) : '');
-  const [startDate, setStartDate] = useState(existing?.startDate ?? todayKey());
+  // The quit date is asked in the intro and changed in the milestones panel (D44). Asked here only if
+  // there isn't one yet (an old backup restored without it).
+  const askDate = !data.quitDate;
+  const [startDate, setStartDate] = useState(data.quitDate ?? todayKey());
   const [error, setError] = useState('');
   const today = todayKey();
 
@@ -233,16 +272,13 @@ function TreasureForm({ onDone }: { onDone: () => void }) {
       setError(t.invalidAmount);
       return;
     }
-    const date = startDate && startDate <= today ? startDate : today;
+    const date = isQuitDate(startDate, today) ? startDate : today;
     update((d) => {
       // A currency switch re-expresses the existing amounts first (see Settings for the same rule).
       let tr = d.treasure && d.settings.currency !== currency ? convertTreasure(d.treasure, d.settings.currency, currency) : d.treasure;
-      if (!tr) tr = newTreasure(perWeek, date);
-      else {
-        tr = { ...tr, startDate: date };
-        if (perWeek !== currentRate(tr)) tr = withWeeklyAmount(tr, perWeek);
-      }
-      return { ...d, treasure: tr, settings: { ...d.settings, currency } };
+      if (!tr) tr = newTreasure(perWeek);
+      else if (perWeek !== currentRate(tr)) tr = withWeeklyAmount(tr, perWeek);
+      return { ...d, quitDate: d.quitDate ?? date, treasure: tr, settings: { ...d.settings, currency } };
     });
     fx.coins();
     onDone();
@@ -287,33 +323,19 @@ function TreasureForm({ onDone }: { onDone: () => void }) {
         {existing && currency !== data.settings.currency && <span class="hint">{t.currencyNote}</span>}
       </div>
 
-      <div class="field">
-        <span>{t.countingFrom}</span>
-        {/* Our own field showing the date, with the real date picker invisibly on top. iPhone Safari
-            gives its date inputs a minimum width of its own, which pushed the field off the screen. */}
-        <div class="date-field">
-          <span class="date-text">{formatDay(startDate || today, lang)}</span>
-          <Calendar />
-          <input
-            class="date-native"
-            type="date"
-            max={today}
+      {askDate && (
+        <div class="field">
+          <span>{t.countingFrom}</span>
+          <DateField
             value={startDate}
-            aria-label={t.countingFrom}
-            onInput={(e) => setStartDate((e.target as HTMLInputElement).value)}
-            onChange={(e) => setStartDate((e.target as HTMLInputElement).value)}
-            onClick={(e) => {
-              // Desktop browsers only open the picker from their small calendar icon; open it from anywhere.
-              try {
-                (e.currentTarget as HTMLInputElement).showPicker?.();
-              } catch {
-                /* not supported or not allowed: the native behaviour still works */
-              }
-            }}
+            max={today}
+            text={formatDay(startDate || today, lang)}
+            label={t.countingFrom}
+            onChange={setStartDate}
           />
+          <span class="hint">{t.countingFromHint}</span>
         </div>
-        <span class="hint">{t.countingFromHint}</span>
-      </div>
+      )}
 
       <button class="primary big" onClick={save}>
         {existing ? t.save : t.startCounting}
@@ -331,8 +353,3 @@ function TreasureForm({ onDone }: { onDone: () => void }) {
 
 const formatNumber = (n: number, lang: string) =>
   new Intl.NumberFormat(lang === 'cs' ? 'cs-CZ' : 'en-GB', { maximumFractionDigits: 2, useGrouping: false }).format(n);
-
-const formatDay = (key: string, lang: string) => {
-  const [y, m, d] = key.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString(lang === 'cs' ? 'cs-CZ' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-};

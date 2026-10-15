@@ -1,19 +1,46 @@
 import { useRef, useState } from 'preact/hooks';
 import { RARITIES } from '../cards';
 import { fx } from '../feedback';
-import { useT } from '../i18n';
+import { useLang, useT } from '../i18n';
+import { isQuitDate } from '../milestones';
+import { todayKey } from '../treasure';
+import { DateField, formatDay } from './DateField';
 import { FishHook } from './Icons';
 import { RarityFish } from './RarityFish';
+import { Decoration } from './Seabed';
 import { MiniTuna, Tuna } from './Tuna';
 import { Haptic } from './Haptic';
 
-/** First-launch explainer: what the app is for and what the fishy words mean. */
-export function Intro({ onDone }: { onDone: () => void }) {
+/**
+ * First-launch explainer: what the app is for and what the fishy words mean. It ends by asking when
+ * she quit (D44), unless that's known. Phones that saw the intro before D44 get just the question.
+ * `onDone` gets the date she picked, or null if she skipped (which counts as today).
+ */
+export function Intro({
+  askQuitDate,
+  questionOnly,
+  onDone,
+}: {
+  askQuitDate: boolean;
+  questionOnly: boolean;
+  onDone: (quitDate: string | null) => void;
+}) {
   const t = useT();
+  const lang = useLang();
   const [index, setIndex] = useState(0);
+  const [earlier, setEarlier] = useState(false);
+  const [picked, setPicked] = useState(yesterday);
   const touchX = useRef<number | null>(null);
-  const slides = t.intro;
+  const explainer = questionOnly ? [] : t.intro;
+  const slides = askQuitDate ? [...explainer, t.quitQuestion] : explainer;
   const last = index === slides.length - 1;
+  const onQuestion = askQuitDate && last;
+  const today = todayKey();
+
+  const finish = (date: string | null) => {
+    fx.done();
+    onDone(date);
+  };
 
   const goTo = (i: number) => {
     const next = Math.max(0, Math.min(slides.length - 1, i));
@@ -36,7 +63,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
       <header class="topbar">
         <span class="topbar-spacer" />
         {!last && (
-          <button class="link" onClick={onDone}>
+          <button class="link" onClick={() => onDone(null)}>
             {t.skip}
             <Haptic />
           </button>
@@ -47,9 +74,18 @@ export function Intro({ onDone }: { onDone: () => void }) {
         <div class="intro-track" style={{ transform: `translateX(-${index * 100}%)` }}>
           {slides.map((slide, i) => (
             <section class="intro-slide" key={i} aria-hidden={i !== index}>
-              <div class="intro-art">{art(i)}</div>
+              <div class="intro-art">{slide === t.quitQuestion ? <SeabedPreview /> : art(i)}</div>
               <h1>{slide.title}</h1>
               <p class="intro-body">{slide.body}</p>
+              {slide === t.quitQuestion && earlier && (
+                <DateField
+                  value={picked}
+                  max={today}
+                  text={formatDay(picked, lang)}
+                  label={t.quitDateLabel}
+                  onChange={(value) => isQuitDate(value, today) && setPicked(value)}
+                />
+              )}
               {slide.terms && (
                 <dl class="glossary">
                   {slide.terms.map((term, j) => (
@@ -67,30 +103,45 @@ export function Intro({ onDone }: { onDone: () => void }) {
       </div>
 
       <footer class="intro-footer">
-        <div class="dots" role="tablist">
-          {slides.map((_, i) => (
-            <button
-              key={i}
-              class={`dot ${i === index ? 'on' : ''}`}
-              role="tab"
-              aria-selected={i === index}
-              aria-label={`${i + 1} / ${slides.length}`}
-              onClick={() => goTo(i)}
-            />
-          ))}
-        </div>
-        <button
-          class="primary big"
-          onClick={() => {
-            if (last) {
-              fx.done();
-              onDone();
-            } else goTo(index + 1);
-          }}
-        >
-          {last ? t.introStart : t.next}
-          <Haptic />
-        </button>
+        {slides.length > 1 && (
+          <div class="dots" role="tablist">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                class={`dot ${i === index ? 'on' : ''}`}
+                role="tab"
+                aria-selected={i === index}
+                aria-label={`${i + 1} / ${slides.length}`}
+                onClick={() => goTo(i)}
+              />
+            ))}
+          </div>
+        )}
+        {onQuestion && !earlier ? (
+          // "Today" is the one-tap answer; "Earlier" shows a date picker on the slide.
+          <>
+            <button class="primary big" onClick={() => finish(today)}>
+              {t.quitToday}
+              <Haptic />
+            </button>
+            <button class="link" onClick={() => { fx.tap(); setEarlier(true); }}>
+              {t.quitEarlier}
+              <Haptic />
+            </button>
+          </>
+        ) : (
+          <button
+            class="primary big"
+            onClick={() => {
+              if (onQuestion) finish(picked);
+              else if (last) finish(null);
+              else goTo(index + 1);
+            }}
+          >
+            {last ? t.introStart : t.next}
+            <Haptic />
+          </button>
+        )}
       </footer>
     </main>
   );
@@ -126,6 +177,24 @@ function art(i: number) {
         </div>
       );
   }
+}
+
+/** A strip of seabed with the first few decorations, for the quit-date question. */
+function SeabedPreview() {
+  return (
+    <div class="intro-seabed" aria-hidden="true">
+      <span style={{ rotate: '-18deg' }}><Decoration id="quit-day" width={44} /></span>
+      <span><Decoration id="day-1" width={36} /></span>
+      <span style={{ rotate: '14deg' }}><Decoration id="day-3" width={48} /></span>
+    </div>
+  );
+}
+
+/** The day before today, as YYYY-MM-DD: where the date picker starts after "Earlier". */
+function yesterday(): string {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return todayKey(d);
 }
 
 function termIcon(j: number) {

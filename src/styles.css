@@ -731,6 +731,53 @@ textarea {
 .weed-b { animation-duration: 7.5s; animation-delay: -2s; }
 @keyframes sway { from { transform: skewX(-4deg); } to { transform: skewX(5deg); } }
 
+/* ---------- Seabed decorations (D43) ---------- */
+.decos { position: absolute; inset: 0; pointer-events: none; }
+.deco { position: absolute; transform: translateX(-50%); line-height: 0; }
+.deco-art { display: block; overflow: visible; }
+.deco > .deco-art { rotate: var(--tilt, 0deg); transform-origin: 50% 100%; }
+/* The far-back pieces fade into the water a little. */
+.deco-month-6, .deco-year-1 { opacity: 0.9; }
+.deco-day-3 > .deco-art { filter: drop-shadow(0 0 6px rgba(255, 138, 92, 0.55)); }
+.deco-month-1 .pearl { filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9)); }
+.deco-month-2 > .deco-art { filter: drop-shadow(0 0 7px rgba(127, 224, 240, 0.65)); }
+.deco-month-2 { animation: drift-up 5.5s ease-in-out infinite alternate; }
+@keyframes drift-up { from { translate: 0 0; } to { translate: 0 -10px; } }
+.deco-week-1 > .deco-art { filter: hue-rotate(var(--hue, 0deg)); }
+.anemone-arms { transform-box: fill-box; transform-origin: bottom center; animation: sway 4.5s ease-in-out infinite alternate; }
+.deco-month-3 > .deco-art { filter: drop-shadow(0 0 7px rgba(255, 211, 107, 0.75)); }
+.lantern-flame { animation: flicker 2.6s ease-in-out infinite alternate; }
+@keyframes flicker { from { opacity: 0.75; } to { opacity: 1; } }
+
+/* The first time she sees one: it pops up out of the sand with a soft glow and a few twinkles. */
+.deco.sparkle > .deco-art { animation: deco-pop 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.35) var(--delay) both; }
+@keyframes deco-pop {
+  from { scale: 0.2; opacity: 0; }
+  to { scale: 1; opacity: 1; }
+}
+.sparkles { position: absolute; left: 50%; top: 50%; width: 76px; height: 76px; translate: -50% -50%; overflow: visible; }
+.spark-halo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 72px;
+  height: 72px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 242, 196, 0.55), rgba(255, 242, 196, 0) 65%);
+  opacity: 0;
+  animation: halo 2.4s ease-out var(--delay) both;
+}
+@keyframes halo { 0% { opacity: 0; } 25% { opacity: 1; } 100% { opacity: 0; } }
+.spark { fill: #fff7d6; transform-box: fill-box; transform-origin: center; opacity: 0; animation: twinkle 0.9s ease-in-out 3 both; }
+@keyframes twinkle {
+  0%, 100% { opacity: 0; transform: scale(0.3) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.2) rotate(45deg); }
+}
+/* In lists (the Treasure), a decoration not earned yet is a pale shape. */
+.deco-silhouette { filter: brightness(0) invert(1); opacity: 0.22; }
+.deco-silhouette * { animation: none; }
+
 /* ---------- Line snap on the win screen ---------- */
 .snap { position: relative; width: 60px; height: 64px; margin-bottom: -4px; }
 .snap-line {
@@ -1159,3 +1206,26 @@ button:has(> .haptic-switch) { position: relative; }
 .milestone.next .milestone-tag { color: var(--accent); }
 .milestone details p { margin: 0 0 8px 32px; font-size: 0.95rem; line-height: 1.45; }
 .milestone.future details p, .milestone.done details p { color: var(--muted); }
+
+/* ---------- Quit date (D44) ---------- */
+/* Treasure without the money part: the pitch sits above the milestones. */
+.center.money-pitch { flex: none; padding-top: 8px; }
+.date-field.compact {
+  align-self: flex-start;
+  width: auto;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+/* The decoration each milestone leaves on the seabed (D43). */
+.milestone details p.milestone-deco { display: flex; align-items: center; gap: 10px; margin: 0 0 10px 32px; font-size: 0.88rem; font-weight: 700; }
+.milestone-deco-art { flex: none; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; background: rgba(255, 255, 255, 0.05); }
+.milestone-deco.has .milestone-deco-art { background: #0a2233; }
+.milestone-deco.has { color: var(--ink); }
+/* The intro's last step shows a strip of seabed with the first decorations. */
+.intro-seabed { position: relative; display: flex; align-items: flex-end; gap: 22px; padding: 0 30px 4px; }
+.intro-seabed > span { display: block; line-height: 0; }
+.intro-seabed::after { content: ''; position: absolute; left: 0; right: 0; bottom: -8px; height: 20px; border-radius: 50%; background: #0a2233; z-index: -1; }
