@@ -1,6 +1,6 @@
 import { useMemo } from 'preact/hooks';
 import type { Screen } from '../app';
-import { haptic, sound } from '../feedback';
+import { fx } from '../feedback';
 import { pick, useT } from '../i18n';
 import { useApp } from '../state';
 import { schoolSize } from '../storage';
@@ -58,17 +58,20 @@ export function Home({
 
       <header class="topbar">
         <div class="topbar-group">
-          <button class="icon-btn" onClick={() => { sound.tap(); go('aquarium'); }} aria-label={t.aquarium}>
+          <button class="icon-btn" onClick={() => { fx.tap(); go('aquarium'); }} aria-label={t.aquarium}>
             <Bowl />
             <span class="icon-label">{t.aquarium}</span>
+            <Haptic />
           </button>
-          <button class="icon-btn" onClick={() => { sound.tap(); go('logbook'); }} aria-label={t.logbook}>
+          <button class="icon-btn" onClick={() => { fx.tap(); go('logbook'); }} aria-label={t.logbook}>
             <LogbookIcon />
             <span class="icon-label">{t.logbook}</span>
+            <Haptic />
           </button>
         </div>
-        <button class="icon-btn" onClick={() => { sound.tap(); go('settings'); }} aria-label={t.settings}>
+        <button class="icon-btn" onClick={() => { fx.tap(); go('settings'); }} aria-label={t.settings}>
           <Gear />
+          <Haptic />
         </button>
       </header>
 
@@ -85,8 +88,7 @@ export function Home({
         <button
           class="hook-button"
           onClick={() => {
-            haptic.big();
-            sound.hookDrop();
+            fx.hookDrop();
             go('hook');
           }}
         >
@@ -103,7 +105,7 @@ export function Home({
                 key={mode}
                 aria-pressed={data.settings.drawFrom === mode}
                 onClick={() => {
-                  haptic.tap();
+                  fx.tap();
                   update((d) => ({ ...d, settings: { ...d.settings, drawFrom: mode } }));
                 }}
               >

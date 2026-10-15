@@ -11,7 +11,7 @@ export function CardView({ card, flipped, isNew }: { card: Card; flipped: boolea
   return (
     <div class={`card-3d ${flipped ? 'flipped' : ''}`}>
       <div class="card-inner">
-        <div class="card-back" aria-hidden="true">
+        <div class={`card-back hint-${card.rarity}`} aria-hidden="true">
           <FishHook size={72} stroke={4} />
           <span class="card-back-name">Off the Hook</span>
         </div>

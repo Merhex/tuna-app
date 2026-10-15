@@ -895,3 +895,92 @@ button:has(> .haptic-switch) { position: relative; }
   touch-action: pan-x pan-y; /* scrolling that starts on a button still scrolls */
   -webkit-tap-highlight-color: transparent;
 }
+
+/* ---------- Tap to flip ---------- */
+.card-tap {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: 22px;
+}
+.card-tap:disabled { cursor: default; color: inherit; }
+.card-tap:not(:disabled) .card-inner { animation: cardIn 0.35s ease-out, wobble 2.6s ease-in-out 0.4s infinite; }
+.card-tap:not(:disabled):active .card-inner { scale: 0.97; }
+@keyframes wobble { 0%, 100% { rotate: -1.2deg; } 50% { rotate: 1.2deg; } }
+.card-back.hint-rare { box-shadow: 0 0 26px rgba(178, 140, 255, 0.6), inset 0 0 0 8px rgba(178, 140, 255, 0.18); border-color: rgba(178, 140, 255, 0.7); }
+.card-back.hint-legendary { box-shadow: 0 0 40px rgba(242, 193, 78, 0.75), inset 0 0 0 8px rgba(242, 193, 78, 0.25); border-color: rgba(242, 193, 78, 0.9); }
+.flip-hint {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--muted);
+  animation: hintPulse 1.6s ease-in-out infinite;
+}
+@keyframes hintPulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+/* ---------- Snap the line ---------- */
+.tug {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 24px 12px;
+  border: 0;
+  border-radius: 24px;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.tug:active { scale: 0.98; }
+.tug-shake { display: flex; flex-direction: column; align-items: center; animation: tugShake 0.28s ease-out; }
+@keyframes tugShake {
+  25% { transform: translate(-4px, 6px) rotate(-3deg); }
+  60% { transform: translate(3px, -2px) rotate(2deg); }
+}
+.tug-line { position: relative; width: 2.5px; height: clamp(110px, 22dvh, 190px); background: rgba(255, 255, 255, 0.75); margin-left: 18px; transition: background 0.2s ease, width 0.2s ease; }
+.tug-hook { color: #e6eef3; margin-top: -6px; margin-bottom: -18px; }
+/* The fray in the middle of the line grows with every tap. */
+.fray { position: absolute; left: 50%; top: 52%; width: 0; height: 0; }
+.fray::before, .fray::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  color: rgba(255, 255, 255, 0.75);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.fray::before { right: 0; transform: rotate(25deg); transform-origin: right center; }
+.fray::after { left: 0; transform: rotate(-25deg); transform-origin: left center; }
+.stage-1 .fray::before { opacity: 1; }
+.stage-2 .fray::before, .stage-2 .fray::after { opacity: 1; }
+.stage-2 .tug-line { width: 1.5px; background: #f6d58e; }
+.stage-3 .fray::before, .stage-3 .fray::after { opacity: 1; color: var(--coral); width: 14px; }
+.stage-3 .tug-line { width: 1px; background: linear-gradient(var(--coral), var(--coral)) top / 100% 48% no-repeat, linear-gradient(var(--coral), var(--coral)) bottom / 100% 44% no-repeat; }
+.tug-tuna { animation: tunaTug 0.35s ease-out; }
+@keyframes tunaTug {
+  30% { transform: translateY(10px) rotate(-6deg); }
+  70% { transform: translateY(-3px) rotate(3deg); }
+}
+.tug-bubbles { position: absolute; bottom: 30px; left: 50%; width: 0; height: 0; pointer-events: none; }
+.tug-bubbles span {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  animation: tugBubble 0.7s ease-out forwards;
+}
+.tug-bubbles span:nth-child(1) { left: -50px; }
+.tug-bubbles span:nth-child(2) { left: -10px; width: 8px; height: 8px; animation-delay: 0.05s; }
+.tug-bubbles span:nth-child(3) { left: 30px; animation-delay: 0.1s; }
+@keyframes tugBubble { from { transform: translateY(0) scale(0.6); opacity: 1; } to { transform: translateY(-90px) scale(1.1); opacity: 0; } }
+.snap-dots { display: flex; gap: 8px; }
+.snap-dots span { width: 14px; height: 14px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); transition: background 0.2s ease, transform 0.2s ease; }
+.snap-dots span.on { background: var(--accent); transform: scale(1.15); }

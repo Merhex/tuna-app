@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks';
 import { CARDS, RARITIES, type Card } from '../cards';
-import { haptic, sound } from '../feedback';
+import { fx } from '../feedback';
 import { useLang, useT } from '../i18n';
 import { useApp } from '../state';
 import { Back, Heart } from './Icons';
@@ -21,8 +21,7 @@ export function Aquarium({ onClose }: { onClose: () => void }) {
   const shown = onlyFavs ? SORTED.filter((c) => data.collection[c.id]?.favourite) : SORTED;
 
   const toggleFav = (id: string) => {
-    haptic.tap();
-    sound.tap();
+    fx.tap();
     update((d) => ({
       ...d,
       collection: { ...d.collection, [id]: { ...d.collection[id], favourite: !d.collection[id].favourite } },
@@ -32,7 +31,7 @@ export function Aquarium({ onClose }: { onClose: () => void }) {
   return (
     <main class="screen aquarium">
       <header class="topbar">
-        <button class="icon-btn" onClick={onClose} aria-label={t.close}><Back /></button>
+        <button class="icon-btn" onClick={onClose} aria-label={t.close}><Back /><Haptic /></button>
         <h1 class="screen-title">{t.aquarium}</h1>
         <span class="topbar-spacer" />
       </header>
@@ -55,7 +54,7 @@ export function Aquarium({ onClose }: { onClose: () => void }) {
               key={card.id}
               class={`tank-card rarity-${card.rarity} ${entry ? 'caught' : 'unknown'}`}
               onClick={() => {
-                sound.tap();
+                fx.tap();
                 setOpen(card);
               }}
             >

@@ -8,6 +8,7 @@ import { DumbbellChart, fmt, Legend, TrendChart } from './Charts';
 import { Back, FishHook } from './Icons';
 import { RarityFish } from './RarityFish';
 import { MiniTuna, Tuna } from './Tuna';
+import { Haptic } from './Haptic';
 
 const PAGE = 30;
 
@@ -26,7 +27,7 @@ export function Logbook({ onClose }: { onClose: () => void }) {
   return (
     <main class="screen logbook">
       <header class="topbar">
-        <button class="icon-btn" onClick={onClose} aria-label={t.close}><Back /></button>
+        <button class="icon-btn" onClick={onClose} aria-label={t.close}><Back /><Haptic /></button>
         <h1 class="screen-title">{t.logbook}</h1>
         <span class="topbar-spacer" />
       </header>
@@ -84,7 +85,7 @@ export function Logbook({ onClose }: { onClose: () => void }) {
               </div>
             ))}
             {history.length > limit && (
-              <button class="secondary full" onClick={() => setLimit((l) => l + PAGE)}>{t.showMore}</button>
+              <button class="secondary full" onClick={() => setLimit((l) => l + PAGE)}>{t.showMore}<Haptic /></button>
             )}
           </section>
         </>

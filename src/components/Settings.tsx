@@ -1,6 +1,6 @@
 import { useRef, useState } from 'preact/hooks';
 import type { Lang } from '../cards';
-import { haptic, sound } from '../feedback';
+import { fx } from '../feedback';
 import { useT } from '../i18n';
 import { isIOS } from '../platform';
 import { useApp } from '../state';
@@ -51,7 +51,7 @@ export function Settings({
       if (!confirm(t.restoreConfirm)) return;
       update(() => ({ ...restored, settings: { ...restored.settings, onboardingDone: true } }));
       setMessage(t.restored);
-      sound.done();
+      fx.done();
     } catch {
       setMessage(t.restoreFailed);
     }
@@ -60,7 +60,7 @@ export function Settings({
   return (
     <main class="screen settings">
       <header class="topbar">
-        <button class="icon-btn" onClick={onClose} aria-label={t.close}><Back /></button>
+        <button class="icon-btn" onClick={onClose} aria-label={t.close}><Back /><Haptic /></button>
         <h1 class="screen-title">{t.settings}</h1>
         <span class="topbar-spacer" />
       </header>
@@ -71,7 +71,7 @@ export function Settings({
           checked={data.settings.sound}
           onChange={(v) => {
             set('sound', v);
-            if (v) setTimeout(() => sound.done(), 50);
+            if (v) setTimeout(() => fx.done(), 50);
           }}
         />
         <Toggle
@@ -80,7 +80,7 @@ export function Settings({
           checked={data.settings.haptics}
           onChange={(v) => {
             set('haptics', v);
-            if (v) setTimeout(() => haptic.success(), 50);
+            if (v) setTimeout(() => fx.tap(), 50);
           }}
         />
         <Toggle label={t.reducedMotion} checked={data.settings.reducedMotion} onChange={(v) => set('reducedMotion', v)} />
@@ -88,7 +88,7 @@ export function Settings({
           <span>{t.language}</span>
           <div class="segmented compact">
             {(['en', 'cs'] as Lang[]).map((l) => (
-              <button key={l} aria-pressed={data.settings.lang === l} onClick={() => { haptic.tap(); set('lang', l); }}>
+              <button key={l} aria-pressed={data.settings.lang === l} onClick={() => { fx.tap(); set('lang', l); }}>
                 {l === 'en' ? 'English' : 'Čeština'}
               <Haptic /></button>
             ))}
@@ -97,9 +97,9 @@ export function Settings({
       </section>
 
       <section class="group">
-        <button class="secondary full" onClick={backup}><Download /> {t.backup}</button>
+        <button class="secondary full" onClick={backup}><Download /> {t.backup}<Haptic /></button>
         <p class="muted small">{t.backupNote}</p>
-        <button class="secondary full" onClick={() => fileInput.current?.click()}><Upload /> {t.restore}</button>
+        <button class="secondary full" onClick={() => fileInput.current?.click()}><Upload /> {t.restore}<Haptic /></button>
         <input
           ref={fileInput}
           type="file"
@@ -115,8 +115,8 @@ export function Settings({
       </section>
 
       <section class="group">
-        <button class="secondary full" onClick={showIntro}><FishHook size={20} stroke={4} /> {t.howItWorks}</button>
-        <button class="secondary full" onClick={showInstall}><Phone /> {t.showInstall}</button>
+        <button class="secondary full" onClick={showIntro}><FishHook size={20} stroke={4} /> {t.howItWorks}<Haptic /></button>
+        <button class="secondary full" onClick={showInstall}><Phone /> {t.showInstall}<Haptic /></button>
       </section>
 
       <section class="group about">

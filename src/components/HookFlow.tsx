@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { CARDS, type Card } from '../cards';
 import { drawCard, FAVOURITES_MIN } from '../draw';
-import { haptic, sound } from '../feedback';
+import { fx } from '../feedback';
 import { pick, useT } from '../i18n';
 import { useApp } from '../state';
 import type { AppData, HookResult } from '../storage';
@@ -10,7 +10,10 @@ import { Close, FishHook } from './Icons';
 import { Tuna } from './Tuna';
 import { Haptic } from './Haptic';
 
-type Step = 'before' | 'drop' | 'card' | 'check' | 'won' | 'notyet' | 'snagged';
+type Step = 'before' | 'drop' | 'card' | 'check' | 'snap' | 'won' | 'notyet' | 'snagged';
+
+/** Taps needed to snap the line after a win. */
+const SNAP_TAPS = 4;
 
 export function HookFlow({ onExit }: { onExit: () => void }) {
   const t = useT();
@@ -25,6 +28,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   const [completed, setCompleted] = useState<string[]>([]);
   const [lastCatch, setLastCatch] = useState<{ isNew: boolean; count: number } | null>(null);
   const [note, setNote] = useState('');
+  const [snapStage, setSnapStage] = useState(0);
   const startedAt = useRef(new Date().toISOString());
   const wonTitle = useRef(pick(t.wonTitles));
   const timers = useRef<number[]>([]);
@@ -50,17 +54,26 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
     setDrawn((ids) => [...ids, result.card.id]);
     setFlipped(false);
     setStep('drop');
-    later(() => {
-      setStep('card');
-      sound.flip();
-      later(() => {
-        setFlipped(true);
-        sound.reveal(result.card.rarity);
-        if (result.card.rarity === 'legendary') haptic.big();
-        else if (result.card.rarity === 'rare') haptic.success();
-        else haptic.tap();
-      }, 350);
-    }, 1100);
+    // The card then lands face-down and waits for her tap (flip), so on iPhone the reveal gets a real tick.
+    later(() => setStep('card'), 1100);
+  }
+
+  function flip() {
+    if (!card || flipped) return;
+    setFlipped(true);
+    fx.reveal(card.rarity);
+  }
+
+  /** One tap on the line. The last one snaps it and starts the celebration. */
+  function tug() {
+    const stage = snapStage + 1;
+    setSnapStage(stage);
+    if (stage < SNAP_TAPS) {
+      fx.strain(stage);
+    } else {
+      fx.celebrate();
+      setStep('won');
+    }
   }
 
   function completeCard() {
@@ -80,8 +93,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
     }));
     setCompleted((ids) => [...ids, card.id]);
     setLastCatch({ isNew: !prev, count });
-    sound.done();
-    haptic.success();
+    fx.done();
     setStep('check');
   }
 
@@ -107,16 +119,17 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
 
   function close() {
     // Leaving after finishing at least one card counts as "not yet"; otherwise nothing is recorded.
-    if (completed.length && step !== 'won' && step !== 'snagged') finish('notyet');
+    if (completed.length && step !== 'snap' && step !== 'won' && step !== 'snagged') finish('notyet');
     onExit();
   }
 
   return (
     <main class={`screen hook step-${step}`}>
       <header class="topbar">
-        {step !== 'won' && (
+        {step !== 'snap' && step !== 'won' && (
           <button class="icon-btn" onClick={close} aria-label={t.close}>
             <Close />
+            <Haptic />
           </button>
         )}
       </header>
@@ -130,8 +143,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
             onPick={(n) => {
               if (leftBefore.current) return;
               leftBefore.current = true;
-              haptic.tap();
-              sound.tap();
+              fx.tap();
               setBefore(n);
               later(draw, 250);
             }}
@@ -145,6 +157,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
             }}
           >
             {t.skip}
+            <Haptic />
           </button>
         </section>
       )}
@@ -163,7 +176,16 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
 
       {step === 'card' && card && (
         <section class="panel center">
-          <CardView card={card} flipped={flipped} isNew={!data.collection[card.id]} />
+          <button
+            class="card-tap"
+            onClick={flip}
+            disabled={flipped}
+            aria-label={flipped ? undefined : t.tapToFlip}
+          >
+            <CardView card={card} flipped={flipped} isNew={!data.collection[card.id]} />
+            {!flipped && <Haptic />}
+          </button>
+          {!flipped && <p class="flip-hint">{t.tapToFlip}</p>}
           {flipped && (
             <div class="card-actions fade-in">
               {card.timerSeconds && <Countdown key={card.id + drawn.length} seconds={card.timerSeconds} />}
@@ -172,7 +194,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
                 <button
                   class="secondary"
                   onClick={() => {
-                    haptic.tap();
+                    fx.tap();
                     setThrownBack(true);
                     draw();
                   }}
@@ -194,8 +216,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           <Rating
             value={after}
             onPick={(n) => {
-              haptic.tap();
-              sound.tap();
+              fx.tap();
               setAfter(n);
             }}
           />
@@ -204,9 +225,9 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
               class="primary big"
               onClick={() => {
                 finish('passed');
-                sound.celebrate();
-                haptic.big();
-                setStep('won');
+                fx.tap();
+                setSnapStage(0);
+                setStep('snap');
               }}
             >
               {t.yes}
@@ -215,8 +236,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
             <button
               class="secondary big"
               onClick={() => {
-                haptic.tap();
-                sound.tap();
+                fx.tap();
                 setStep('notyet');
               }}
             >
@@ -228,12 +248,41 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           <button
             class="quiet-link"
             onClick={() => {
-              sound.gentle();
+              fx.gentle();
               setStep('snagged');
             }}
           >
             {t.snagged}
           </button>
+        </section>
+      )}
+
+      {step === 'snap' && (
+        <section class="panel center snap-step">
+          <h1>{t.snapTitle}</h1>
+          <p class="muted">{t.snapHint}</p>
+          <button class={`tug stage-${snapStage}`} onClick={tug} aria-label={t.snapAria(SNAP_TAPS - snapStage)}>
+            <div class="tug-shake" key={snapStage}>
+              <div class="tug-line">
+                <span class="fray" />
+              </div>
+              <div class="tug-hook">
+                <FishHook size={52} stroke={4.5} />
+              </div>
+            </div>
+            <div class="tug-tuna" key={`tuna-${snapStage}`}>
+              <Tuna mood={snapStage >= 2 ? 'smug' : 'cheer'} size={190} />
+            </div>
+            {snapStage > 0 && (
+              <div class="tug-bubbles" key={`bubbles-${snapStage}`} aria-hidden="true">
+                <span /><span /><span />
+              </div>
+            )}
+            <Haptic />
+          </button>
+          <div class="snap-dots" aria-hidden="true">
+            {Array.from({ length: SNAP_TAPS }, (_, i) => <span key={i} class={i < snapStage ? 'on' : ''} />)}
+          </div>
         </section>
       )}
 
@@ -279,7 +328,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           <h1>{t.notYetTitle}</h1>
           <p class="muted">{t.notYetBody}</p>
           <button class="primary big" onClick={draw}>{t.drawAnother}<Haptic /></button>
-          <button class="link" onClick={() => { finish('notyet'); onExit(); }}>{t.backToTank}</button>
+          <button class="link" onClick={() => { finish('notyet'); onExit(); }}>{t.backToTank}<Haptic /></button>
         </section>
       )}
 
@@ -322,8 +371,7 @@ function Countdown({ seconds }: { seconds: number }) {
       if (remaining === 0) {
         clearInterval(id);
         setRunning(false);
-        sound.timerEnd();
-        haptic.success();
+        fx.timerEnd();
       }
     }, 200);
     return () => clearInterval(id);
@@ -344,8 +392,7 @@ function Countdown({ seconds }: { seconds: number }) {
         <button
           class="secondary small"
           onClick={() => {
-            haptic.tap();
-            sound.tap();
+            fx.tap();
             setRunning(true);
           }}
         >

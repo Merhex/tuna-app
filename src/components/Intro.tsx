@@ -1,6 +1,6 @@
 import { useRef, useState } from 'preact/hooks';
 import { RARITIES } from '../cards';
-import { haptic, sound } from '../feedback';
+import { fx } from '../feedback';
 import { useT } from '../i18n';
 import { FishHook } from './Icons';
 import { RarityFish } from './RarityFish';
@@ -18,8 +18,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
   const goTo = (i: number) => {
     const next = Math.max(0, Math.min(slides.length - 1, i));
     if (next === index) return;
-    haptic.tap();
-    sound.tap();
+    fx.tap();
     setIndex(next);
   };
 
@@ -39,6 +38,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
         {!last && (
           <button class="link" onClick={onDone}>
             {t.skip}
+            <Haptic />
           </button>
         )}
       </header>
@@ -83,8 +83,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
           class="primary big"
           onClick={() => {
             if (last) {
-              haptic.success();
-              sound.done();
+              fx.done();
               onDone();
             } else goTo(index + 1);
           }}

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'preact/hooks';
-import { haptic, sound } from '../feedback';
+import { fx } from '../feedback';
 import { useT } from '../i18n';
 import { isInAppBrowser, isIOS, isIOSNonSafari } from '../platform';
 import { PlusSquare, ShareIOS } from './Icons';
 import { MiniTuna, Tuna } from './Tuna';
+import { Haptic } from './Haptic';
 
 interface InstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -55,13 +56,14 @@ export function InstallGuide({ onContinue }: { onContinue: () => void }) {
                 try {
                   await navigator.clipboard.writeText(location.href);
                   setCopied(true);
-                  haptic.tap();
+                  fx.tap();
                 } catch {
                   /* clipboard blocked; the URL is still visible below */
                 }
               }}
             >
               {copied ? t.copied : t.copyLink}
+              <Haptic />
             </button>
             <code class="url">{location.href}</code>
           </div>
@@ -82,7 +84,7 @@ export function InstallGuide({ onContinue }: { onContinue: () => void }) {
             <button
               class="primary big"
               onClick={async () => {
-                sound.tap();
+                fx.tap();
                 await deferredPrompt?.prompt();
                 const choice = await deferredPrompt?.userChoice;
                 deferredPrompt = null;
