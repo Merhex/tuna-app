@@ -59,7 +59,7 @@ Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an
 ## Progress screens
 
 - **D35 · Logbook: see cravings get weaker.** Decided. Before/after chart, per-day trend, day-by-day history.
-- **D38 · Sunken Treasure: money not spent, live.** Decided. Optional; weekly amount, currency and start date; ticks live and never resets. *Deliberately no savings goal:* reaching a goal could feel like permission to vape again. No “I bought one” subtraction either.
+- **D38 · Sunken Treasure: money not spent, live.** Decided. Optional; weekly amount, currency and start date; ticks live and never resets. *Deliberately no savings goal, now or later:* a goal is closed. Once it's reached there's a finish line, and a finish line can become the excuse to start vaping again. The counter is open-ended instead: it keeps growing, so the effort keeps showing, with nothing to “finish”. No “I bought one” subtraction either.
 - **D41 · Milestones in the Sunken Treasure.** Decided, built. See below.
 
 ## Technical

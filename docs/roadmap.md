@@ -32,7 +32,7 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 
 | Idea | Why not |
 | --- | --- |
-| **A savings goal in the treasure** (“save for Lisbon”) | D38: reaching a goal could feel like permission to vape again. |
+| **A savings goal in the treasure** (“save for Lisbon”). Scratched for good. | D38: a goal is closed. Once it's reached there's a finish line, and a finish line can become the excuse to start vaping again. The treasure stays open-ended: it only grows, with no end point. |
 | **Streaks or “days clean”** | D11: a reset after a slip often turns into “I've failed anyway”. Milestones count days since quitting and never reset. |
 | **Reminders at risky times** | No backend (D22), and iPhone web apps can't schedule their own notifications. Would need the same push server as the flare. |
 
