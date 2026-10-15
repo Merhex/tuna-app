@@ -140,3 +140,23 @@ export function Heart({ size = 18, filled = false }: P & { filled?: boolean }) {
     </svg>
   );
 }
+
+export function House({ size = 18 }: P) {
+  return (
+    <svg {...base(size)} viewBox="0 0 24 24">
+      <path d="M3.5 11L12 4l8.5 7" />
+      <path d="M6 9v11h12V9" />
+      <path d="M10 20v-5h4v5" />
+    </svg>
+  );
+}
+
+/** Map pin, for "out and about". */
+export function Pin({ size = 18 }: P) {
+  return (
+    <svg {...base(size)} viewBox="0 0 24 24">
+      <path d="M12 21s-6.5-5.8-6.5-11a6.5 6.5 0 0 1 13 0c0 5.2-6.5 11-6.5 11z" />
+      <circle cx="12" cy="10" r="2.4" />
+    </svg>
+  );
+}

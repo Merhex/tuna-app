@@ -1,5 +1,5 @@
 import { createStore, get, setMany, getMany } from 'idb-keyval';
-import type { Lang } from './cards';
+import type { Lang, Place } from './cards';
 import type { DrawState } from './draw';
 import { defaultCurrency, type Currency, type Treasure } from './treasure';
 
@@ -39,6 +39,10 @@ export interface Settings {
   lang: Lang;
   drawFrom: 'all' | 'favourites';
   currency: Currency;
+  /** Where she said she was last time; only cards that fit are drawn. */
+  place: Place;
+  /** Day of the latest milestone she has seen in the treasure, for the "new milestone" dot. */
+  milestoneSeen: number;
 }
 
 export interface AppData {
@@ -75,6 +79,8 @@ export function defaultData(): AppData {
       lang,
       drawFrom: 'all',
       currency: defaultCurrency(lang),
+      place: 'home',
+      milestoneSeen: 0,
     },
     treasure: null,
   };

@@ -1,0 +1,104 @@
+{
+  "milestones": [
+    {
+      "id": "quit-day",
+      "day": 0,
+      "when": { "en": "Quit day", "cs": "Den D" },
+      "title": { "en": "Cast Off", "cs": "Vyplouváme" },
+      "body": {
+        "en": "You’ve started. The first few days are usually the hardest, and that’s normal, not a sign it isn’t working. Each craving still only lasts a few minutes. Keep swimming.",
+        "cs": "Začala jsi. První dny bývají nejtěžší a je to normální, ne znamení, že to nefunguje. Každá chuť pořád trvá jen pár minut. Plav dál."
+      }
+    },
+    {
+      "id": "day-1",
+      "day": 1,
+      "when": { "en": "1 day", "cs": "1 den" },
+      "title": { "en": "First Tide", "cs": "První příliv" },
+      "body": {
+        "en": "One full day. By now almost all the nicotine has left your blood, so what you’re feeling is your brain noticing it’s gone. Restless, snappy or foggy is normal, and it passes.",
+        "cs": "Celý jeden den. Většina nikotinu už ti zmizela z krve, takže to, co cítíš, je mozek, který si všiml, že chybí. Neklid, podrážděnost nebo mlha v hlavě jsou normální a přejdou."
+      }
+    },
+    {
+      "id": "day-3",
+      "day": 3,
+      "when": { "en": "3 days", "cs": "3 dny" },
+      "title": { "en": "Top of the Wave", "cs": "Na vrcholu vlny" },
+      "body": {
+        "en": "Withdrawal is usually at its worst in the first three days, and you’ve just swum through them. If today still feels rough, that’s the top of the wave. For most people it eases from here.",
+        "cs": "Abstinenční příznaky bývají nejhorší první tři dny a ty jsi je právě proplavala. Jestli je dnešek pořád drsný, jsi na vrcholu vlny. Většině lidí se odsud začne ulevovat."
+      }
+    },
+    {
+      "id": "week-1",
+      "day": 7,
+      "when": { "en": "1 week", "cs": "1 týden" },
+      "title": { "en": "Open Water", "cs": "Otevřené moře" },
+      "body": {
+        "en": "One week. The first week is the toughest stretch, and it’s behind you. Cravings still drop by, often at the same old moments. Every one you ride out teaches your brain that the hook is empty.",
+        "cs": "Jeden týden. První týden je nejtěžší úsek a máš ho za sebou. Chutě se pořád ozývají, často ve stejných chvílích jako dřív. Každá, kterou přečkáš, učí tvůj mozek, že na háčku nic není."
+      }
+    },
+    {
+      "id": "week-2",
+      "day": 14,
+      "when": { "en": "2 weeks", "cs": "2 týdny" },
+      "title": { "en": "Finding the Current", "cs": "Chytáš proud" },
+      "body": {
+        "en": "Two weeks. Restlessness, bad sleep and a foggy head usually keep easing over the next couple of weeks. Cravings tend to come less often and leave faster, even if the odd one still hits hard.",
+        "cs": "Dva týdny. Neklid, špatný spánek a mlha v hlavě obvykle v dalších týdnech dál slábnou. Chutě chodí méně často a rychleji odcházejí, i když nějaká ještě občas pořádně zabere."
+      }
+    },
+    {
+      "id": "month-1",
+      "day": 30,
+      "when": { "en": "1 month", "cs": "1 měsíc" },
+      "title": { "en": "Deep Water", "cs": "Hluboká voda" },
+      "body": {
+        "en": "One month. On average, withdrawal symptoms last three to four weeks, so for most people the worst has faded by now. What’s left is mostly habit, and a habit loses its grip every time it goes unfed.",
+        "cs": "Jeden měsíc. Abstinenční příznaky trvají v průměru tři až čtyři týdny, takže většina lidí má to nejhorší za sebou. Co zbývá, je hlavně zvyk, a zvyk slábne pokaždé, když ho nenakrmíš."
+      }
+    },
+    {
+      "id": "month-2",
+      "day": 60,
+      "when": { "en": "2 months", "cs": "2 měsíce" },
+      "title": { "en": "Calmer Waters", "cs": "Klidnější vody" },
+      "body": {
+        "en": "Two months. Research on people who quit smoking found that after about six weeks they felt less anxious and stressed than people who kept going, not more. Nicotine mostly soothes the edginess it creates itself.",
+        "cs": "Dva měsíce. Výzkumy lidí, kteří přestali kouřit, zjistily, že po zhruba šesti týdnech měli méně úzkosti a stresu než ti, kdo pokračovali, ne víc. Nikotin hlavně tiší neklid, který si sám způsobuje."
+      }
+    },
+    {
+      "id": "month-3",
+      "day": 90,
+      "when": { "en": "3 months", "cs": "3 měsíce" },
+      "title": { "en": "Rewired", "cs": "Přepojeno" },
+      "body": {
+        "en": "Three months. In brain scans of people who quit, nicotine receptors were back to normal levels somewhere between 6 and 12 weeks. Your brain has been quietly rewiring itself the whole time.",
+        "cs": "Tři měsíce. Snímky mozku lidí, kteří přestali, ukázaly, že se nikotinové receptory vrátily na normální úroveň někdy mezi 6. a 12. týdnem. Tvůj mozek se celou dobu potichu přepojoval."
+      }
+    },
+    {
+      "id": "month-6",
+      "day": 182,
+      "when": { "en": "6 months", "cs": "6 měsíců" },
+      "title": { "en": "Ocean Crosser", "cs": "Přes oceán" },
+      "body": {
+        "en": "Half a year. Bluefin cross whole oceans; you just crossed six months. Cravings this far in are usually rare and brief, but one can still ambush you at a party or in a rough week. Expect it, and it loses its pull.",
+        "cs": "Půl roku. Tuňák obecný přeplave celé oceány a ty jsi právě přeplavala šest měsíců. Chutě jsou teď obvykle vzácné a krátké, ale pořád tě nějaká může přepadnout na párty nebo v těžkém týdnu. Když s ní počítáš, ztrácí sílu."
+      }
+    },
+    {
+      "id": "year-1",
+      "day": 365,
+      "when": { "en": "1 year", "cs": "1 rok" },
+      "title": { "en": "Legend of the Deep", "cs": "Legenda hlubin" },
+      "body": {
+        "en": "One whole year. A full lap around the sun since you cut the line. Go look at your school and your aquarium: every fish in there is a hook that went home hungry.",
+        "cs": "Celý rok. Celé kolečko kolem Slunce od chvíle, kdy jsi přestřihla vlasec. Mrkni na svoje hejno a akvárium: každá ryba v nich je háček, který odešel s prázdnou."
+      }
+    }
+  ]
+}

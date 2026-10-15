@@ -5,6 +5,7 @@ import { pick, useT } from '../i18n';
 import { useApp } from '../state';
 import { schoolSize } from '../storage';
 import { FAVOURITES_MIN } from '../draw';
+import { latestMilestoneDay } from '../milestones';
 import { Bowl, ChestIcon, FishHook, Gear, Heart, LogbookIcon } from './Icons';
 import { MiniTuna, Tuna } from './Tuna';
 import { Haptic } from './Haptic';
@@ -25,6 +26,8 @@ export function Home({
   const school = schoolSize(data);
   const tagline = useMemo(() => pick(t.taglines), [t]);
   const favCount = Object.values(data.collection).filter((c) => c.favourite).length;
+  // A milestone reached since she last opened the treasure (D41).
+  const newMilestone = !!data.treasure && latestMilestoneDay(data.treasure.startDate) > data.settings.milestoneSeen;
 
   useEffect(() => {
     if (!washedAshore) return;
@@ -74,9 +77,14 @@ export function Home({
             <span class="icon-label">{t.logbook}</span>
             <Haptic />
           </button>
-          <button class="icon-btn nav-btn" onClick={() => { fx.coins(); go('treasure'); }} aria-label={t.treasure}>
+          <button
+            class="icon-btn nav-btn"
+            onClick={() => { fx.coins(); go('treasure'); }}
+            aria-label={newMilestone ? `${t.treasure}, ${t.newMilestone}` : t.treasure}
+          >
             <ChestIcon />
             <span class="icon-label">{t.treasure}</span>
+            {newMilestone && <span class="nav-dot" aria-hidden="true" />}
             <Haptic />
           </button>
         </div>

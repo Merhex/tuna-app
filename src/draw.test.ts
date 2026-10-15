@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CARDS } from './cards';
+import { CARDS, DECK_VERSION, fitsPlace, PLACES, RARITIES } from './cards';
 import { drawCard, DRAW_SETTINGS, type DrawState } from './draw';
 
 const fresh: DrawState = { drawsSinceRare: 0, previousCardId: null };
@@ -65,11 +65,51 @@ describe('drawCard', () => {
     }
   });
 
-  it('has 40 unique cards with both languages filled in', () => {
-    expect(CARDS).toHaveLength(40);
-    expect(new Set(CARDS.map((c) => c.id)).size).toBe(40);
+  it('has 51 unique cards with both languages filled in', () => {
+    expect(CARDS).toHaveLength(51);
+    expect(new Set(CARDS.map((c) => c.id)).size).toBe(51);
     for (const c of CARDS) {
       expect(c.title.en && c.title.cs && c.task.en && c.task.cs).toBeTruthy();
+    }
+  });
+
+  it('never has a card from a deck version that has not shipped', () => {
+    for (const c of CARDS) expect(c.addedIn, c.id).toBeLessThanOrEqual(DECK_VERSION);
+  });
+});
+
+describe('where she is (D39, D40)', () => {
+  const out = CARDS.filter((c) => fitsPlace(c, 'out'));
+
+  it('fits every card somewhere', () => {
+    for (const c of CARDS) expect(PLACES.some((p) => fitsPlace(c, p)), c.id).toBe(true);
+  });
+
+  it('keeps cards that need a kitchen, a floor or privacy at home', () => {
+    expect(out.map((c) => c.id)).not.toContain('ice-cube-hold');
+    expect(out.map((c) => c.id)).not.toContain('landed-tuna');
+    expect(out.map((c) => c.id)).toContain('five-four-three');
+    expect(CARDS.filter((c) => fitsPlace(c, 'home'))).toHaveLength(CARDS.length);
+  });
+
+  it('keeps at least half the deck doable out of the house', () => {
+    expect(out.length / CARDS.length).toBeGreaterThanOrEqual(0.5);
+  });
+
+  it('has at least two cards of every rarity out of the house', () => {
+    // Two, so the guaranteed rare and the no-repeat rule still have something to pick from.
+    for (const r of RARITIES) expect(out.filter((c) => c.rarity === r).length, r).toBeGreaterThanOrEqual(2);
+  });
+
+  it('still guarantees a rare or better when drawing only out-of-house cards', () => {
+    for (let i = 0; i < 200; i++) {
+      const { card } = drawCard({
+        cards: out,
+        caughtIds: new Set(),
+        state: { drawsSinceRare: DRAW_SETTINGS.pityAfter, previousCardId: null },
+      });
+      expect(['rare', 'legendary']).toContain(card.rarity);
+      expect(fitsPlace(card, 'out')).toBe(true);
     }
   });
 });
