@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { jokeDurationMs, makeBag, nextStreak, PET_SETTINGS } from './pet';
+import { jokeDurationMs, jokeKind, makeBag, nextStreak, PET_SETTINGS } from './pet';
 import { STRINGS } from './i18n';
 
 describe('nextStreak', () => {
@@ -35,13 +35,21 @@ describe('makeBag', () => {
 });
 
 describe('jokes', () => {
+  it('come from the dark list, the Jungkook list or the usual one, by the set chances', () => {
+    expect(jokeKind(0)).toBe('dark');
+    expect(jokeKind(PET_SETTINGS.darkChance - 0.001)).toBe('dark');
+    expect(jokeKind(PET_SETTINGS.darkChance)).toBe('jungkook');
+    expect(jokeKind(PET_SETTINGS.darkChance + PET_SETTINGS.jungkookChance - 0.001)).toBe('jungkook');
+    expect(jokeKind(PET_SETTINGS.darkChance + PET_SETTINGS.jungkookChance)).toBe('normal');
+    expect(jokeKind(0.999)).toBe('normal');
+  });
   it('stay on screen between 5 and 11 seconds', () => {
     expect(jokeDurationMs('Hi')).toBe(5000);
     expect(jokeDurationMs('x'.repeat(1000))).toBe(11000);
   });
   for (const [lang, t] of Object.entries(STRINGS)) {
-    it(`${lang}: both lists have jokes, with no duplicates and typographic quotes`, () => {
-      for (const list of [t.petJokes, t.petDarkJokes]) {
+    it(`${lang}: every list has jokes, with no duplicates and typographic quotes`, () => {
+      for (const list of [t.petJokes, t.petDarkJokes, t.petJungkookJokes]) {
         expect(list.length).toBeGreaterThanOrEqual(10);
         expect(new Set(list).size).toBe(list.length);
         for (const joke of list) expect(joke).not.toMatch(/['"]/);

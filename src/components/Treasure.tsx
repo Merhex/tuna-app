@@ -226,7 +226,9 @@ function Counter() {
             )}
             <ul class="buy-list">
               {others.map((c) => (
-                <li key={c.id}>{describeComparison(c, countOf(c, amount, currency), lang)}</li>
+                <li key={c.id} class={c.jungkook ? 'jungkook' : undefined}>
+                  {describeComparison(c, countOf(c, amount, currency), lang)}
+                </li>
               ))}
             </ul>
             <button class="secondary small" onClick={() => { fx.tap(); setSeed((s) => s + 1); }}>
