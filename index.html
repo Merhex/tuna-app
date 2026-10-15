@@ -11,9 +11,29 @@
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <title>Off the Hook</title>
+    <!-- Inline so the very first paint is the ocean, not a white flash, even before the stylesheet loads. -->
+    <style>
+      html { background: #061724; color: #eaf4fa; }
+      #boot-fallback {
+        position: fixed; inset: 0; display: grid; place-items: center; padding: 24px;
+        font: 17px/1.5 -apple-system, system-ui, sans-serif; text-align: center;
+        opacity: 0; pointer-events: none; animation: boot-show 0.3s ease 6s forwards;
+      }
+      #boot-fallback p { max-width: 30ch; margin: 0 0 12px; }
+      #boot-fallback small { color: #a9c3d4; }
+      @keyframes boot-show { to { opacity: 1; pointer-events: auto; } }
+    </style>
   </head>
   <body>
     <div id="app"></div>
+    <!-- Shown only if the app hasn't started after a few seconds; the app removes it as soon as it runs. -->
+    <div id="boot-fallback" role="alert">
+      <div>
+        <p>🐟 Off the Hook couldn't start. Close it and open it again.</p>
+        <p>🐟 Off the Hook se nepodařilo spustit. Zavři ji a otevři znovu.</p>
+        <small>If this keeps happening: the site may be serving unbuilt files. In the GitHub repo, set Settings → Pages → Source to “GitHub Actions”.</small>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

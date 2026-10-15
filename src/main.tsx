@@ -19,3 +19,4 @@ const updateSW = registerSW({
 });
 
 render(<App />, document.getElementById('app')!);
+document.getElementById('boot-fallback')?.remove();

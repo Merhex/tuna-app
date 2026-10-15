@@ -33,6 +33,8 @@ npm run icons    # re-render app icons from scripts/icon.svg
 
 ## Deploying
 
-Pushing to `main` deploys to GitHub Pages via `.github/workflows/deploy.yml`. One-time setup: in the repo on GitHub, go to **Settings → Pages** and set **Source** to **GitHub Actions**.
+Pushing to `main` deploys to GitHub Pages via `.github/workflows/deploy.yml`.
+
+One-time setup: in the repo on GitHub, go to **Settings → Pages → Build and deployment** and set **Source** to **GitHub Actions**. Not "Deploy from a branch": that publishes the unbuilt source files, and the app shows a blank page (or a "couldn't start" message).
 
 The app is served at `https://merhex.github.io/tuna-app/`.
