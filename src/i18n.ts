@@ -6,6 +6,8 @@ import type { Category, Lang, Rarity } from './cards';
 const csPlural = (n: number, one: string, few: string, many: string) =>
   n === 1 ? one : n >= 2 && n <= 4 ? few : many;
 
+type Slide = { title: string; body: string; terms?: { word: string; meaning: string }[] };
+
 const en = {
   hookButton: "There's a hook!",
   school: (n: number) => (n === 0 ? 'Beat a hook and your first tuna joins your school.' : `Your school: ${n} tuna`),
@@ -25,6 +27,33 @@ const en = {
   drawFavourites: 'Favourites',
   washedAshore: 'New catches washed ashore!',
   ok: 'Nice',
+
+  intro: [
+    {
+      title: 'Cravings pass. Always.',
+      body: "A craving usually peaks and fades within a few minutes. This app gives you something to do until it's gone. That's the whole idea.",
+    },
+    {
+      title: "What's a hook?",
+      body: 'In here, everything happens underwater. You are the tuna.',
+      terms: [
+        { word: 'A hook', meaning: 'A craving.' },
+        { word: 'Hook strength', meaning: 'How strong the craving is, from 1 (barely there) to 10 (brutal).' },
+        { word: 'The line snaps', meaning: 'The craving passed. You win.' },
+      ],
+    },
+    {
+      title: 'Side quests',
+      body: "When a hook shows up, tap “There's a hook!” and draw a card. Each one is a silly, physical or calming quest to keep you busy. The rarer the fish, the better the card.",
+    },
+    {
+      title: 'Your school and your aquarium',
+      body: 'Every hook you beat adds a tuna to your school. Every card you complete goes into your aquarium. Nothing is ever taken away, and everything stays private on your phone.',
+    },
+  ] as Slide[],
+  next: 'Next',
+  introStart: "Let's swim!",
+  howItWorks: 'How it works',
 
   rateBefore: 'How hard is the hook pulling?',
   rateAfter: 'And how hard is it pulling now?',
@@ -132,6 +161,33 @@ const cs: Strings = {
   drawFavourites: 'Oblíbené',
   washedAshore: 'Moře vyplavilo nové úlovky!',
   ok: 'Super',
+
+  intro: [
+    {
+      title: 'Chuť vždycky přejde.',
+      body: 'Chuť obvykle vrcholí a odezní během pár minut. Tahle appka ti dá co dělat, dokud nepřejde. O to tu jde.',
+    },
+    {
+      title: 'Co je háček?',
+      body: 'Tady se všechno děje pod vodou. Ty jsi tuňák.',
+      terms: [
+        { word: 'Háček', meaning: 'Chuť, která tě přepadne.' },
+        { word: 'Síla háčku', meaning: 'Jak silná ta chuť je, od 1 (skoro nic) do 10 (brutální).' },
+        { word: 'Vlasec praskne', meaning: 'Chuť přešla. Vyhrála jsi.' },
+      ],
+    },
+    {
+      title: 'Vedlejší úkoly',
+      body: 'Když se objeví háček, klepni na „Je tu háček!“ a vytáhni kartu. Každá je praštěný, pohybový nebo uklidňující úkol, který tě zaměstná. Čím vzácnější ryba, tím lepší karta.',
+    },
+    {
+      title: 'Tvoje hejno a akvárium',
+      body: 'Za každý poražený háček se k tvému hejnu přidá tuňák. Každá splněná karta putuje do akvária. Nic ti nikdy nevezmeme a všechno zůstává jen v tvém telefonu.',
+    },
+  ],
+  next: 'Dál',
+  introStart: 'Jdeme plavat!',
+  howItWorks: 'Jak to funguje',
 
   rateBefore: 'Jak silně háček tahá?',
   rateAfter: 'A jak silně tahá teď?',

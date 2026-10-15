@@ -25,6 +25,8 @@ export interface HookEntry {
 
 export interface Settings {
   onboardingDone: boolean;
+  /** Has seen the "how it works" intro. */
+  introSeen: boolean;
   /** Deck version she last saw; null until first launch is finished. */
   lastDeckVersion: number | null;
   sound: boolean;
@@ -55,6 +57,7 @@ export function defaultData(): AppData {
     drawState: { drawsSinceRare: 0, previousCardId: null },
     settings: {
       onboardingDone: false,
+      introSeen: false,
       lastDeckVersion: null,
       sound: true,
       haptics: true,

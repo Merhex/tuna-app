@@ -11,13 +11,16 @@ import { Aquarium } from './components/Aquarium';
 import { Settings } from './components/Settings';
 import { InstallGuide } from './components/InstallGuide';
 import { Ocean } from './components/Ocean';
+import { Intro } from './components/Intro';
 
-export type Screen = 'install' | 'home' | 'hook' | 'aquarium' | 'settings';
+export type Screen = 'install' | 'intro' | 'home' | 'hook' | 'aquarium' | 'settings';
 
 export function App() {
   const [data, setData] = useState<AppData | null>(null);
   const [screen, setScreen] = useState<Screen>('home');
   const [washedAshore, setWashedAshore] = useState(false);
+  // Where to go after the intro: home on first launch, back to Settings when reopened from there.
+  const [introReturn, setIntroReturn] = useState<Screen>('home');
 
   useEffect(() => {
     loadData().then((loaded) => {
@@ -34,7 +37,10 @@ export function App() {
       const next = { ...loaded, settings: s };
       setData(next);
       void saveData(next);
+      // Install guide first (in Safari), then the intro. On iPhone the home-screen app has its own
+      // storage, so the intro shows the first time she opens the installed app.
       if (!s.onboardingDone) setScreen('install');
+      else if (!s.introSeen) setScreen('intro');
     });
   }, []);
 
@@ -67,7 +73,16 @@ export function App() {
           <InstallGuide
             onContinue={() => {
               update((d) => ({ ...d, settings: { ...d.settings, onboardingDone: true } }));
-              go('home');
+              go(data.settings.introSeen ? 'home' : 'intro');
+            }}
+          />
+        )}
+        {screen === 'intro' && (
+          <Intro
+            onDone={() => {
+              update((d) => ({ ...d, settings: { ...d.settings, introSeen: true } }));
+              go(introReturn);
+              setIntroReturn('home');
             }}
           />
         )}
@@ -76,7 +91,16 @@ export function App() {
         )}
         {screen === 'hook' && <HookFlow onExit={() => go('home')} />}
         {screen === 'aquarium' && <Aquarium onClose={() => go('home')} />}
-        {screen === 'settings' && <Settings onClose={() => go('home')} showInstall={() => go('install')} />}
+        {screen === 'settings' && (
+          <Settings
+            onClose={() => go('home')}
+            showInstall={() => go('install')}
+            showIntro={() => {
+              setIntroReturn('settings');
+              go('intro');
+            }}
+          />
+        )}
       </LangContext.Provider>
     </AppContext.Provider>
   );

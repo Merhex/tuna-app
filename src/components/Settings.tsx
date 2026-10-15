@@ -4,10 +4,18 @@ import { haptic, sound } from '../feedback';
 import { useT } from '../i18n';
 import { isIOS } from '../platform';
 import { useApp } from '../state';
-import { Back, Download, Phone, Upload } from './Icons';
+import { Back, Download, FishHook, Phone, Upload } from './Icons';
 import { averagePullDrop, makeBackup, parseBackup, schoolSize, type Settings as S } from '../storage';
 
-export function Settings({ onClose, showInstall }: { onClose: () => void; showInstall: () => void }) {
+export function Settings({
+  onClose,
+  showInstall,
+  showIntro,
+}: {
+  onClose: () => void;
+  showInstall: () => void;
+  showIntro: () => void;
+}) {
   const t = useT();
   const { data, update } = useApp();
   const [message, setMessage] = useState('');
@@ -117,6 +125,7 @@ export function Settings({ onClose, showInstall }: { onClose: () => void; showIn
       </section>
 
       <section class="group">
+        <button class="secondary full" onClick={showIntro}><FishHook size={20} stroke={4} /> {t.howItWorks}</button>
         <button class="secondary full" onClick={showInstall}><Phone /> {t.showInstall}</button>
       </section>
 
