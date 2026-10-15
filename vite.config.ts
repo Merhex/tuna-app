@@ -1,13 +1,26 @@
 import { defineConfig } from 'vitest/config';
 import preact from '@preact/preset-vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import { execSync } from 'node:child_process';
 
 // GitHub Pages serves the app from https://<user>.github.io/tuna-app/
 const base = process.env.BASE_PATH ?? '/tuna-app/';
 
+function gitCommit() {
+  try {
+    return execSync('git rev-parse --short HEAD').toString().trim();
+  } catch {
+    return 'dev';
+  }
+}
+
 export default defineConfig({
   base,
-  define: { __APP_VERSION__: JSON.stringify(process.env.npm_package_version ?? '0.0.0') },
+  define: {
+    // Shown in Settings so it's easy to see which version is running: the commit it was built from, and when.
+    __APP_VERSION__: JSON.stringify(process.env.BUILD_ID || process.env.GITHUB_SHA?.slice(0, 7) || gitCommit()),
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+  },
   plugins: [
     preact(),
     VitePWA({

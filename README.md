@@ -38,3 +38,9 @@ Pushing to `main` deploys to GitHub Pages via `.github/workflows/deploy.yml`.
 One-time setup: in the repo on GitHub, go to **Settings → Pages → Build and deployment** and set **Source** to **GitHub Actions**. Not "Deploy from a branch": that publishes the unbuilt source files, and the app shows a blank page (or a "couldn't start" message).
 
 The app is served at `https://merhex.github.io/tuna-app/`.
+
+### How updates reach her phone
+
+The app runs from a copy saved on the device, so it works offline. On every open (and every time it comes back into view) it checks for a new version in the background. If one arrives within 15 seconds of opening, it reloads into it right away; otherwise it switches the next time she leaves the app. It never reloads during a craving.
+
+To see which version is running, look at the bottom of **Settings**: `Version <commit> · <build time>`. The commit matches the one on GitHub.

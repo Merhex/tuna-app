@@ -157,6 +157,7 @@ const en = {
   copied: 'Copied!',
   desktopNote: "Looks like you’re on a computer. The app is made for phones, but you can try it here.",
   continueBrowser: 'Continue in browser',
+  version: 'Version',
   back: 'Back',
   continueWarn: 'Your collection could get lost if the browser clears its data.',
 };
@@ -315,6 +316,7 @@ const cs: Strings = {
   copied: 'Zkopírováno!',
   desktopNote: 'Vypadá to, že jsi na počítači. Appka je dělaná pro telefon, ale vyzkoušet ji můžeš i tady.',
   continueBrowser: 'Pokračovat v prohlížeči',
+  version: 'Verze',
   back: 'Zpět',
   continueWarn: 'Pokud prohlížeč smaže data, můžeš přijít o sbírku.',
 };

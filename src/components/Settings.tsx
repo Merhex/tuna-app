@@ -126,7 +126,10 @@ export function Settings({
       <section class="group about">
         <h2>{t.about}</h2>
         <p class="muted small">{t.aboutBody}</p>
-        <p class="muted small">Off the Hook · v{__APP_VERSION__}</p>
+        <p class="muted small version">
+          {t.version} {__APP_VERSION__} ·{' '}
+          {new Date(__BUILD_TIME__).toLocaleString(data.settings.lang, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+        </p>
       </section>
     </main>
   );
