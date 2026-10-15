@@ -5,7 +5,7 @@ import { pick, useT } from '../i18n';
 import { useApp } from '../state';
 import { schoolSize } from '../storage';
 import { FAVOURITES_MIN } from '../draw';
-import { Bowl, FishHook, Gear, Heart, LogbookIcon } from './Icons';
+import { Bowl, ChestIcon, FishHook, Gear, Heart, LogbookIcon } from './Icons';
 import { MiniTuna, Tuna } from './Tuna';
 import { Haptic } from './Haptic';
 
@@ -64,14 +64,19 @@ export function Home({
 
       <header class="topbar">
         <div class="topbar-group">
-          <button class="icon-btn" onClick={() => { fx.tap(); go('aquarium'); }} aria-label={t.aquarium}>
+          <button class="icon-btn nav-btn" onClick={() => { fx.tap(); go('aquarium'); }} aria-label={t.aquarium}>
             <Bowl />
             <span class="icon-label">{t.aquarium}</span>
             <Haptic />
           </button>
-          <button class="icon-btn" onClick={() => { fx.tap(); go('logbook'); }} aria-label={t.logbook}>
+          <button class="icon-btn nav-btn" onClick={() => { fx.tap(); go('logbook'); }} aria-label={t.logbook}>
             <LogbookIcon />
             <span class="icon-label">{t.logbook}</span>
+            <Haptic />
+          </button>
+          <button class="icon-btn nav-btn" onClick={() => { fx.coins(); go('treasure'); }} aria-label={t.treasure}>
+            <ChestIcon />
+            <span class="icon-label">{t.treasure}</span>
             <Haptic />
           </button>
         </div>

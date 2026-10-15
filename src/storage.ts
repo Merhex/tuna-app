@@ -1,6 +1,7 @@
 import { createStore, get, setMany, getMany } from 'idb-keyval';
 import type { Lang } from './cards';
 import type { DrawState } from './draw';
+import { defaultCurrency, type Currency, type Treasure } from './treasure';
 
 export const SCHEMA_VERSION = 1;
 
@@ -37,6 +38,7 @@ export interface Settings {
   reducedMotion: boolean;
   lang: Lang;
   drawFrom: 'all' | 'favourites';
+  currency: Currency;
 }
 
 export interface AppData {
@@ -44,18 +46,21 @@ export interface AppData {
   hooks: HookEntry[];
   drawState: DrawState;
   settings: Settings;
+  /** Sunken Treasure; null until she sets it up (it's optional). */
+  treasure: Treasure | null;
 }
 
 let storeHandle: ReturnType<typeof createStore> | undefined;
 // Opened on first use, so this module can also be imported where IndexedDB doesn't exist (tests).
 const store = () => (storeHandle ??= createStore('off-the-hook', 'data'));
-const KEYS = ['collection', 'hooks', 'drawState', 'settings'] as const;
+const KEYS = ['collection', 'hooks', 'drawState', 'settings', 'treasure'] as const;
 
 function defaultLang(): Lang {
   return navigator.language?.toLowerCase().startsWith('cs') ? 'cs' : 'en';
 }
 
 export function defaultData(): AppData {
+  const lang = defaultLang();
   return {
     collection: {},
     hooks: [],
@@ -67,9 +72,11 @@ export function defaultData(): AppData {
       sound: true,
       haptics: true,
       reducedMotion: false,
-      lang: defaultLang(),
+      lang,
       drawFrom: 'all',
+      currency: defaultCurrency(lang),
     },
+    treasure: null,
   };
 }
 
@@ -80,7 +87,12 @@ function normalise(raw: Partial<AppData>): AppData {
     collection: raw.collection ?? d.collection,
     hooks: raw.hooks ?? d.hooks,
     drawState: { ...d.drawState, ...raw.drawState },
-    settings: { ...d.settings, ...raw.settings },
+    settings: {
+      ...d.settings,
+      ...raw.settings,
+      currency: raw.settings?.currency ?? defaultCurrency(raw.settings?.lang ?? d.settings.lang),
+    },
+    treasure: raw.treasure ?? null,
   };
 }
 

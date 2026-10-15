@@ -76,6 +76,18 @@ export function PlusSquare({ size = 22 }: P) {
   );
 }
 
+/** A small treasure chest. */
+export function ChestIcon({ size = 22 }: P) {
+  return (
+    <svg {...base(size)} viewBox="0 0 24 24">
+      <path d="M3.5 11h17v8.5a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5z" />
+      <path d="M3.5 11V9a6 4 0 0 1 17 0v2" />
+      <path d="M10.5 11v3.5h3V11" />
+      <path d="M7 11v10M17 11v10" stroke-width="1.6" />
+    </svg>
+  );
+}
+
 /** Ship's logbook: a book with a falling line on the page. */
 export function LogbookIcon({ size = 22 }: P) {
   return (

@@ -911,3 +911,83 @@ button:has(> .haptic-switch) { position: relative; }
   .step-card .big { min-height: 52px; }
   .step-card .card-face { gap: 8px; }
 }
+
+/* ---------- Home navigation: icon over label, so three fit next to the gear on small phones ---------- */
+.nav-btn {
+  flex-direction: column;
+  gap: 2px;
+  height: 52px;
+  min-width: 0;
+  padding: 0 10px;
+  border-radius: 16px;
+}
+.nav-btn .icon-label { font-size: 0.72rem; font-weight: 700; line-height: 1; }
+.home .topbar { min-height: 60px; }
+.home .topbar .icon-btn:not(.nav-btn) { width: 52px; height: 52px; border-radius: 16px; }
+
+/* ---------- Sunken Treasure ---------- */
+.treasure .screen-title { font-size: 1.25rem; }
+.treasure-pitch { max-width: 32ch; }
+.treasure-main { align-items: stretch; gap: 10px; }
+.chest-wrap { display: flex; justify-content: center; margin-top: 4px; }
+.chest.open .chest-sparkles path { animation: sparkle 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.chest.open .chest-sparkles path:nth-child(2) { animation-delay: 0.8s; }
+.chest.open .chest-sparkles path:nth-child(3) { animation-delay: 1.6s; }
+@keyframes sparkle { 0%, 100% { opacity: 0; transform: scale(0.4); } 50% { opacity: 1; transform: scale(1); } }
+.money {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  flex-wrap: wrap;
+  font-family: var(--display);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--gold);
+  text-shadow: 0 2px 16px rgba(242, 193, 78, 0.35);
+}
+.money-main { font-size: clamp(2.2rem, 11vw, 3rem); line-height: 1; white-space: pre; }
+.money-dust { font-size: 1.1rem; opacity: 0.55; margin-left: 2px; }
+.center-text { text-align: center; }
+.rate-line { text-align: center; font-weight: 700; font-size: 0.95rem; }
+.buys {
+  margin-top: 6px;
+  background: rgba(13, 44, 68, 0.82);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.buys h2 { font-size: 1.05rem; color: var(--muted); }
+.buy-headline { font-family: var(--display); font-weight: 800; font-size: 1.2rem; line-height: 1.25; color: var(--ink); }
+.buy-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.buy-list li { padding-left: 22px; position: relative; line-height: 1.35; }
+.buy-list li::before { content: ''; position: absolute; left: 2px; top: 0.45em; width: 11px; height: 11px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffe9a3, #e0a419); }
+.buys .secondary { align-self: flex-start; }
+.treasure-form { gap: 18px; padding-top: 8px; }
+.treasure-form .chest { align-self: center; }
+.amount-row { display: flex; align-items: center; gap: 10px; }
+.amount-input, .date-input {
+  font: inherit;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 14px;
+  min-width: 0;
+  color-scheme: dark;
+}
+.amount-input { width: 8ch; flex: none; }
+.date-input { font-size: 1.1rem; width: 100%; min-height: 50px; }
+.amount-unit { font-weight: 700; color: var(--ink); }
+.hint { font-size: 0.82rem; color: var(--muted); }
+.form-error { color: var(--coral); font-weight: 700; font-size: 0.9rem; }
+.treasure-form .field > span:first-child { font-weight: 700; color: var(--ink); font-size: 1rem; }
+.treasure-form .segmented { align-self: flex-start; }
+.treasure-form .segmented button { min-width: 56px; justify-content: center; font-size: 1rem; }
+@media (max-width: 360px) {
+  .treasure .screen-title { font-size: 1.05rem; white-space: nowrap; }
+}

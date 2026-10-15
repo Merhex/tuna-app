@@ -13,8 +13,9 @@ import { InstallGuide } from './components/InstallGuide';
 import { Ocean } from './components/Ocean';
 import { Intro } from './components/Intro';
 import { Logbook } from './components/Logbook';
+import { Treasure } from './components/Treasure';
 
-export type Screen = 'install' | 'intro' | 'home' | 'hook' | 'aquarium' | 'logbook' | 'settings';
+export type Screen = 'install' | 'intro' | 'home' | 'hook' | 'aquarium' | 'logbook' | 'treasure' | 'settings';
 
 export function App() {
   const [data, setData] = useState<AppData | null>(null);
@@ -101,6 +102,7 @@ export function App() {
         {screen === 'hook' && <HookFlow onExit={() => go('home')} />}
         {screen === 'aquarium' && <Aquarium onClose={() => go('home')} />}
         {screen === 'logbook' && <Logbook onClose={() => go('home')} />}
+        {screen === 'treasure' && <Treasure onClose={() => go('home')} />}
         {screen === 'settings' && (
           <Settings
             onClose={() => go('home')}

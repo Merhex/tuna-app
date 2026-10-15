@@ -143,6 +143,16 @@ export const fx = {
       bubbles.forEach((t, i) => bubble(ac, t, 450 + i * 80));
     });
   },
+  /** Coins clinking into the chest. */
+  coins() {
+    const clinks = [0, 70, 150, 260];
+    cue(clinks.map((ms): Beat => [ms, 12]), (ac) => {
+      clinks.forEach((ms, i) => {
+        tone(ac, { freq: 2400 + i * 260, start: ms / 1000, dur: 0.09, type: 'triangle', gain: 0.07 });
+        tone(ac, { freq: 3600 + i * 300, start: ms / 1000 + 0.01, dur: 0.06, type: 'sine', gain: 0.04 });
+      });
+    });
+  },
   /** Soft and low, for the snag screen. */
   gentle() {
     cue([[0, 10], [200, 10]], (ac) => {

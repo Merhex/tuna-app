@@ -8,6 +8,7 @@ import { Back, Download, FishHook, Phone, Upload } from './Icons';
 import { Haptic } from './Haptic';
 import { isStandalone } from '../platform';
 import { makeBackup, parseBackup, type Settings as S } from '../storage';
+import { convertTreasure, CURRENCIES, type Currency } from '../treasure';
 
 export function Settings({
   onClose,
@@ -25,6 +26,14 @@ export function Settings({
 
   const set = <K extends keyof S>(key: K, value: S[K]) =>
     update((d) => ({ ...d, settings: { ...d.settings, [key]: value } }));
+
+  // Switching currency re-expresses the treasure's amounts, so it keeps meaning the same money.
+  const setCurrency = (c: Currency) =>
+    update((d) => ({
+      ...d,
+      treasure: d.treasure && d.settings.currency !== c ? convertTreasure(d.treasure, d.settings.currency, c) : d.treasure,
+      settings: { ...d.settings, currency: c },
+    }));
 
   async function backup() {
     const name = `off-the-hook-backup-${new Date().toISOString().slice(0, 10)}.json`;
@@ -95,6 +104,17 @@ export function Settings({
             ))}
           </div>
         </div>
+        <div class="row">
+          <span>{t.currency}</span>
+          <div class="segmented compact">
+            {CURRENCIES.map((c) => (
+              <button key={c} aria-pressed={data.settings.currency === c} onClick={() => { fx.tap(); setCurrency(c); }}>
+                {CURRENCY_SYMBOL[c]}
+                <Haptic />
+              </button>
+            ))}
+          </div>
+        </div>
       </section>
 
       <section class="group">
@@ -156,3 +176,5 @@ function Toggle({
     </label>
   );
 }
+
+const CURRENCY_SYMBOL: Record<Currency, string> = { CZK: 'Kč', EUR: '€', USD: '$' };

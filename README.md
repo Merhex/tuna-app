@@ -9,6 +9,7 @@ The design decisions live in the decision record artifact. This repo is the phas
 - **No backend.** It's a static site. All progress stays on her phone (IndexedDB), with backup/restore to a file.
 - **Installable and offline.** It's a PWA: add it to the home screen from Safari and it runs full screen, offline.
 - **English and Czech.** The language is picked from the phone's settings and can be changed in Settings.
+- **Sunken Treasure** (optional): a live counter of the money she's not spending, from a weekly amount and a start date. It never resets; a changed weekly amount only applies from then on. Currency (Kč, €, $) is separate from the language.
 - **Sounds and vibrations** are generated in code (no audio files) and can be turned off in Settings. On iPhone, vibrations need iOS 18+.
 
 ## Adding or editing cards
