@@ -1,12 +1,13 @@
-import { useEffect, useMemo } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { Screen } from '../app';
 import { fx } from '../feedback';
 import { pick, useT } from '../i18n';
 import { useApp } from '../state';
 import { schoolSize } from '../storage';
 import { FAVOURITES_MIN } from '../draw';
+import { jokeDurationMs, makeBag, nextStreak, PET_SETTINGS } from '../pet';
 import { Bowl, ChestIcon, FishHook, Gear, Heart, LogbookIcon } from './Icons';
-import { MiniTuna, Tuna } from './Tuna';
+import { MiniTuna, Tuna, type Mood } from './Tuna';
 import { Haptic } from './Haptic';
 
 const MAX_SWIMMERS = 36;
@@ -94,7 +95,7 @@ export function Home({
       )}
 
       <div class="home-center">
-        <Tuna mood="happy" size={130} class="bob" />
+        <PettableTuna />
         <p class="tagline">{tagline}</p>
         <button
           class="hook-button"
@@ -128,5 +129,86 @@ export function Home({
         )}
       </div>
     </main>
+  );
+}
+
+// One shuffled bag per joke list, kept across visits to the home screen so jokes don't repeat soon.
+const bags = new Map<string[], () => string>();
+function tell(list: string[]) {
+  let bag = bags.get(list);
+  if (!bag) bags.set(list, (bag = makeBag(list)));
+  return bag();
+}
+
+/**
+ * Easter egg: tapping the tuna pets it (eyes close, hearts float up). Five fast taps in a row and
+ * it tells a joke; one in ten is a dark one, delivered with a wide-eyed stare.
+ */
+function PettableTuna() {
+  const t = useT();
+  const [petting, setPetting] = useState(false);
+  const [hearts, setHearts] = useState<{ id: number; dx: number; rot: number }[]>([]);
+  const [joke, setJoke] = useState<{ id: number; text: string; dark: boolean } | null>(null);
+  const lastPet = useRef<{ at: number; streak: number } | null>(null);
+  const nextId = useRef(0);
+  const pettingTimer = useRef<number>();
+  const jokeTimer = useRef<number>();
+  const heartTimers = useRef<number[]>([]);
+
+  useEffect(
+    () => () => {
+      clearTimeout(pettingTimer.current);
+      clearTimeout(jokeTimer.current);
+      heartTimers.current.forEach(clearTimeout);
+    },
+    [],
+  );
+
+  function pet() {
+    const now = performance.now();
+    const streak = nextStreak(lastPet.current, now);
+    lastPet.current = { at: now, streak };
+    const id = ++nextId.current;
+
+    setPetting(true);
+    clearTimeout(pettingTimer.current);
+    pettingTimer.current = window.setTimeout(() => setPetting(false), 1200);
+
+    setHearts((h) => [...h.slice(-5), { id, dx: Math.random() * 70 - 35, rot: Math.random() * 40 - 20 }]);
+    heartTimers.current.push(window.setTimeout(() => setHearts((h) => h.filter((x) => x.id !== id)), 1000));
+
+    if (streak < PET_SETTINGS.tapsForJoke) {
+      fx.pet(streak);
+      return;
+    }
+    lastPet.current = null;
+    const dark = Math.random() < PET_SETTINGS.darkChance;
+    const text = tell(dark ? t.petDarkJokes : t.petJokes);
+    if (dark) fx.ominous();
+    else fx.giggle();
+    setJoke({ id, text, dark });
+    clearTimeout(jokeTimer.current);
+    jokeTimer.current = window.setTimeout(() => setJoke(null), jokeDurationMs(text));
+  }
+
+  const mood: Mood = joke?.dark ? 'unhinged' : petting || joke ? 'bliss' : 'happy';
+
+  return (
+    <div class="pet-zone">
+      {joke && (
+        <p key={joke.id} class={`speech${joke.dark ? ' dark' : ''}`} role="status">
+          {joke.text}
+        </p>
+      )}
+      <button class="tuna-pet bob" onClick={pet} aria-label={t.petTuna}>
+        <Tuna mood={mood} size={130} />
+        {hearts.map((h) => (
+          <span key={h.id} class="pet-heart" style={{ '--dx': `${h.dx}px`, '--rot': `${h.rot}deg` }}>
+            <Heart size={18} filled />
+          </span>
+        ))}
+        <Haptic />
+      </button>
+    </div>
   );
 }
