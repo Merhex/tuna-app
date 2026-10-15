@@ -1,7 +1,8 @@
 /**
- * Sunken Treasure: money not spent on vaping since the start date. Calculated from the start date and
+ * Sunken Treasure: money not spent on vaping since the quit date. Calculated from the quit date and
  * the weekly amount(s), never added up step by step, so it's always exact, keeps counting while the
- * app is closed, and never resets.
+ * app is closed, and never resets. The quit date itself lives outside the treasure (D44), so the
+ * milestones and the seabed work without the money part.
  */
 import type { Lang } from './cards';
 
@@ -9,15 +10,13 @@ export type Currency = 'CZK' | 'EUR' | 'USD';
 export const CURRENCIES: Currency[] = ['CZK', 'EUR', 'USD'];
 
 export interface Rate {
-  /** When this weekly amount took effect (ISO time). The first rate counts from the start date. */
+  /** When this weekly amount took effect (ISO time). The first rate counts from the quit date. */
   from: string;
   /** Weekly amount, in the treasure's currency. */
   perWeek: number;
 }
 
 export interface Treasure {
-  /** Local calendar day counting starts on (YYYY-MM-DD), from its midnight. */
-  startDate: string;
   rates: Rate[];
 }
 
@@ -33,14 +32,15 @@ export function todayKey(now = new Date()): string {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 }
 
-export function startTime(t: Treasure): number {
-  const [y, m, d] = t.startDate.split('-').map(Number);
+/** Local midnight at the start of the quit date (YYYY-MM-DD), when counting starts. */
+export function startTime(quitDate: string): number {
+  const [y, m, d] = quitDate.split('-').map(Number);
   return new Date(y, m - 1, d).getTime();
 }
 
 /** Total saved at `now`. Each weekly amount applies from when it was set until the next one. */
-export function savedAt(t: Treasure, now = Date.now()): number {
-  const start = startTime(t);
+export function savedAt(t: Treasure, quitDate: string, now = Date.now()): number {
+  const start = startTime(quitDate);
   let total = 0;
   t.rates.forEach((rate, i) => {
     const from = i === 0 ? start : Math.max(start, Date.parse(rate.from));
@@ -64,8 +64,8 @@ export function withWeeklyAmount(t: Treasure, perWeek: number, now = new Date())
   return { ...t, rates: [...t.rates, { from: now.toISOString(), perWeek }] };
 }
 
-export function newTreasure(perWeek: number, startDate: string, now = new Date()): Treasure {
-  return { startDate, rates: [{ from: now.toISOString(), perWeek }] };
+export function newTreasure(perWeek: number, now = new Date()): Treasure {
+  return { rates: [{ from: now.toISOString(), perWeek }] };
 }
 
 /** Re-express all amounts in another currency (at the rough rates above). */

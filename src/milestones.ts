@@ -43,3 +43,8 @@ export function reachedOn(startDate: string, m: Milestone): Date {
 export function latestMilestoneDay(startDate: string, now = new Date()): number {
   return milestoneProgress(daysSince(startDate, now)).current.day;
 }
+
+/** A quit date that makes sense (YYYY-MM-DD): not in the future, and not decades back by a typing slip. */
+export function isQuitDate(value: string, today: string): boolean {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) && value >= '2000-01-01' && value <= today;
+}

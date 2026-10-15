@@ -1,6 +1,6 @@
 # Milestones
 
-The Sunken Treasure shows a timeline of milestones, counted in whole days from the treasure's start date: the day she quit (decision D41). Each one says what's typical at that point. The text lives in [`src/data/milestones.json`](../src/data/milestones.json), in English and Czech.
+The Sunken Treasure shows a timeline of milestones, counted in whole days from the day she quit (decision D41). She gives that date at the end of the intro (D44), and each milestone leaves a decoration on the home screen's seabed (D43). Each one says what's typical at that point. The text lives in [`src/data/milestones.json`](../src/data/milestones.json), in English and Czech.
 
 ## Rules for the text
 
@@ -45,7 +45,8 @@ The Sunken Treasure shows a timeline of milestones, counted in whole days from t
 
 ## Changing the milestones
 
-- Edit the text freely. Keep each milestone's `id` permanent: a planned feature (bottles from you, unlocked at milestones) will key on it.
+- Edit the text freely. Keep each milestone's `id` permanent: the seabed decorations (D43) key on it, and so will a planned feature (bottles from you, unlocked at milestones).
 - Days are counted in whole calendar days from the start date, which is day 0. A new milestone needs a `day`, a `when` label, a `title` and a `body`, each in `en` and `cs`.
-- `npm test` checks the list starts at day 0, is in order, has unique IDs and has both languages.
+- A new milestone also needs a decoration: a name in `src/seabed.ts`, and art and a spot on the sand in `src/components/Seabed.tsx`.
+- `npm test` checks the list starts at day 0, is in order, has unique IDs, has both languages and has a decoration for every milestone.
 - Czech text should get a native speaker's read, like the cards.

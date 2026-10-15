@@ -5,6 +5,7 @@ import { LangContext } from './i18n';
 import { isStandalone } from './platform';
 import { AppContext } from './state';
 import { loadData, requestPersistence, saveData, type AppData } from './storage';
+import { todayKey } from './treasure';
 import { Home } from './components/Home';
 import { HookFlow } from './components/HookFlow';
 import { Aquarium } from './components/Aquarium';
@@ -42,9 +43,10 @@ export function App() {
       setData(next);
       void saveData(next);
       // Install guide first (in Safari), then the intro. On iPhone the home-screen app has its own
-      // storage, so the intro shows the first time she opens the installed app.
+      // storage, so the intro shows the first time she opens the installed app. If she saw the intro
+      // before it asked for the quit date, she gets just that question, once (D44).
       if (!s.onboardingDone) setScreen('install');
-      else if (!s.introSeen) setScreen('intro');
+      else if (!s.introSeen || !next.quitDate) setScreen('intro');
     });
   }, []);
 
@@ -60,7 +62,7 @@ export function App() {
   const update = (fn: (d: AppData) => AppData) =>
     setData((prev) => {
       const next = fn(prev!);
-      void saveData(next);
+      if (next !== prev) void saveData(next);
       return next;
     });
 
@@ -83,14 +85,21 @@ export function App() {
                 return;
               }
               update((d) => ({ ...d, settings: { ...d.settings, onboardingDone: true } }));
-              go(data.settings.introSeen ? 'home' : 'intro');
+              go(data.settings.introSeen && data.quitDate ? 'home' : 'intro');
             }}
           />
         )}
         {screen === 'intro' && (
           <Intro
-            onDone={() => {
-              update((d) => ({ ...d, settings: { ...d.settings, introSeen: true } }));
+            askQuitDate={!data.quitDate}
+            questionOnly={data.settings.introSeen && !data.quitDate && introReturn === 'home'}
+            onDone={(quitDate) => {
+              // Skipping the question, or the whole intro, counts as quitting today (D44).
+              update((d) => ({
+                ...d,
+                quitDate: d.quitDate ?? quitDate ?? todayKey(),
+                settings: { ...d.settings, introSeen: true },
+              }));
               go(introReturn);
               setIntroReturn('home');
             }}

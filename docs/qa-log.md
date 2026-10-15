@@ -94,3 +94,29 @@ Still open, needs a real iPhone or a person:
 
 - Sounds, vibrations and the real Safari install flow can't be verified in a desktop browser.
 - The Czech text still needs a native speaker's read.
+
+---
+
+# Seabed decorations and the quit date (D43, D44)
+
+Checked in a headless browser at iPhone 13, iPhone SE and iPhone 15 Pro Max sizes, in English and Czech, with data seeded for each case.
+
+## Pass 1: 8/10
+
+- **Data from before D44:** a treasure started 20 days ago loads with that date as the quit date, the money unchanged, and five decorations (quit day to two weeks) that sparkle one after another. After a reload they don't sparkle again.
+- **Intro, brand new:** the question is the last step. "Today" saves today, skipping the whole intro saves today, and "Earlier" shows a date picker that saves the picked day.
+- **Intro seen before D44, no treasure:** only the question shows, once, with no dots.
+- **Moving the date later** in the Treasure keeps all six earned decorations.
+- **Two years in:** all ten decorations, with the coral grown and recoloured (13 months past a year).
+- **Reduced motion:** decorations are just there, no sparkle.
+- **Treasure without money:** the money pitch sits above the milestones, and each milestone shows its decoration (in colour once earned, a pale shape before).
+- No console errors. All unit tests and the production build pass.
+
+Found and fixed: the decorations were a little small on an iPhone 13, and on an iPhone SE the shipwreck, castle and jellyfish reached up into the school text. Small ones are now a bit bigger, and the background pieces smaller and lower. The lantern's glow was a hard-edged disc; it's now a soft glow.
+
+Still open:
+
+- On an iPhone SE the grown coral (after two years) still touches the school text, like the seaweed already does.
+- The sparkle, the date picker and the intro question need a look on a real iPhone.
+- The Czech decoration names and question need a native speaker's read.
+

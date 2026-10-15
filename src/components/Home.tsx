@@ -28,7 +28,7 @@ export function Home({
   const tagline = useMemo(() => pick(t.taglines), [t]);
   const favCount = Object.values(data.collection).filter((c) => c.favourite).length;
   // A milestone reached since she last opened the treasure (D41).
-  const newMilestone = !!data.treasure && latestMilestoneDay(data.treasure.startDate) > data.settings.milestoneSeen;
+  const newMilestone = !!data.quitDate && latestMilestoneDay(data.quitDate) > data.settings.milestoneSeen;
 
   useEffect(() => {
     if (!washedAshore) return;
