@@ -132,13 +132,6 @@ export const fx = {
       [0, 0.25].forEach((s) => tone(ac, { freq: 1047, start: s, dur: 0.4, type: 'sine', gain: 0.16 }));
     });
   },
-  /** One tug on the line while snapping it: a creak that gets higher, plus a bubble. `stage` is 1–3. */
-  strain(stage: number) {
-    cue([[0, 20 + stage * 8]], (ac) => {
-      tone(ac, { freq: 180 + stage * 70, to: 260 + stage * 90, dur: 0.12, type: 'sawtooth', gain: 0.05 });
-      bubble(ac, 0.05, 480 + stage * 90);
-    });
-  },
   /** The line snaps and the tuna swims free: a twang, a happy arpeggio, then a stream of bubbles. */
   celebrate() {
     const arpeggio = [523, 659, 784, 1047, 1319];
