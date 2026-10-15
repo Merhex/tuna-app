@@ -2,7 +2,8 @@ import { useEffect, useState } from 'preact/hooks';
 import { haptic, sound } from '../feedback';
 import { useT } from '../i18n';
 import { isInAppBrowser, isIOS, isIOSNonSafari } from '../platform';
-import { Tuna } from './Tuna';
+import { PlusSquare, ShareIOS } from './Icons';
+import { MiniTuna, Tuna } from './Tuna';
 
 interface InstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -69,7 +70,7 @@ export function InstallGuide({ onContinue }: { onContinue: () => void }) {
             <ol class="ios-steps">
               {t.iosSteps.map((s, i) => (
                 <li key={i}>
-                  <span class="step-icon" aria-hidden="true">{[<ShareIcon />, '➕', '🐟'][i]}</span>
+                  <span class="step-icon" aria-hidden="true">{[<ShareIOS />, <PlusSquare />, <MiniTuna size={30} />][i]}</span>
                   <span>{s}</span>
                 </li>
               ))}
@@ -110,11 +111,3 @@ export function InstallGuide({ onContinue }: { onContinue: () => void }) {
   );
 }
 
-function ShareIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-      <path d="M12 3v12M7 8l5-5 5 5" />
-      <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" />
-    </svg>
-  );
-}

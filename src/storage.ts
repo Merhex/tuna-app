@@ -115,6 +115,13 @@ export function schoolSize(data: AppData): number {
   return data.hooks.filter((h) => h.result === 'passed').length;
 }
 
+/** Average drop in hook strength over hooks rated both before and after; null if none yet. */
+export function averagePullDrop(data: AppData): number | null {
+  const rated = data.hooks.filter((h) => h.before !== undefined && h.after !== undefined);
+  if (!rated.length) return null;
+  return rated.reduce((sum, h) => sum + (h.before! - h.after!), 0) / rated.length;
+}
+
 // ---- Backup and restore (decision D25) ----
 
 export function makeBackup(data: AppData): string {

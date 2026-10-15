@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { CARDS, type Card } from '../cards';
-import { drawCard } from '../draw';
+import { drawCard, FAVOURITES_MIN } from '../draw';
 import { haptic, sound } from '../feedback';
 import { pick, useT } from '../i18n';
 import { useApp } from '../state';
 import type { AppData, HookResult } from '../storage';
 import { CardView, Rating } from './CardView';
+import { Close, FishHook } from './Icons';
 import { Tuna } from './Tuna';
 
 type Step = 'before' | 'drop' | 'card' | 'check' | 'won' | 'notyet' | 'snagged';
@@ -26,6 +27,8 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   const startedAt = useRef(new Date().toISOString());
   const wonTitle = useRef(pick(t.wonTitles));
   const timers = useRef<number[]>([]);
+  // Guards against a double tap on the first screen drawing two cards.
+  const leftBefore = useRef(false);
 
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
   const later = (fn: () => void, ms: number) => timers.current.push(window.setTimeout(fn, ms));
@@ -39,7 +42,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
       cards: CARDS,
       caughtIds: new Set(Object.keys(data.collection)),
       state: data.drawState,
-      favouriteIds: favouriteIds?.size ? favouriteIds : undefined,
+      favouriteIds: favouriteIds && favouriteIds.size >= FAVOURITES_MIN ? favouriteIds : undefined,
     });
     update((d) => ({ ...d, drawState: result.state }));
     setCard(result.card);
@@ -111,7 +114,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
       <header class="topbar">
         {step !== 'won' && (
           <button class="icon-btn" onClick={close} aria-label={t.close}>
-            ✕
+            <Close />
           </button>
         )}
       </header>
@@ -123,13 +126,24 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           <Rating
             value={before}
             onPick={(n) => {
+              if (leftBefore.current) return;
+              leftBefore.current = true;
               haptic.tap();
               sound.tap();
               setBefore(n);
               later(draw, 250);
             }}
           />
-          <button class="link" onClick={draw}>{t.skip}</button>
+          <button
+            class="link"
+            onClick={() => {
+              if (leftBefore.current) return;
+              leftBefore.current = true;
+              draw();
+            }}
+          >
+            {t.skip}
+          </button>
         </section>
       )}
 
@@ -137,7 +151,9 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
         <section class="panel center">
           <div class="line-drop" aria-hidden="true">
             <div class="line" />
-            <div class="hook-swing">🪝</div>
+            <div class="hook-swing">
+              <FishHook size={56} stroke={4.5} />
+            </div>
           </div>
           <p class="biting">{t.biting}</p>
         </section>
@@ -196,6 +212,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
               class="secondary big"
               onClick={() => {
                 haptic.tap();
+                sound.tap();
                 setStep('notyet');
               }}
             >
@@ -222,6 +239,12 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
               <span key={i} style={{ left: `${(i * 37) % 100}%`, animationDelay: `${(i % 7) * 0.18}s` }} />
             ))}
           </div>
+          <div class="snap" aria-hidden="true">
+            <div class="snap-line" />
+            <div class="snap-hook">
+              <FishHook size={44} stroke={4.5} />
+            </div>
+          </div>
           <Tuna mood="smug" size={150} class="bob" />
           <h1 class="won-title">{wonTitle.current}</h1>
           {lastCatch?.isNew && <p class="new-catch">{t.newCatch}</p>}
@@ -229,6 +252,17 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
             {CARDS.find((c) => c.id === completed[completed.length - 1])?.title[data.settings.lang]} ·{' '}
             {t.caughtTimes(lastCatch?.count ?? 1)}
           </p>
+          {before !== undefined && after !== undefined && (
+            <div class="pull-change">
+              <span class="muted small">{t.pullChange}</span>
+              <div class="pull-values">
+                <span class="pull-num" style={{ '--level': before } as Record<string, number>}>{before}</span>
+                <span class="pull-arrow">→</span>
+                <span class="pull-num" style={{ '--level': after } as Record<string, number>}>{after}</span>
+              </div>
+              {after < before && <span class="small">{t.pullLesson}</span>}
+            </div>
+          )}
           <p>{t.joinedSchool}</p>
           <button class="primary big" onClick={onExit}>{t.backToTank}</button>
         </section>

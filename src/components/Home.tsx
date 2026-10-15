@@ -4,7 +4,9 @@ import { haptic, sound } from '../feedback';
 import { pick, useT } from '../i18n';
 import { useApp } from '../state';
 import { schoolSize } from '../storage';
-import { HookIcon, MiniTuna, Tuna } from './Tuna';
+import { FAVOURITES_MIN } from '../draw';
+import { Bowl, FishHook, Gear, Heart } from './Icons';
+import { MiniTuna, Tuna } from './Tuna';
 
 const MAX_SWIMMERS = 36;
 
@@ -55,11 +57,11 @@ export function Home({
 
       <header class="topbar">
         <button class="icon-btn" onClick={() => { sound.tap(); go('aquarium'); }} aria-label={t.aquarium}>
-          <span aria-hidden="true">🐠</span>
+          <Bowl />
           <span class="icon-label">{t.aquarium}</span>
         </button>
         <button class="icon-btn" onClick={() => { sound.tap(); go('settings'); }} aria-label={t.settings}>
-          <span aria-hidden="true">⚙️</span>
+          <Gear />
         </button>
       </header>
 
@@ -81,12 +83,12 @@ export function Home({
             go('hook');
           }}
         >
-          <HookIcon size={56} />
+          <FishHook size={62} stroke={5.5} />
           <span>{t.hookButton}</span>
         </button>
         <p class="school-count">{t.school(school)}</p>
 
-        {favCount >= 3 && (
+        {favCount >= FAVOURITES_MIN && (
           <div class="segmented" role="group" aria-label={t.drawFrom}>
             {(['all', 'favourites'] as const).map((mode) => (
               <button
@@ -97,7 +99,7 @@ export function Home({
                   update((d) => ({ ...d, settings: { ...d.settings, drawFrom: mode } }));
                 }}
               >
-                {mode === 'all' ? t.drawAll : t.drawFavourites}
+                {mode === 'all' ? t.drawAll : <><Heart size={14} filled /> {t.drawFavourites}</>}
               </button>
             ))}
           </div>

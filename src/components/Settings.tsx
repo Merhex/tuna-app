@@ -4,7 +4,8 @@ import { haptic, sound } from '../feedback';
 import { useT } from '../i18n';
 import { isIOS } from '../platform';
 import { useApp } from '../state';
-import { makeBackup, parseBackup, schoolSize, type Settings as S } from '../storage';
+import { Back, Download, Phone, Upload } from './Icons';
+import { averagePullDrop, makeBackup, parseBackup, schoolSize, type Settings as S } from '../storage';
 
 export function Settings({ onClose, showInstall }: { onClose: () => void; showInstall: () => void }) {
   const t = useT();
@@ -50,7 +51,7 @@ export function Settings({ onClose, showInstall }: { onClose: () => void; showIn
   return (
     <main class="screen settings">
       <header class="topbar">
-        <button class="icon-btn" onClick={onClose} aria-label={t.close}>←</button>
+        <button class="icon-btn" onClick={onClose} aria-label={t.close}><Back /></button>
         <h1 class="screen-title">{t.settings}</h1>
         <span class="topbar-spacer" />
       </header>
@@ -58,6 +59,12 @@ export function Settings({ onClose, showInstall }: { onClose: () => void; showIn
       <div class="stats">
         <div><strong>{schoolSize(data)}</strong><span>{t.hooksBeaten}</span></div>
         <div><strong>{Object.keys(data.collection).length}</strong><span>{t.cardsCaught}</span></div>
+        {averagePullDrop(data) !== null && (
+          <div class="stat-wide">
+            <strong>−{averagePullDrop(data)!.toFixed(1)}</strong>
+            <span>{t.avgPullDrop}</span>
+          </div>
+        )}
       </div>
 
       <section class="group">
@@ -92,9 +99,9 @@ export function Settings({ onClose, showInstall }: { onClose: () => void; showIn
       </section>
 
       <section class="group">
-        <button class="secondary full" onClick={backup}>💾 {t.backup}</button>
+        <button class="secondary full" onClick={backup}><Download /> {t.backup}</button>
         <p class="muted small">{t.backupNote}</p>
-        <button class="secondary full" onClick={() => fileInput.current?.click()}>📂 {t.restore}</button>
+        <button class="secondary full" onClick={() => fileInput.current?.click()}><Upload /> {t.restore}</button>
         <input
           ref={fileInput}
           type="file"
@@ -110,7 +117,7 @@ export function Settings({ onClose, showInstall }: { onClose: () => void; showIn
       </section>
 
       <section class="group">
-        <button class="secondary full" onClick={showInstall}>📲 {t.showInstall}</button>
+        <button class="secondary full" onClick={showInstall}><Phone /> {t.showInstall}</button>
       </section>
 
       <section class="group about">

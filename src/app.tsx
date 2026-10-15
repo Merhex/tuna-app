@@ -10,6 +10,7 @@ import { HookFlow } from './components/HookFlow';
 import { Aquarium } from './components/Aquarium';
 import { Settings } from './components/Settings';
 import { InstallGuide } from './components/InstallGuide';
+import { Ocean } from './components/Ocean';
 
 export type Screen = 'install' | 'home' | 'hook' | 'aquarium' | 'settings';
 
@@ -61,9 +62,7 @@ export function App() {
   return (
     <AppContext.Provider value={{ data, update }}>
       <LangContext.Provider value={data.settings.lang}>
-        <div class="ocean" aria-hidden="true">
-          <div class="rays" />
-        </div>
+        <Ocean seabed={screen === 'home'} />
         {screen === 'install' && (
           <InstallGuide
             onContinue={() => {

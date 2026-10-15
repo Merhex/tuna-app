@@ -48,12 +48,3 @@ export function MiniTuna({ size = 28 }: { size?: number }) {
   );
 }
 
-export function HookIcon({ size = 64 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round">
-      <path d="M32 4 V40 A12 12 0 0 1 8 40 V34" />
-      <path d="M8 34 L14 40" />
-      <circle cx="32" cy="4" r="2" fill="currentColor" />
-    </svg>
-  );
-}

@@ -3,6 +3,8 @@ import { CARDS, RARITIES, type Card } from '../cards';
 import { haptic, sound } from '../feedback';
 import { useLang, useT } from '../i18n';
 import { useApp } from '../state';
+import { Back, Heart } from './Icons';
+import { RarityFish } from './RarityFish';
 
 const SORTED = [...CARDS].sort((a, b) => RARITIES.indexOf(b.rarity) - RARITIES.indexOf(a.rarity));
 const BADGE_AT = 5;
@@ -29,7 +31,7 @@ export function Aquarium({ onClose }: { onClose: () => void }) {
   return (
     <main class="screen aquarium">
       <header class="topbar">
-        <button class="icon-btn" onClick={onClose} aria-label={t.close}>←</button>
+        <button class="icon-btn" onClick={onClose} aria-label={t.close}><Back /></button>
         <h1 class="screen-title">{t.aquarium}</h1>
         <span class="topbar-spacer" />
       </header>
@@ -41,7 +43,7 @@ export function Aquarium({ onClose }: { onClose: () => void }) {
 
       <div class="segmented">
         <button aria-pressed={!onlyFavs} onClick={() => setOnlyFavs(false)}>{t.drawAll}</button>
-        <button aria-pressed={onlyFavs} onClick={() => setOnlyFavs(true)}>{t.drawFavourites}</button>
+        <button aria-pressed={onlyFavs} onClick={() => setOnlyFavs(true)}><Heart size={14} filled /> {t.drawFavourites}</button>
       </div>
 
       <div class="tank-grid">
@@ -58,14 +60,17 @@ export function Aquarium({ onClose }: { onClose: () => void }) {
             >
               {entry ? (
                 <>
+                  <RarityFish rarity={card.rarity} size={64} />
                   <span class="tank-title">{card.title[lang]}</span>
                   <span class="tank-meta">
-                    ×{entry.count} {entry.count >= BADGE_AT && '⭐'} {entry.favourite && '♥'}
+                    ×{entry.count}
+                    {entry.count >= BADGE_AT && <span class="star" title="5+">★</span>}
+                    {entry.favourite && <Heart size={12} filled />}
                   </span>
                 </>
               ) : (
                 <>
-                  <span class="tank-silhouette" aria-hidden="true">🐟</span>
+                  <span class="tank-silhouette"><RarityFish rarity={card.rarity} size={64} silhouette /></span>
                   <span class="tank-title">{t.unknownCard}</span>
                 </>
               )}
@@ -81,6 +86,9 @@ export function Aquarium({ onClose }: { onClose: () => void }) {
             <div class="card-top">
               <span class="rarity-label">{t.rarity[open.rarity]}</span>
             </div>
+            <div class="modal-fish">
+              <RarityFish rarity={open.rarity} size={150} silhouette={!data.collection[open.id]} />
+            </div>
             {data.collection[open.id] ? (
               <>
                 <h2 class="card-title">{open.title[lang]}</h2>
@@ -94,7 +102,7 @@ export function Aquarium({ onClose }: { onClose: () => void }) {
                   aria-pressed={data.collection[open.id].favourite}
                   onClick={() => toggleFav(open.id)}
                 >
-                  {data.collection[open.id].favourite ? '♥' : '♡'} {t.favourite}
+                  <Heart size={16} filled={data.collection[open.id].favourite} /> {t.favourite}
                 </button>
               </>
             ) : (

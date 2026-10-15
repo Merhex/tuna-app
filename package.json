@@ -11,6 +11,8 @@
     "icons": "node scripts/make-icons.mjs"
   },
   "dependencies": {
+    "@fontsource/baloo-2": "5.1.0",
+    "@fontsource/nunito": "5.1.0",
     "idb-keyval": "6.2.1",
     "preact": "10.24.3"
   },

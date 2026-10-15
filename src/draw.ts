@@ -9,6 +9,9 @@ export const DRAW_SETTINGS = {
   uncaughtWeight: 3,
 };
 
+/** Favourites mode needs at least this many hearted cards (the toggle only appears from here). */
+export const FAVOURITES_MIN = 3;
+
 export interface DrawState {
   drawsSinceRare: number;
   previousCardId: string | null;
