@@ -4,6 +4,7 @@ import { drawCard, FAVOURITES_MIN } from '../draw';
 import { fx } from '../feedback';
 import { pick, useT } from '../i18n';
 import { useApp } from '../state';
+import { cravingInProgress } from '../updates';
 import type { AppData, HookResult } from '../storage';
 import { CardView, Rating } from './CardView';
 import { Close, FishHook } from './Icons';
@@ -11,6 +12,9 @@ import { Tuna } from './Tuna';
 import { Haptic } from './Haptic';
 
 type Step = 'before' | 'drop' | 'card' | 'check' | 'won' | 'notyet' | 'snagged';
+
+/** How long a new screen ignores taps (see `guard`). */
+const SETTLE_MS = 300;
 
 export function HookFlow({ onExit }: { onExit: () => void }) {
   const t = useT();
@@ -32,6 +36,25 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   const leftBefore = useRef(false);
 
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
+  useEffect(() => {
+    cravingInProgress.current = true;
+    return () => {
+      cravingInProgress.current = false;
+    };
+  }, []);
+
+  // Taps in the first moments of a new screen are ignored. Otherwise a quick double tap on the
+  // previous screen's button lands on whatever is now under the finger, such as a rating she
+  // never chose. (The haptic tick still plays; only the action is skipped.)
+  const stepAt = useRef(performance.now());
+  useEffect(() => {
+    stepAt.current = performance.now();
+  }, [step]);
+  const guard =
+    <A extends unknown[]>(fn: (...args: A) => void) =>
+    (...args: A) => {
+      if (performance.now() - stepAt.current >= SETTLE_MS) fn(...args);
+    };
   const later = (fn: () => void, ms: number) => timers.current.push(window.setTimeout(fn, ms));
 
   function draw() {
@@ -123,21 +146,21 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           <h1>{t.rateBefore}</h1>
           <Rating
             value={before}
-            onPick={(n) => {
+            onPick={guard((n: number) => {
               if (leftBefore.current) return;
               leftBefore.current = true;
               fx.tap();
               setBefore(n);
               later(draw, 250);
-            }}
+            })}
           />
           <button
             class="link"
-            onClick={() => {
+            onClick={guard(() => {
               if (leftBefore.current) return;
               leftBefore.current = true;
               draw();
-            }}
+            })}
           >
             {t.skip}
             <Haptic />
@@ -163,15 +186,15 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           {flipped && (
             <div class="card-actions fade-in">
               {card.timerSeconds && <Countdown key={card.id + drawn.length} seconds={card.timerSeconds} />}
-              <button class="primary big" onClick={completeCard}>{t.doneIt}<Haptic /></button>
+              <button class="primary big" onClick={guard(completeCard)}>{t.doneIt}<Haptic /></button>
               {!thrownBack && (
                 <button
                   class="secondary"
-                  onClick={() => {
+                  onClick={guard(() => {
                     fx.tap();
                     setThrownBack(true);
                     draw();
-                  }}
+                  })}
                 >
                   🎣 {t.throwBack}
                   <Haptic />
@@ -189,29 +212,29 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           <p class="muted">{t.rateAfter}</p>
           <Rating
             value={after}
-            onPick={(n) => {
+            onPick={guard((n: number) => {
               fx.tap();
               setAfter(n);
-            }}
+            })}
           />
           <div class="stack">
             <button
               class="primary big"
-              onClick={() => {
+              onClick={guard(() => {
                 finish('passed');
                 fx.celebrate();
                 setStep('won');
-              }}
+              })}
             >
               {t.yes}
               <Haptic />
             </button>
             <button
               class="secondary big"
-              onClick={() => {
+              onClick={guard(() => {
                 fx.tap();
                 setStep('notyet');
-              }}
+              })}
             >
               {t.notYet}
               <Haptic />
@@ -220,10 +243,10 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           {/* Deliberately small and quiet (decision D31). */}
           <button
             class="quiet-link"
-            onClick={() => {
+            onClick={guard(() => {
               fx.gentle();
               setStep('snagged');
-            }}
+            })}
           >
             {t.snagged}
           </button>
@@ -262,7 +285,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
             </div>
           )}
           <p>{t.joinedSchool}</p>
-          <button class="primary big" onClick={onExit}>{t.backToTank}<Haptic /></button>
+          <button class="primary big" onClick={guard(onExit)}>{t.backToTank}<Haptic /></button>
         </section>
       )}
 
@@ -271,8 +294,8 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           <Tuna mood="cheer" size={110} />
           <h1>{t.notYetTitle}</h1>
           <p class="muted">{t.notYetBody}</p>
-          <button class="primary big" onClick={draw}>{t.drawAnother}<Haptic /></button>
-          <button class="link" onClick={() => { finish('notyet'); onExit(); }}>{t.backToTank}<Haptic /></button>
+          <button class="primary big" onClick={guard(draw)}>{t.drawAnother}<Haptic /></button>
+          <button class="link" onClick={guard(() => { finish('notyet'); onExit(); })}>{t.backToTank}<Haptic /></button>
         </section>
       )}
 

@@ -54,3 +54,43 @@ Known, deliberate or minor:
 - A few emoji remain where they fit the theme (🎣 Throw it back, 🥫 in a joke, 🌊 in the new-cards message).
 - No custom iOS launch screen, so there's a brief blank moment on open.
 - The Czech text should get a once-over from a native speaker.
+
+---
+
+# QA round 2 (branch `qa-pass-2`)
+
+Same method as round 1, plus cases round 1 didn't cover: the installed (home-screen) app, the iPhone 15 Pro Max size, reduced motion, the Android install guide, a full aquarium in Czech, the "new catches" message, fast double taps, and a read through the code for logic bugs.
+
+## Pass 1: 7/10
+
+Looks polished and works without errors. Found by using it critically:
+
+- **Bug: a fast double tap could choose a rating she never picked.** "There's a hook!" sits right where the 1–10 row appears next, so a second tap landed on a number. The same thing could happen with Done it → Yes, and Yes → Back to the tank.
+- **Bug: an app update could reload mid-craving.** Updates apply when she leaves the app, but several cards send her to another app ("text someone…", "send a voice memo"). Coming back would land her on the home screen and lose the craving.
+- **Bug: "Show the home-screen guide" in Settings** still appeared once the app was installed, where it makes no sense. In the browser, its only way out was "Continue in browser", which went to the home screen instead of back to Settings.
+- **Detail: the "New catches washed ashore!" message** pushed the screen down and covered the tuna, and stayed until dismissed.
+- **Detail: the home-screen tagline and "Your school: 9 tuna"** were hard to read when a small swimming tuna passed behind them.
+- **Detail: straight quotes and apostrophes** ("don't", "Your elbows…") instead of typographic ones (don’t, “Your elbows…”), in the cards and the app text.
+- **Detail: the 📉 emoji** after "Your cravings hit 4.2 points weaker" is a red "going down" chart, the opposite of a celebration.
+- **Detail: the trend chart's first value label** (7.8) sat on top of the line.
+- **Robustness:** after a phone call, iPhone can leave web audio "interrupted", and the app only recovered from "suspended", so sounds could stay silent. The "couldn't start" message appeared after 6 seconds, which a slow first load on mobile data can exceed.
+- **Performance:** each row in the Logbook history had its own background blur, which is heavy to scroll on a phone with hundreds of entries.
+
+**Fixed:** a new screen ignores taps for its first 0.3 seconds (the tick still plays, only the action is skipped); updates never apply during a craving; the guide is hidden once installed and returns to Settings with a "Back" button; the message floats over the screen and hides itself after 8 seconds; a soft shadow behind the tagline and school text; typographic quotes and apostrophes throughout; 📉 removed; the chart label moves to the side away from the line; audio recovers from any non-running state; the fallback waits 12 seconds; history rows use a solid background.
+
+## Pass 2: 8/10
+
+All pass 1 fixes verified: double taps no longer choose anything, the guide returns to Settings, the label sits clear of the line. One more find:
+
+- **Detail:** the "NEW" badge on cards stayed in English in Czech.
+
+**Fixed:** “NOVÁ” in Czech.
+
+## Pass 3 (verification): 8.5/10
+
+Everything above re-checked on iPhone 13, iPhone SE and iPhone 15 Pro Max, in English and Czech. No console errors, no horizontal scrolling, card actions fit on the iPhone SE, a real craving records correctly, and all unit tests pass.
+
+Still open, needs a real iPhone or a person:
+
+- Sounds, vibrations and the real Safari install flow can't be verified in a desktop browser.
+- The Czech text still needs a native speaker's read.

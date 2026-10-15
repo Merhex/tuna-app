@@ -1,4 +1,4 @@
-import { useMemo } from 'preact/hooks';
+import { useEffect, useMemo } from 'preact/hooks';
 import type { Screen } from '../app';
 import { fx } from '../feedback';
 import { pick, useT } from '../i18n';
@@ -25,6 +25,12 @@ export function Home({
   const school = schoolSize(data);
   const tagline = useMemo(() => pick(t.taglines), [t]);
   const favCount = Object.values(data.collection).filter((c) => c.favourite).length;
+
+  useEffect(() => {
+    if (!washedAshore) return;
+    const id = setTimeout(dismissWashedAshore, 8000);
+    return () => clearTimeout(id);
+  }, [washedAshore]);
 
   // Stable pseudo-random lanes so the school doesn't jump around between renders.
   const swimmers = useMemo(

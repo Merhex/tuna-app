@@ -61,7 +61,7 @@
         "cs": "Zločin obličejem"
       },
       "task": {
-        "en": "Eat or lick something sour. Lemon, sour candy, pickle juice, whatever's in the fridge. Commit to the face.",
+        "en": "Eat or lick something sour. Lemon, sour candy, pickle juice, whatever’s in the fridge. Commit to the face.",
         "cs": "Sněz nebo olízni něco kyselého. Citron, kyselé bonbony, nálev od okurek, cokoli je v lednici. Ten výraz dotáhni do konce."
       },
       "rarity": "common",
@@ -165,7 +165,7 @@
         "cs": "Načítací obrazovka"
       },
       "task": {
-        "en": "Controller down. 20 squats before the next match. Your character can wait, they aren't real and they don't love you.",
+        "en": "Controller down. 20 squats before the next match. Your character can wait, they aren’t real and they don’t love you.",
         "cs": "Ovladač dolů. 20 dřepů před dalším zápasem. Tvoje postava počká, není skutečná a nemiluje tě."
       },
       "rarity": "common",
@@ -199,7 +199,7 @@
         "cs": "Kousátko"
       },
       "task": {
-        "en": "Give your mouth a job that isn't slowly killing you: gum, a straw, a carrot, a frozen grape. Chew with hostility.",
+        "en": "Give your mouth a job that isn’t slowly killing you: gum, a straw, a carrot, a frozen grape. Chew with hostility.",
         "cs": "Dej puse práci, která tě pomalu nezabíjí: žvýkačka, brčko, mrkev, zmražená kulička hroznového vína. Žvýkej nepřátelsky."
       },
       "rarity": "common",
@@ -234,7 +234,7 @@
         "cs": "Přepadení komplimentem"
       },
       "task": {
-        "en": "Text someone a weirdly specific compliment. \"Your elbows have always seemed trustworthy.\" Leave it there.",
+        "en": "Text someone a weirdly specific compliment. “Your elbows have always seemed trustworthy.” Leave it there.",
         "cs": "Napiš někomu podivně konkrétní kompliment. „Tvoje lokty vždycky vypadaly důvěryhodně.“ A nech to být."
       },
       "rarity": "common",
@@ -286,7 +286,7 @@
         "cs": "Mátová zášť"
       },
       "task": {
-        "en": "Brush your teeth like you're scrubbing evidence off them. Minty mouth, clean slate, smug smile.",
+        "en": "Brush your teeth like you’re scrubbing evidence off them. Minty mouth, clean slate, smug smile.",
         "cs": "Vyčisti si zuby, jako bys z nich drhla důkazy. Mátová pusa, čistý štít, samolibý úsměv."
       },
       "rarity": "common",
@@ -303,7 +303,7 @@
         "cs": "Draft na apokalypsu"
       },
       "task": {
-        "en": "Pick three objects within reach and rank them by how useful they'd be in the apocalypse. Defend the last-place pick's honour.",
+        "en": "Pick three objects within reach and rank them by how useful they’d be in the apocalypse. Defend the last-place pick’s honour.",
         "cs": "Vyber tři věci na dosah a seřaď je podle toho, jak užitečné by byly při apokalypse. Obhaj čest té poslední."
       },
       "rarity": "common",
@@ -320,7 +320,7 @@
         "cs": "Monolog padoucha"
       },
       "task": {
-        "en": "Deliver a 30-second villain monologue at the craving. It thinks it's the villain. Show it what a real one looks like.",
+        "en": "Deliver a 30-second villain monologue at the craving. It thinks it’s the villain. Show it what a real one looks like.",
         "cs": "Přednes chuti 30sekundový monolog padoucha. Myslí si, že padouch je ona. Ukaž jí, jak vypadá skutečný."
       },
       "rarity": "common",
@@ -339,7 +339,7 @@
         "cs": "Po prkně"
       },
       "task": {
-        "en": "Walk to another room or out the door for two minutes. The craving can follow you, but it's slow and out of shape.",
+        "en": "Walk to another room or out the door for two minutes. The craving can follow you, but it’s slow and out of shape.",
         "cs": "Na dvě minuty odejdi do jiné místnosti nebo ven ze dveří. Chuť tě může sledovat, ale je pomalá a bez kondice."
       },
       "rarity": "common",
@@ -374,7 +374,7 @@
         "cs": "Kapela hrála dál"
       },
       "task": {
-        "en": "One song. Dance like the ship is going down and you've made peace with it.",
+        "en": "One song. Dance like the ship is going down and you’ve made peace with it.",
         "cs": "Jedna písnička. Tancuj, jako by se loď potápěla a ty ses s tím už smířila."
       },
       "rarity": "uncommon",
@@ -460,7 +460,7 @@
         "cs": "Místo činu"
       },
       "task": {
-        "en": "Describe the room you're in like a detective who just arrived. Who died? What's the murder weapon? Why is there a sock there?",
+        "en": "Describe the room you’re in like a detective who just arrived. Who died? What’s the murder weapon? Why is there a sock there?",
         "cs": "Popiš místnost, ve které jsi, jako detektiv, který právě dorazil. Kdo zemřel? Co je vražedná zbraň? Proč tam leží ponožka?"
       },
       "rarity": "uncommon",
@@ -478,7 +478,7 @@
         "cs": "Parte"
       },
       "task": {
-        "en": "Pick a random object in the room and write its three-line obituary. Cause of death: you. In lieu of flowers: don't.",
+        "en": "Pick a random object in the room and write its three-line obituary. Cause of death: you. In lieu of flowers: don’t.",
         "cs": "Vyber náhodnou věc v místnosti a napiš jí parte na tři řádky. Příčina smrti: ty. Místo květin: nic."
       },
       "rarity": "uncommon",
@@ -531,7 +531,7 @@
         "cs": "Jen špatné odpovědi"
       },
       "task": {
-        "en": "Text someone a normal question (\"what should I eat?\") and demand wrong answers only. Screenshot the worst one.",
+        "en": "Text someone a normal question (“what should I eat?”) and demand wrong answers only. Screenshot the worst one.",
         "cs": "Napiš někomu normální otázku („co mám jíst?“) a chtěj jen špatné odpovědi. Tu nejhorší si screenshotni."
       },
       "rarity": "uncommon",
@@ -548,7 +548,7 @@
         "cs": "Pohřeb na moři"
       },
       "task": {
-        "en": "This craving is dying. Stand up and give it a 60-second eulogy. Mention its flaws. Someone in the back is sobbing. It's not you.",
+        "en": "This craving is dying. Stand up and give it a 60-second eulogy. Mention its flaws. Someone in the back is sobbing. It’s not you.",
         "cs": "Tahle chuť umírá. Postav se a prones nad ní 60sekundovou smuteční řeč. Zmiň její chyby. Někdo vzadu vzlyká. Ty to nejsi."
       },
       "rarity": "rare",
@@ -618,7 +618,7 @@
         "cs": "Námořnická píseň zášti"
       },
       "task": {
-        "en": "Make up and sing a four-line sea shanty about the hook that tried to catch you and failed. Record it. Send it to someone who didn't ask.",
+        "en": "Make up and sing a four-line sea shanty about the hook that tried to catch you and failed. Record it. Send it to someone who didn’t ask.",
         "cs": "Vymysli a zazpívej čtyřveršovou námořnickou píseň o háčku, který tě chtěl chytit a nepovedlo se mu to. Nahraj ji. Pošli ji někomu, kdo o ni nežádal."
       },
       "rarity": "rare",
@@ -689,7 +689,7 @@
         "cs": "Tuňákový sprint"
       },
       "task": {
-        "en": "Bluefin hit 70 km/h. Your turn. Five minutes outside, as fast as you can walk without it being a crime. The craving can't keep up. Nothing can.",
+        "en": "Bluefin hit 70 km/h. Your turn. Five minutes outside, as fast as you can walk without it being a crime. The craving can’t keep up. Nothing can.",
         "cs": "Tuňák obecný zvládne 70 km/h. Teď ty. Pět minut venku, tak rychle, jak se dá jít, aniž by to byl trestný čin. Chuť nestíhá. Nic nestíhá."
       },
       "rarity": "legendary",

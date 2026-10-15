@@ -19,7 +19,7 @@ export function CardView({ card, flipped, isNew }: { card: Card; flipped: boolea
           {card.rarity === 'legendary' && flipped && <div class="burst" aria-hidden="true" />}
           <div class="card-top">
             <span class="rarity-label">{t.rarity[card.rarity]}</span>
-            {isNew && <span class="new-pill">NEW</span>}
+            {isNew && <span class="new-pill">{t.newBadge}</span>}
           </div>
           <h2 class="card-title">{card.title[lang]}</h2>
           <p class="card-task">{card.task[lang]}</p>

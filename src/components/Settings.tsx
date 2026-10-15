@@ -6,6 +6,7 @@ import { isIOS } from '../platform';
 import { useApp } from '../state';
 import { Back, Download, FishHook, Phone, Upload } from './Icons';
 import { Haptic } from './Haptic';
+import { isStandalone } from '../platform';
 import { makeBackup, parseBackup, type Settings as S } from '../storage';
 
 export function Settings({
@@ -116,7 +117,10 @@ export function Settings({
 
       <section class="group">
         <button class="secondary full" onClick={showIntro}><FishHook size={20} stroke={4} /> {t.howItWorks}<Haptic /></button>
-        <button class="secondary full" onClick={showInstall}><Phone /> {t.showInstall}<Haptic /></button>
+        {/* Already on the home screen: nothing to install. */}
+        {!isStandalone() && (
+          <button class="secondary full" onClick={showInstall}><Phone /> {t.showInstall}<Haptic /></button>
+        )}
       </section>
 
       <section class="group about">

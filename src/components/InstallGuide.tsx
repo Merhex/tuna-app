@@ -25,7 +25,7 @@ export function captureInstallPrompt() {
 
 const isAndroid = () => /Android/i.test(navigator.userAgent);
 
-export function InstallGuide({ onContinue }: { onContinue: () => void }) {
+export function InstallGuide({ onContinue, fromSettings = false }: { onContinue: () => void; fromSettings?: boolean }) {
   const t = useT();
   const [, force] = useState(0);
   const [copied, setCopied] = useState(false);
@@ -104,10 +104,19 @@ export function InstallGuide({ onContinue }: { onContinue: () => void }) {
           </div>
         )}
 
-        <button class="quiet-link" onClick={onContinue}>
-          {t.continueBrowser}
-        </button>
-        <p class="muted small">{t.continueWarn}</p>
+        {fromSettings ? (
+          <button class="secondary" onClick={onContinue}>
+            {t.back}
+            <Haptic />
+          </button>
+        ) : (
+          <>
+            <button class="quiet-link" onClick={onContinue}>
+              {t.continueBrowser}
+            </button>
+            <p class="muted small">{t.continueWarn}</p>
+          </>
+        )}
       </section>
     </main>
   );

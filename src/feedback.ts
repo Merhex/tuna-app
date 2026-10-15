@@ -25,7 +25,7 @@ function audio(): AudioContext | null {
       const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       ctx = new AC();
     }
-    if (ctx.state === 'suspended') void ctx.resume();
+    if (ctx.state !== 'running') void ctx.resume();
     return ctx;
   } catch {
     return null;

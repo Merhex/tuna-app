@@ -9,13 +9,13 @@ const csPlural = (n: number, one: string, few: string, many: string) =>
 type Slide = { title: string; body: string; terms?: { word: string; meaning: string }[] };
 
 const en = {
-  hookButton: "There's a hook!",
+  hookButton: "There’s a hook!",
   school: (n: number) => (n === 0 ? 'Beat a hook and your first tuna joins your school.' : `Your school: ${n} tuna`),
   taglines: [
     'Keep swimming.',
-    "Don't end up in a can. 🥫",
+    "Don’t end up in a can. 🥫",
     'The cannery called. We hung up.',
-    "You're o-fish-ally tougher than this.",
+    "You’re o-fish-ally tougher than this.",
     'Sea you on the other side of this craving.',
     'Hooks are just bait with commitment issues.',
     'No tin for you. Not today, not ever.',
@@ -31,10 +31,10 @@ const en = {
   intro: [
     {
       title: 'Cravings pass. Always.',
-      body: "A craving usually peaks and fades within a few minutes. This app gives you something to do until it's gone. That's the whole idea.",
+      body: "A craving usually peaks and fades within a few minutes. This app gives you something to do until it’s gone. That’s the whole idea.",
     },
     {
-      title: "What's a hook?",
+      title: "What’s a hook?",
       body: 'In here, everything happens underwater. You are the tuna.',
       terms: [
         { word: 'A hook', meaning: 'A craving.' },
@@ -44,7 +44,7 @@ const en = {
     },
     {
       title: 'Side quests',
-      body: "When a hook shows up, tap “There's a hook!” and draw a card. Each one is a silly, physical or calming quest to keep you busy. The rarer the fish, the better the card.",
+      body: "When a hook shows up, tap “There’s a hook!” and draw a card. Each one is a silly, physical or calming quest to keep you busy. The rarer the fish, the better the card.",
     },
     {
       title: 'Your school and your aquarium',
@@ -52,7 +52,7 @@ const en = {
     },
   ] as Slide[],
   next: 'Next',
-  introStart: "Let's swim!",
+  introStart: "Let’s swim!",
   howItWorks: 'How it works',
 
   logbook: 'Logbook',
@@ -64,9 +64,9 @@ const en = {
   dumbbellEmpty: 'Rate a hook at the start and at the end, and it shows up here.',
   trendTitle: 'Craving strength over time',
   trendSub: 'How strong hooks were when they hit, averaged per day (last 30 days).',
-  trendDown: (x: string) => `Your cravings hit ${x} points weaker than when you started. 📉`,
+  trendDown: (x: string) => `Your cravings hit ${x} points weaker than when you started.`,
   trendFlat: 'Cravings come in waves. Keep logging and the trend will show.',
-  trendEmpty: "The trend line appears once you've rated hooks on two different days.",
+  trendEmpty: "The trend line appears once you’ve rated hooks on two different days.",
   hookCount: (n: number) => (n === 1 ? '1 hook' : `${n} hooks`),
   history: 'History',
   today: 'Today',
@@ -82,8 +82,9 @@ const en = {
   rateLow: 'barely',
   rateHigh: 'brutal',
   skip: 'Skip',
-  biting: "Something's biting…",
+  biting: "Something’s biting…",
   newCatch: 'NEW CATCH!',
+  newBadge: 'NEW',
   rarity: { common: 'Sardine', uncommon: 'Mackerel', rare: 'Swordfish', legendary: 'Golden Bluefin' } as Record<Rarity, string>,
   category: {
     physical: 'Physical',
@@ -106,7 +107,7 @@ const en = {
   pullLesson: 'See? Hooks always lose their pull.',
   caughtTimes: (n: number) => `caught ×${n}`,
   backToTank: 'Back to the tank',
-  notYetTitle: "That's fine. Hooks get tired before you do.",
+  notYetTitle: "That’s fine. Hooks get tired before you do.",
   notYetBody: 'Draw another card and keep it busy.',
   drawAnother: 'Draw another card',
   snaggedTitle: 'Even the best tuna get snagged.',
@@ -133,13 +134,13 @@ const en = {
   restore: 'Restore from backup',
   restoreConfirm: 'This replaces everything in the app with the backup. Continue?',
   restored: 'Aquarium restored.',
-  restoreFailed: "That file isn't an Off the Hook backup.",
+  restoreFailed: "That file isn’t an Off the Hook backup.",
   showInstall: 'Show the home-screen guide',
   about: 'About',
   aboutBody:
     'Off the Hook is a distraction tool, not medical advice. If you want more support with quitting, the Czech national quitline is free: 800 350 000. Nicotine replacement is worth talking about with a pharmacist or doctor.',
 
-  installTitle: "Let's get you a tank on your home screen",
+  installTitle: "Let’s get you a tank on your home screen",
   installWhy:
     'Added to your home screen, the app opens full screen, works offline, and your aquarium is safe from Safari clearing its data.',
   iosSteps: [
@@ -150,12 +151,13 @@ const en = {
   iosOtherBrowser: 'Tip: this works most reliably in Safari.',
   androidInstall: 'Add to home screen',
   androidManual: 'Open the browser menu (⋮) and choose “Install app” or “Add to home screen”.',
-  inAppTitle: "This browser can't install apps",
+  inAppTitle: "This browser can’t install apps",
   inAppBody: 'Copy the link and open it in Safari (or Chrome on Android).',
   copyLink: 'Copy link',
   copied: 'Copied!',
-  desktopNote: "Looks like you're on a computer. The app is made for phones, but you can try it here.",
+  desktopNote: "Looks like you’re on a computer. The app is made for phones, but you can try it here.",
   continueBrowser: 'Continue in browser',
+  back: 'Back',
   continueWarn: 'Your collection could get lost if the browser clears its data.',
 };
 
@@ -220,7 +222,7 @@ const cs: Strings = {
   dumbbellEmpty: 'Ohodnoť háček na začátku i na konci a objeví se tady.',
   trendTitle: 'Síla chutí v čase',
   trendSub: 'Jak silné byly háčky, když přišly, průměr za den (posledních 30 dní).',
-  trendDown: (x) => `Tvoje chutě přicházejí o ${x} bodu slabší než na začátku. 📉`,
+  trendDown: (x) => `Tvoje chutě přicházejí o ${x} bodu slabší než na začátku.`,
   trendFlat: 'Chutě přicházejí ve vlnách. Zapisuj dál a trend se ukáže.',
   trendEmpty: 'Čára trendu se objeví, až ohodnotíš háčky aspoň ve dvou různých dnech.',
   hookCount: (n) => `${n} ${csPlural(n, 'háček', 'háčky', 'háčků')}`,
@@ -240,6 +242,7 @@ const cs: Strings = {
   skip: 'Přeskočit',
   biting: 'Něco bere…',
   newCatch: 'NOVÝ ÚLOVEK!',
+  newBadge: 'NOVÁ',
   rarity: { common: 'Sardinka', uncommon: 'Makrela', rare: 'Mečoun', legendary: 'Zlatý tuňák' },
   category: {
     physical: 'Pohyb',
@@ -312,6 +315,7 @@ const cs: Strings = {
   copied: 'Zkopírováno!',
   desktopNote: 'Vypadá to, že jsi na počítači. Appka je dělaná pro telefon, ale vyzkoušet ji můžeš i tady.',
   continueBrowser: 'Pokračovat v prohlížeči',
+  back: 'Zpět',
   continueWarn: 'Pokud prohlížeč smaže data, můžeš přijít o sbírku.',
 };
 

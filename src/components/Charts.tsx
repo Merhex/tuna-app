@@ -142,6 +142,12 @@ export function TrendChart({ points }: { points: DayPoint[] }) {
     points.reduce((best, p, i) => (Math.abs(x(p) - px) < Math.abs(x(points[best]) - px) ? i : best), 0);
   const day = (p: DayPoint) => p.date.toLocaleDateString(lang, { weekday: 'short', day: 'numeric', month: 'short' });
   const current = points[sel];
+  // Put an end label on the side of its dot away from the neighbouring point, so it never sits on the line.
+  const labelY = (p: DayPoint, neighbour: DayPoint) => {
+    const y = yScale(p.avgBefore);
+    const below = neighbour.avgBefore > p.avgBefore;
+    return below && y + 20 < yScale(1) ? y + 20 : y - 10;
+  };
   const first = points[0];
   const last = points[points.length - 1];
 
@@ -168,8 +174,8 @@ export function TrendChart({ points }: { points: DayPoint[] }) {
           {points.map((p) => (
             <circle key={p.day} cx={x(p)} cy={yScale(p.avgBefore)} r="4" fill={START} stroke={CHART_SURFACE} stroke-width="2" />
           ))}
-          <text x={x(first)} y={yScale(first.avgBefore) - 10} text-anchor="start" class="value-text">{fmt(lang, first.avgBefore)}</text>
-          <text x={x(last)} y={yScale(last.avgBefore) - 10} text-anchor="end" class="value-text">{fmt(lang, last.avgBefore)}</text>
+          <text x={x(first)} y={labelY(first, points[1])} text-anchor="start" class="value-text">{fmt(lang, first.avgBefore)}</text>
+          <text x={x(last)} y={labelY(last, points[points.length - 2])} text-anchor="end" class="value-text">{fmt(lang, last.avgBefore)}</text>
           <text x={M.l} y={H - 6} class="axis-text">{first.date.toLocaleDateString(lang, { day: 'numeric', month: 'short' })}</text>
           <text x={width - M.r} y={H - 6} text-anchor="end" class="axis-text">{last.date.toLocaleDateString(lang, { day: 'numeric', month: 'short' })}</text>
         </svg>

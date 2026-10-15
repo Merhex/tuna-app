@@ -22,6 +22,8 @@ export function App() {
   const [washedAshore, setWashedAshore] = useState(false);
   // Where to go after the intro: home on first launch, back to Settings when reopened from there.
   const [introReturn, setIntroReturn] = useState<Screen>('home');
+  // The home-screen guide can also be reopened from Settings; then it returns there.
+  const [installFromSettings, setInstallFromSettings] = useState(false);
 
   useEffect(() => {
     loadData().then((loaded) => {
@@ -72,7 +74,13 @@ export function App() {
         <Ocean seabed={screen === 'home'} />
         {screen === 'install' && (
           <InstallGuide
+            fromSettings={installFromSettings}
             onContinue={() => {
+              if (installFromSettings) {
+                setInstallFromSettings(false);
+                go('settings');
+                return;
+              }
               update((d) => ({ ...d, settings: { ...d.settings, onboardingDone: true } }));
               go(data.settings.introSeen ? 'home' : 'intro');
             }}
@@ -96,7 +104,10 @@ export function App() {
         {screen === 'settings' && (
           <Settings
             onClose={() => go('home')}
-            showInstall={() => go('install')}
+            showInstall={() => {
+              setInstallFromSettings(true);
+              go('install');
+            }}
             showIntro={() => {
               setIntroReturn('settings');
               go('intro');
