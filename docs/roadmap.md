@@ -24,7 +24,7 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 | 5 | **Messages in a bottle.** Her own reasons, written on good days, shown during hard ones. | Medium | Small | Phase 2. |
 | 6 | **Tuna facts as rewards** on the win screen. | Low | Small | Phase 2. |
 | 7 | **Dodge the hooks** mini-game. | Medium | Large | Phase 2. Visual distraction like Tetris measurably weakens cravings, but it's the biggest build here. |
-| 8 | **Tank decorations** unlocked by achievements (all sardines caught, 50 hooks beaten). | Low | Medium to large | A reason to keep opening the app once the collection fills up. Mostly artwork. |
+| 8 | **Seabed decorations.** A decoration on the home screen's seabed at every milestone, sparkling the first time she sees it. After a year the coral keeps growing and changes colour every month. | Low | Medium to large | Decided: D43. Needs the quit date asked in the intro (D44). Mostly artwork. |
 | 9 | **Navigation charts.** If-then plans (“If I'm at a party, then I'll…”). | Medium | Medium | Phase 3. Sits awkwardly with D29 (no trigger features); decide that first. |
 | 10 | **Bait insights.** When hooks hit and when slips happen, from times and bait notes. | Medium | Medium | Phase 3. Conflicts with D29 as it stands: needs a decision before building. |
 

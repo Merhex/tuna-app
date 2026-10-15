@@ -2,7 +2,7 @@
 
 Every product and technical decision, numbered. Code comments refer to these numbers.
 
-**Last number used: D42.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
+**Last number used: D44.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
 
 Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an answer), **Superseded**.
 
@@ -55,12 +55,14 @@ Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an
 - **D33 · Sounds and vibrations, on by default, both switchable.** Decided. On iPhone, vibrations only happen on a real tap.
 - **D34 · A short intro after the install guide.** Decided.
 - **D36 · Vibration rhythms match the sounds; no extra taps.** Decided. Tap-to-flip and a four-tap “snap the line” were tried and reverted.
+- **D44 · Ask for the quit date in the intro.** Decided, not built. See below.
 
 ## Progress screens
 
 - **D35 · Logbook: see cravings get weaker.** Decided. Before/after chart, per-day trend, day-by-day history.
 - **D38 · Sunken Treasure: money not spent, live.** Decided. Optional; weekly amount, currency and start date; ticks live and never resets. *Deliberately no savings goal, now or later:* a goal is closed. Once it's reached there's a finish line, and a finish line can become the excuse to start vaping again. The counter is open-ended instead: it keeps growing, so the effort keeps showing, with nothing to “finish”. No “I bought one” subtraction either.
 - **D41 · Milestones in the Sunken Treasure.** Decided, built. See below.
+- **D43 · Seabed decorations at milestones.** Decided, not built. See below.
 
 ## Technical
 
@@ -120,7 +122,7 @@ Below the money counter, a timeline of milestones counted from the treasure’s 
 
 - **Never resets** (D11). It’s worded “days since you quit”, never “days clean”, so a slip doesn’t make it untrue.
 - **Typical, not promises.** Hedged wording, a footnote saying everyone’s different, and a source for every claim in [milestones.md](milestones.md). No vape imagery (D30).
-- **Lives in the treasure** because the start date already does. Trade-off: no milestones without setting up the treasure. The empty treasure screen mentions them.
+- **Lives in the treasure** because the start date already does. Trade-off: no milestones without setting up the treasure. The empty treasure screen mentions them. *Superseded by D44 (not built yet):* the intro will ask for the quit date, so milestones won't need the money counter.
 - **Milestone IDs are permanent,** so phase 3’s bottles can unlock at them.
 
 *Why:* knowing that day 3 is usually the peak and that most withdrawal fades within a month makes a hard day feel like a stage, not a failure.
@@ -132,3 +134,46 @@ Below the money counter, a timeline of milestones counted from the treasure’s 
 **Decided.**
 
 Roadmap, decisions, milestone sources and QA notes live in `docs/` as Markdown. The deploy only publishes `dist/`, so none of it ships in the app. The repository is public, so these files are written about the app only, with no personal or health details about her. That context stays in the private decision record.
+
+## D43 · Seabed decorations at milestones
+
+**Decided, not built.**
+
+Every milestone (D41) adds a decoration to the seabed at the bottom of the home screen. For now the milestones are the only achievements.
+
+| Day | Milestone | Decoration |
+| ---: | --- | --- |
+| 0 | Cast Off | A small anchor |
+| 1 | First Tide | A shell |
+| 3 | Top of the Wave | A bright starfish. Day 3 is usually the hardest, so it gets the brightest one. |
+| 7 | Open Water | A coral branch |
+| 14 | Finding the Current | An anemone that sways like the seaweed |
+| 30 | Deep Water | A pearl in a clam |
+| 60 | Calmer Waters | A glowing jellyfish |
+| 90 | Rewired | A lantern |
+| 182 | Ocean Crosser | A small shipwreck, in the background |
+| 365 | Legend of the Deep | A sunken castle, in the background |
+
+- **In the background, nothing to tap.** They sit on the seabed that's already there (the `Ocean` component), behind the school. The middle of the screen stays one big button (D4).
+- **A sparkle the first time.** A new decoration sparkles once, the first time she sees it on the home screen. No popup, so it never gets in the way of a craving. With reduced motion on, it just appears.
+- **Never taken away.** A decoration stays once it's earned, even if the quit date is moved later (D11). So earned decorations are stored, not worked out from the date each time. Moving the date earlier can earn several at once; each one sparkles.
+- **No finish line** (D38). After a year the coral keeps growing and shifts colour a little every month, with no last colour.
+- **The Treasure shows them too.** Each milestone in the timeline shows the decoration it earns.
+- **Bottles** (phase 3, Q3) could wash up on the same seabed.
+
+*Why:* something new to see on day 0, 1, 3, 7 and 14, the hardest stretch, and a reason to keep opening the app once the card collection is full.
+
+*Needs:* a quit date without setting up the money counter. See D44.
+
+## D44 · Ask for the quit date in the intro
+
+**Decided, not built.** Supersedes D41's trade-off (no milestones without setting up the treasure).
+
+The intro ends with one question: “When did you quit?” That date drives the milestones, the decorations (D43) and the treasure's money counter. The money part stays optional.
+
+- **Today** is the big, one-tap answer. **Earlier** opens a date picker (no future dates, like the treasure's picker).
+- **Skipping counts as today,** whether she skips the question or the whole intro. If she quit earlier, she can change the date in the Treasure; moving it earlier only adds decorations.
+- **One date for everything.** The treasure's start date becomes the quit date. Changing it never takes a decoration away (D43).
+- **Phones that already passed the intro** (it shows once, D34): if the treasure is set up, its start date is the quit date and nothing is asked. If not, the question shows once on the next launch.
+
+*Why:* decorations and milestones shouldn't depend on setting up the money counter, and one question at the start is easier than finding the Treasure.
