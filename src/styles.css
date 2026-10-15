@@ -31,9 +31,10 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* No double-tap zoom anywhere (pinch zoom still works). Set on every element, not just
-   html, because iPhone Safari starts afresh inside each scrolling area. */
-* { box-sizing: border-box; touch-action: manipulation; }
+/* No zooming, by double tap or pinch: the layout already fits every screen. Scrolling still works.
+   Set on every element, not just html, because iPhone Safari starts afresh inside each scrolling
+   area. main.tsx backs this up for iPhone. */
+* { box-sizing: border-box; touch-action: pan-x pan-y; }
 
 html, body {
   margin: 0;
