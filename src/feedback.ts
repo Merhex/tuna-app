@@ -160,6 +160,29 @@ export const fx = {
       tone(ac, { freq: 523, start: 0.2, dur: 0.6, gain: 0.07 });
     });
   },
+  /** Petting the tuna: a soft blub that climbs a little with every tap in a row. */
+  pet(streak: number) {
+    cue([[0, 8]], (ac) => {
+      const base = 380 + Math.min(streak, 6) * 45;
+      tone(ac, { freq: base, to: base * 1.6, dur: 0.12, gain: 0.1 });
+      tone(ac, { freq: 90, dur: 0.18, type: 'triangle', gain: 0.06 });
+    });
+  },
+  /** The tuna tells a joke: a giggle of quick bubbles. */
+  giggle() {
+    const at = [0, 0.08, 0.16, 0.24, 0.32];
+    cue(at.map((s): Beat => [s * 1000, 10]), (ac) => at.forEach((s, i) => bubble(ac, s, 600 + (i % 2) * 180 + i * 40)));
+  },
+  /** ...or a joke it really shouldn't have: dun, dun, DUNNN. */
+  ominous() {
+    cue([[0, 120], [300, 120], [650, 400]], (ac) => {
+      tone(ac, { freq: 98, dur: 0.25, type: 'sawtooth', gain: 0.06 });
+      tone(ac, { freq: 92.5, start: 0.3, dur: 0.25, type: 'sawtooth', gain: 0.06 });
+      tone(ac, { freq: 87.3, start: 0.65, dur: 1.3, type: 'sawtooth', gain: 0.06 });
+      tone(ac, { freq: 123.5, start: 0.65, dur: 1.3, type: 'sawtooth', gain: 0.045 });
+      tone(ac, { freq: 43.7, start: 0.65, dur: 1.5, gain: 0.14 });
+    });
+  },
 };
 
 // ---------- Vibration ----------
