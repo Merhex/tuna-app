@@ -2,6 +2,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { countOf, describeComparison, pickComparisons } from '../comparisons';
 import { fx } from '../feedback';
 import { useLang, useT } from '../i18n';
+import { daysSince, MILESTONES, milestoneProgress, reachedOn } from '../milestones';
 import { useApp } from '../state';
 import {
   CURRENCIES,
@@ -62,9 +63,78 @@ export function Treasure({ onClose }: { onClose: () => void }) {
           </section>
         )
       ) : (
-        <Counter />
+        <>
+          <Counter />
+          <Milestones />
+        </>
       )}
     </main>
+  );
+}
+
+/** What to expect, counted from the start date (D41). Kept out of Counter, which re-renders 10 times a second. */
+function Milestones() {
+  const t = useT();
+  const lang = useLang();
+  const { data, update } = useApp();
+  const startDate = data.treasure!.startDate;
+  const [now, setNow] = useState(() => new Date());
+  // Milestones reached since she last looked get a NEW pill for this visit.
+  const [seenBefore] = useState(data.settings.milestoneSeen);
+
+  // The day only changes at midnight; checking once a minute is plenty.
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  const days = daysSince(startDate, now);
+  const { current, next } = milestoneProgress(days);
+
+  useEffect(() => {
+    if (data.settings.milestoneSeen !== current.day) {
+      update((d) => ({ ...d, settings: { ...d.settings, milestoneSeen: current.day } }));
+    }
+  }, [current.day]);
+
+  const locale = lang === 'cs' ? 'cs-CZ' : 'en-GB';
+
+  return (
+    <section class="milestones">
+      <h2>{t.milestonesTitle}</h2>
+      <p class="days-count">
+        <strong>{days}</strong> <span>{t.daysSinceQuit(days)}</span>
+      </p>
+      <ol class="milestone-list">
+        {MILESTONES.map((m) => {
+          const state = m === current ? 'current' : m.day < days ? 'done' : m === next ? 'next' : 'future';
+          const isNew = m.day > seenBefore && m.day <= days && m.day > 0;
+          return (
+            <li key={m.id} class={`milestone ${state}`}>
+              <details open={state === 'current' || state === 'next'}>
+                <summary>
+                  <span class="milestone-dot" aria-hidden="true" />
+                  <span class="milestone-head">
+                    <span class="milestone-when">{m.when[lang]}</span>
+                    <span class="milestone-title">{m.title[lang]}</span>
+                  </span>
+                  <span class="milestone-tag">
+                    {isNew && <span class="new-pill">{t.milestoneNew}</span>}
+                    {state === 'current' && !isNew && t.youAreHere}
+                    {state === 'next' && t.inDays(m.day - days)}
+                    {state === 'done' &&
+                      !isNew &&
+                      reachedOn(startDate, m).toLocaleDateString(locale, { day: 'numeric', month: 'short' })}
+                  </span>
+                </summary>
+                <p>{m.body[lang]}</p>
+              </details>
+            </li>
+          );
+        })}
+      </ol>
+      <p class="muted small">{t.milestonesNote}</p>
+    </section>
   );
 }
 

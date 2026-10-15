@@ -1,5 +1,5 @@
 {
-  "deckVersion": 1,
+  "deckVersion": 2,
   "cards": [
     {
       "id": "weak-hand-cat",
@@ -707,6 +707,197 @@
       ],
       "timerSeconds": 30,
       "addedIn": 1
+    },
+    {
+      "id": "clam-press",
+      "title": {
+        "en": "Clam Up",
+        "cs": "Zavřená škeble"
+      },
+      "task": {
+        "en": "Press your palms together as hard as you can for 10 seconds, then let go. Three rounds. You are a clam. Nothing gets in.",
+        "cs": "Stiskni dlaně k sobě, co nejsilněji to jde, na 10 sekund, a pak povol. Tři kola. Jsi škeble. Nic se dovnitř nedostane."
+      },
+      "rarity": "common",
+      "category": "physical",
+      "where": [
+        "anywhere"
+      ],
+      "timerSeconds": 30,
+      "addedIn": 2
+    },
+    {
+      "id": "nose-sommelier",
+      "title": {
+        "en": "Nose Sommelier",
+        "cs": "Čichový someliér"
+      },
+      "task": {
+        "en": "Find the strongest smell within reach: coffee, soap, your sleeve, someone’s lunch. Sniff it slowly and describe its notes like it costs a fortune.",
+        "cs": "Najdi nejsilnější vůni v dosahu: kafe, mýdlo, vlastní rukáv, cizí svačinu. Pomalu přičichni a popiš její tóny, jako by stála majlant."
+      },
+      "rarity": "common",
+      "category": "sensory",
+      "where": [
+        "anywhere"
+      ],
+      "addedIn": 2
+    },
+    {
+      "id": "tongue-twister",
+      "title": {
+        "en": "Tongue Tied",
+        "cs": "Jazykolam"
+      },
+      "task": {
+        "en": "Say “six slippery sardines slid slowly southward” five times fast. In your head if you’re on a bus. Out loud if you’re brave.",
+        "cs": "Řekni pětkrát rychle „strč prst skrz krk“. V duchu, jestli sedíš v tramvaji. Nahlas, jestli jsi odvážná."
+      },
+      "rarity": "common",
+      "category": "ridiculous",
+      "where": [
+        "anywhere"
+      ],
+      "addedIn": 2
+    },
+    {
+      "id": "toe-piano",
+      "title": {
+        "en": "Toe Piano",
+        "cs": "Klavír v botách"
+      },
+      "task": {
+        "en": "Play a 30-second piano concerto with your toes, inside your shoes or socks. Ten keys, one masterpiece, zero audience. Bow internally.",
+        "cs": "Zahraj prsty u nohou třicetivteřinový klavírní koncert, v botách nebo v ponožkách. Deset kláves, jedno mistrovské dílo, nula diváků. V duchu se ukloň."
+      },
+      "rarity": "uncommon",
+      "category": "physical",
+      "where": [
+        "anywhere"
+      ],
+      "timerSeconds": 30,
+      "addedIn": 2
+    },
+    {
+      "id": "cold-sip",
+      "title": {
+        "en": "Freshwater Upgrade",
+        "cs": "Sladkovodní upgrade"
+      },
+      "task": {
+        "en": "Drink something cold in ten slow sips. Feel each one all the way down. Tuna drink seawater all day. You got the upgrade.",
+        "cs": "Vypij něco studeného na deset pomalých doušků. Vnímej každý až dolů. Tuňáci celý den pijou mořskou vodu. Ty máš upgrade."
+      },
+      "rarity": "uncommon",
+      "category": "sensory",
+      "where": [
+        "anywhere"
+      ],
+      "addedIn": 2
+    },
+    {
+      "id": "alphabet-aquarium",
+      "title": {
+        "en": "Alphabet Aquarium",
+        "cs": "Abecední akvárium"
+      },
+      "task": {
+        "en": "Name a sea creature for every letter, A to Z, in 45 seconds. Stuck on X? Everyone is. Invent one and describe it with confidence.",
+        "cs": "Vyjmenuj mořského tvora na každé písmeno abecedy, od A do Z, za 45 sekund. Zasekla ses na X? To každý. Vymysli si ho a popiš ho sebevědomě."
+      },
+      "rarity": "uncommon",
+      "category": "grounding",
+      "where": [
+        "anywhere"
+      ],
+      "timerSeconds": 45,
+      "addedIn": 2
+    },
+    {
+      "id": "pearl-diver",
+      "title": {
+        "en": "Pearl Diver",
+        "cs": "Lovkyně perel"
+      },
+      "task": {
+        "en": "Dive for three pearls: type three tiny good things from today into your notes. Rules: one must be food, and one must be extremely stupid.",
+        "cs": "Vylov tři perly: napiš si do poznámek tři drobné dobré věci z dneška. Pravidla: jedna musí být jídlo a jedna musí být extrémně hloupá."
+      },
+      "rarity": "uncommon",
+      "category": "grounding",
+      "where": [
+        "anywhere"
+      ],
+      "addedIn": 2
+    },
+    {
+      "id": "undercover-tuna",
+      "title": {
+        "en": "Undercover Tuna",
+        "cs": "Tuňák v utajení"
+      },
+      "task": {
+        "en": "Pick someone nearby (or the last person in your camera roll). Notice three details, then silently build their secret life: name, job, and what’s really in that bag.",
+        "cs": "Vyber si někoho poblíž (nebo poslední osobu ve fotkách). Všimni si tří detailů a v duchu mu vymysli tajný život: jméno, práci a co má doopravdy v té tašce."
+      },
+      "rarity": "rare",
+      "category": "grounding",
+      "where": [
+        "anywhere"
+      ],
+      "addedIn": 2
+    },
+    {
+      "id": "emoji-hieroglyphs",
+      "title": {
+        "en": "Hieroglyphs",
+        "cs": "Hieroglyfy"
+      },
+      "task": {
+        "en": "Text someone your entire life story in exactly five emoji. Let them guess. Confirm nothing. Deny nothing. Swim away.",
+        "cs": "Pošli někomu celý svůj životní příběh v přesně pěti emoji. Ať hádá. Nic nepotvrzuj. Nic nevyvracej. Odplav."
+      },
+      "rarity": "rare",
+      "category": "social",
+      "where": [
+        "anywhere"
+      ],
+      "addedIn": 2
+    },
+    {
+      "id": "haiku-of-spite",
+      "title": {
+        "en": "Haiku of Spite",
+        "cs": "Haiku pomsty"
+      },
+      "task": {
+        "en": "Write the craving a haiku in your notes: 5, 7, 5 syllables. It should leave the craving feeling personally attacked. Read it back. Admire.",
+        "cs": "Napiš téhle chuti do poznámek haiku: 5, 7, 5 slabik. Má se po něm cítit osobně napadená. Přečti si ho. Obdivuj."
+      },
+      "rarity": "rare",
+      "category": "ridiculous",
+      "where": [
+        "anywhere"
+      ],
+      "addedIn": 2
+    },
+    {
+      "id": "end-credits",
+      "title": {
+        "en": "End Credits",
+        "cs": "Závěrečné titulky"
+      },
+      "task": {
+        "en": "45 seconds: walk like the hero in the final scene of a film. Slow, unbothered, wind in your fins. Behind you, the craving explodes. Don’t look back.",
+        "cs": "45 sekund: kráčej jako hrdinka v závěrečné scéně filmu. Pomalu, nad věcí, vítr v ploutvích. Za tebou vybuchne chuť. Neohlížej se."
+      },
+      "rarity": "legendary",
+      "category": "physical",
+      "where": [
+        "anywhere"
+      ],
+      "timerSeconds": 45,
+      "addedIn": 2
     }
   ]
 }

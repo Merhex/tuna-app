@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { CARDS, type Card } from '../cards';
+import { CARDS, fitsPlace, PLACES, type Card } from '../cards';
 import { drawCard, FAVOURITES_MIN } from '../draw';
 import { fx } from '../feedback';
 import { pick, useT } from '../i18n';
@@ -7,7 +7,7 @@ import { useApp } from '../state';
 import { cravingInProgress } from '../updates';
 import type { AppData, HookResult } from '../storage';
 import { CardView, Rating } from './CardView';
-import { Close, FishHook } from './Icons';
+import { Close, FishHook, House, Pin } from './Icons';
 import { Tuna } from './Tuna';
 import { Haptic } from './Haptic';
 
@@ -58,12 +58,15 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   const later = (fn: () => void, ms: number) => timers.current.push(window.setTimeout(fn, ms));
 
   function draw() {
+    // Only cards she can do where she is (D39). Favourites mode needs enough hearted cards that fit here,
+    // otherwise it would keep dealing the same one or two.
+    const pool = CARDS.filter((c) => fitsPlace(c, data.settings.place));
     const favouriteIds =
       data.settings.drawFrom === 'favourites'
-        ? new Set(Object.entries(data.collection).filter(([, c]) => c.favourite).map(([id]) => id))
+        ? new Set(pool.filter((c) => data.collection[c.id]?.favourite).map((c) => c.id))
         : undefined;
     const result = drawCard({
-      cards: CARDS,
+      cards: pool,
       caughtIds: new Set(Object.keys(data.collection)),
       state: data.drawState,
       favouriteIds: favouriteIds && favouriteIds.size >= FAVOURITES_MIN ? favouriteIds : undefined,
@@ -143,6 +146,22 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
       {step === 'before' && (
         <section class="panel center">
           <Tuna mood="cheer" size={110} />
+          <div class="segmented place-toggle" role="group" aria-label={t.placeLabel}>
+            {PLACES.map((p) => (
+              <button
+                key={p}
+                aria-pressed={data.settings.place === p}
+                onClick={guard(() => {
+                  fx.tap();
+                  update((d) => ({ ...d, settings: { ...d.settings, place: p } }));
+                })}
+              >
+                {p === 'home' ? <House size={17} /> : <Pin size={17} />}
+                {p === 'home' ? t.placeHome : t.placeOut}
+                <Haptic />
+              </button>
+            ))}
+          </div>
           <h1>{t.rateBefore}</h1>
           <Rating
             value={before}
