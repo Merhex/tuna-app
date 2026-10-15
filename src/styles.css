@@ -31,7 +31,10 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-* { box-sizing: border-box; }
+/* No zooming, by double tap or pinch: the layout already fits every screen. Scrolling still works.
+   Set on every element, not just html, because iPhone Safari starts afresh inside each scrolling
+   area. main.tsx backs this up for iPhone. */
+* { box-sizing: border-box; touch-action: pan-x pan-y; }
 
 html, body {
   margin: 0;
@@ -55,7 +58,6 @@ button {
   border: none;
   background: none;
   cursor: pointer;
-  touch-action: manipulation;
 }
 button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
@@ -262,6 +264,76 @@ p { margin: 0; }
 @keyframes bob {
   0%, 100% { transform: translateY(0) rotate(-2deg); }
   50% { transform: translateY(-8px) rotate(2deg); }
+}
+
+/* Petting the tuna (Easter egg, see PettableTuna in Home.tsx). */
+.pet-zone { position: relative; z-index: 2; }
+.tuna-pet { display: block; position: relative; padding: 4px 12px; border-radius: 40px; }
+.tuna-pet .tuna { display: block; }
+.tuna-pet:active .tuna { scale: 0.94 1.04; transition: scale 0.08s ease; }
+.pet-heart {
+  position: absolute;
+  left: calc(50% - 9px);
+  top: 18px;
+  color: var(--coral);
+  pointer-events: none;
+  animation: heartUp 0.9s ease-out forwards;
+}
+.pet-heart svg { display: block; }
+@keyframes heartUp {
+  from { transform: translate(calc(var(--dx) * 0.4), 0) scale(0.6); opacity: 1; }
+  to { transform: translate(var(--dx), -64px) scale(1.15) rotate(var(--rot)); opacity: 0; }
+}
+/* The tuna talks in place of the tagline, so nothing on the screen moves. */
+.home-center:has(.speech) .tagline { opacity: 0; }
+.tagline { transition: opacity 0.2s ease; }
+.speech {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  translate: -50% 0;
+  width: min(340px, calc(100vw - 32px));
+  margin: 0;
+  padding: 11px 15px;
+  border-radius: 18px;
+  background: #f4fafd;
+  color: var(--ink-dark);
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  text-align: left;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  transform-origin: calc(50% - 46px) 0;
+  animation: speechIn 0.3s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+/* The tail points up at the tuna's mouth, on the left. */
+.speech::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: calc(50% - 56px);
+  border: 10px solid transparent;
+  border-bottom-color: #f4fafd;
+  border-top: 0;
+}
+.speech.dark {
+  background: #2a0d12;
+  color: #ffd6cc;
+  box-shadow: 0 0 0 2px var(--coral-strong), 0 10px 32px rgba(242, 85, 47, 0.45);
+  animation: speechIn 0.3s cubic-bezier(0.2, 1.4, 0.4, 1), shudder 0.45s 0.3s linear;
+}
+.speech.dark::after { border-bottom-color: #2a0d12; }
+@media (max-height: 600px) {
+  .speech { font-size: 0.88rem; padding: 9px 13px; }
+}
+@keyframes speechIn { from { scale: 0.3; opacity: 0; } }
+@keyframes shudder {
+  0%, 100% { rotate: 0deg; }
+  20% { rotate: -1.5deg; }
+  40% { rotate: 1.5deg; }
+  60% { rotate: -1deg; }
+  80% { rotate: 1deg; }
 }
 
 /* ---------- Rating ---------- */

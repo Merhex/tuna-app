@@ -25,6 +25,10 @@ All cards are in [`src/data/cards.json`](src/data/cards.json). Each card has an 
 
 Rarity chances, the guaranteed-rare counter and the weighting toward uncaught cards are in [`src/draw.ts`](src/draw.ts) (`DRAW_SETTINGS`).
 
+## The petting Easter egg
+
+Tap the tuna on the home screen and it closes its eyes. Tap it five times fast and it tells a joke, and 1 in 10 of those comes from the dark list. The jokes are `petJokes` and `petDarkJokes` in [`src/i18n.ts`](src/i18n.ts) (English and Czech). Timing and odds are `PET_SETTINGS` in [`src/pet.ts`](src/pet.ts).
+
 ## Development
 
 ```sh

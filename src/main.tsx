@@ -8,6 +8,14 @@ import './styles.css';
 
 captureInstallPrompt();
 
+// No pinch zoom: the layout already fits every screen, and a stray pinch could leave the app stuck
+// zoomed in. The CSS (touch-action) and the viewport tag stop it in most browsers; iPhone Safari can
+// still zoom past them, so cancel its pinch gestures and any two-finger move here too.
+const noZoom = (e: Event) => e.preventDefault();
+document.addEventListener('gesturestart', noZoom);
+document.addEventListener('gesturechange', noZoom);
+document.addEventListener('touchmove', (e) => e.touches.length > 1 && e.preventDefault(), { passive: false });
+
 // Re-render in the next task instead of a microtask. On iPhone, a button's haptic comes from the
 // invisible switch inside it (components/Haptic.tsx), and Safari plays it when it finishes handling
 // the tap. Rendering right away would remove the button (and its switch) mid-tap when the screen
