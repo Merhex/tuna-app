@@ -44,7 +44,7 @@ const en = {
     },
     {
       title: 'Side quests',
-      body: "When a hook shows up, tap “There’s a hook!” and draw a card. Each one is a silly, physical or calming quest to keep you busy. The rarer the fish, the better the card.",
+      body: "When a hook shows up, tap “There’s a hook!” and draw a card. Each one is a quick quest, under a minute: silly, physical or calming. The rarer the fish, the better the card.",
     },
     {
       title: 'Your school and your aquarium',
@@ -202,7 +202,7 @@ const cs: Strings = {
     },
     {
       title: 'Vedlejší úkoly',
-      body: 'Když se objeví háček, klepni na „Je tu háček!“ a vytáhni kartu. Každá je praštěný, pohybový nebo uklidňující úkol, který tě zaměstná. Čím vzácnější ryba, tím lepší karta.',
+      body: 'Když se objeví háček, klepni na „Je tu háček!“ a vytáhni kartu. Každá je rychlý úkol na méně než minutu: praštěný, pohybový nebo uklidňující. Čím vzácnější ryba, tím lepší karta.',
     },
     {
       title: 'Tvoje hejno a akvárium',

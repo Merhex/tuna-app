@@ -73,3 +73,17 @@ describe('drawCard', () => {
     }
   });
 });
+
+describe('card length', () => {
+  // Cards are quick routine breakers: everything must be doable in under a minute.
+  it('keeps every timer at 60 seconds or less', () => {
+    for (const c of CARDS) expect(c.timerSeconds ?? 0, c.id).toBeLessThanOrEqual(60);
+  });
+  it('never asks for minutes, a whole song or a long walk', () => {
+    const tooLong = /\b(minutes?|full song|one song|around the block)\b|minut|celou (jednu )?písničku|obejdi blok/i;
+    for (const c of CARDS) {
+      expect(c.task.en, c.id).not.toMatch(tooLong);
+      expect(c.task.cs, c.id).not.toMatch(tooLong);
+    }
+  });
+});

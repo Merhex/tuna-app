@@ -305,11 +305,13 @@ p { margin: 0; }
 .biting { font-family: var(--display); font-size: 1.2rem; color: var(--muted); animation: fadeIn 0.6s ease; }
 
 /* ---------- Cards ---------- */
-.card-3d { width: min(86vw, 340px); height: clamp(280px, 48dvh, 440px); perspective: 1200px; }
+/* The card grows to fit its text (both faces share one grid cell), so long tasks are never cut off. */
+.card-3d { width: min(86vw, 340px); perspective: 1200px; }
 .card-inner {
   position: relative;
+  display: grid;
   width: 100%;
-  height: 100%;
+  min-height: clamp(260px, 44dvh, 440px);
   transform-style: preserve-3d;
   transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1.1);
   animation: cardIn 0.35s ease-out;
@@ -317,8 +319,8 @@ p { margin: 0; }
 .flipped .card-inner { transform: rotateY(180deg); }
 @keyframes cardIn { from { transform: translateY(40px) scale(0.9); opacity: 0; } }
 .card-back, .card-3d .card-face {
-  position: absolute;
-  inset: 0;
+  grid-area: 1 / 1;
+  position: relative;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   border-radius: 22px;
@@ -622,12 +624,16 @@ textarea {
 .calm *, .calm *::before, .calm *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 .calm .swimmer { animation: none; left: var(--x); }
 .card-face .muted { color: #4d6274; }
-.card-task { overflow-y: auto; min-height: 0; }
 @media (max-height: 700px) {
   .card-title { font-size: 1.35rem; }
   .card-task { font-size: 0.98rem; }
   .card-face { padding: 18px 16px; gap: 10px; }
+  .card-inner { min-height: 230px; }
+  .card-bottom .rarity-fish { width: 96px; height: 48px; }
+  .ring { width: 52px; height: 52px; }
+  .card-actions { gap: 10px; }
 }
+.countdown .secondary { white-space: nowrap; }
 
 /* ---------- Background bubbles and seabed ---------- */
 .bg-bubbles { position: absolute; inset: 0; }
@@ -897,4 +903,11 @@ button:has(> .haptic-switch) { position: relative; }
   z-index: 3;
   touch-action: pan-x pan-y; /* scrolling that starts on a button still scrolls */
   -webkit-tap-highlight-color: transparent;
+}
+/* iPhone SE and similar: keep a full card with timer and both buttons on one screen. */
+@media (max-height: 600px) {
+  .step-card .panel { gap: 10px; }
+  .step-card .card-actions { gap: 8px; }
+  .step-card .big { min-height: 52px; }
+  .step-card .card-face { gap: 8px; }
 }

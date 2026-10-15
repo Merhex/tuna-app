@@ -26,14 +26,15 @@
         "cs": "Studenokrevná"
       },
       "task": {
-        "en": "Hold an ice cube until it melts or your hand files a complaint. Bluefin are warm-blooded. You are now neither.",
-        "cs": "Drž kostku ledu, dokud neroztaje nebo dokud ti ruka nepodá stížnost. Tuňák obecný je teplokrevný. Ty teď nejsi ani jedno."
+        "en": "Hold an ice cube for 30 seconds, or until your hand files a complaint. Bluefin are warm-blooded. You are now neither.",
+        "cs": "Drž kostku ledu 30 sekund, nebo dokud ti ruka nepodá stížnost. Tuňák obecný je teplokrevný. Ty teď nejsi ani jedno."
       },
       "rarity": "common",
       "category": "sensory",
       "where": [
         "home"
       ],
+      "timerSeconds": 30,
       "addedIn": 1
     },
     {
@@ -112,14 +113,15 @@
         "cs": "Drž linii"
       },
       "task": {
-        "en": "Wall sit for one full song. Choose wisely: you will suffer for its entire runtime, and Bohemian Rhapsody is six minutes.",
-        "cs": "Sed u zdi po celou jednu písničku. Vybírej moudře: budeš trpět celou její délku a Bohemian Rhapsody má šest minut."
+        "en": "Wall sit for 45 seconds. Put on a song for moral support. You won’t make it to the end of the song. That’s fine.",
+        "cs": "Sed u zdi na 45 sekund. Pusť si k tomu písničku pro morální podporu. Do konce písničky to nevydržíš. To nevadí."
       },
       "rarity": "common",
       "category": "physical",
       "where": [
         "home"
       ],
+      "timerSeconds": 45,
       "addedIn": 1
     },
     {
@@ -129,8 +131,8 @@
         "cs": "Planeta Země: Obývák"
       },
       "task": {
-        "en": "Narrate the next 60 seconds of your life out loud like a nature documentary. The narrator suspects the subject will not survive the winter.",
-        "cs": "Příštích 60 sekund svého života komentuj nahlas jako přírodopisný dokument. Vypravěč tuší, že tenhle exemplář zimu nepřežije."
+        "en": "Narrate the next 45 seconds of your life out loud like a nature documentary. The narrator suspects the subject will not survive the winter.",
+        "cs": "Příštích 45 sekund svého života komentuj nahlas jako přírodopisný dokument. Vypravěč tuší, že tenhle exemplář zimu nepřežije."
       },
       "rarity": "common",
       "category": "ridiculous",
@@ -138,7 +140,7 @@
         "home",
         "quiet"
       ],
-      "timerSeconds": 60,
+      "timerSeconds": 45,
       "addedIn": 1
     },
     {
@@ -216,15 +218,15 @@
         "cs": "Vyjednávání s únosci"
       },
       "task": {
-        "en": "The craving has taken you hostage. Stay calm. In for 4, hold for 4, out for 6. Five rounds. Do not make sudden moves.",
-        "cs": "Chuť tě vzala jako rukojmí. Zachovej klid. Nádech na 4, zadržet na 4, výdech na 6. Pět kol. Žádné prudké pohyby."
+        "en": "The craving has taken you hostage. Stay calm. In for 4, hold for 4, out for 6. Four rounds. Do not make sudden moves.",
+        "cs": "Chuť tě vzala jako rukojmí. Zachovej klid. Nádech na 4, zadržet na 4, výdech na 6. Čtyři kola. Žádné prudké pohyby."
       },
       "rarity": "common",
       "category": "grounding",
       "where": [
         "anywhere"
       ],
-      "timerSeconds": 70,
+      "timerSeconds": 56,
       "addedIn": 1
     },
     {
@@ -286,14 +288,15 @@
         "cs": "Mátová zášť"
       },
       "task": {
-        "en": "Brush your teeth like you’re scrubbing evidence off them. Minty mouth, clean slate, smug smile.",
-        "cs": "Vyčisti si zuby, jako bys z nich drhla důkazy. Mátová pusa, čistý štít, samolibý úsměv."
+        "en": "A 30-second speed brush, like you’re scrubbing evidence off your teeth. Minty mouth, clean slate, smug smile.",
+        "cs": "Třicetisekundové rychločištění zubů, jako bys z nich drhla důkazy. Mátová pusa, čistý štít, samolibý úsměv."
       },
       "rarity": "common",
       "category": "sensory",
       "where": [
         "home"
       ],
+      "timerSeconds": 30,
       "addedIn": 1
     },
     {
@@ -339,15 +342,15 @@
         "cs": "Po prkně"
       },
       "task": {
-        "en": "Walk to another room or out the door for two minutes. The craving can follow you, but it’s slow and out of shape.",
-        "cs": "Na dvě minuty odejdi do jiné místnosti nebo ven ze dveří. Chuť tě může sledovat, ale je pomalá a bez kondice."
+        "en": "Walk to another room or out the door for 45 seconds. The craving can follow you, but it’s slow and out of shape.",
+        "cs": "Na 45 sekund odejdi do jiné místnosti nebo ven ze dveří. Chuť tě může sledovat, ale je pomalá a bez kondice."
       },
       "rarity": "common",
       "category": "physical",
       "where": [
         "anywhere"
       ],
-      "timerSeconds": 120,
+      "timerSeconds": 45,
       "addedIn": 1
     },
     {
@@ -357,8 +360,8 @@
         "cs": "Poslední vůle"
       },
       "task": {
-        "en": "This craving has a few minutes to live. Write its last will. Who inherits its terrible personality? Its debts? Its dramatic final words?",
-        "cs": "Tahle chuť má pár minut života. Sepiš její poslední vůli. Kdo zdědí její příšernou povahu? Její dluhy? Její dramatická poslední slova?"
+        "en": "This craving has seconds to live. Write its last will in three lines: who inherits its terrible personality, its debts, and its dramatic final words.",
+        "cs": "Tahle chuť má jen pár vteřin života. Sepiš její poslední vůli na tři řádky: kdo zdědí její příšernou povahu, její dluhy a její dramatická poslední slova."
       },
       "rarity": "uncommon",
       "category": "ridiculous",
@@ -374,14 +377,15 @@
         "cs": "Kapela hrála dál"
       },
       "task": {
-        "en": "One song. Dance like the ship is going down and you’ve made peace with it.",
-        "cs": "Jedna písnička. Tancuj, jako by se loď potápěla a ty ses s tím už smířila."
+        "en": "45 seconds. Dance like the ship is going down and you’ve made peace with it.",
+        "cs": "45 sekund. Tancuj, jako by se loď potápěla a ty ses s tím už smířila."
       },
       "rarity": "uncommon",
       "category": "physical",
       "where": [
         "home"
       ],
+      "timerSeconds": 45,
       "addedIn": 1
     },
     {
@@ -468,7 +472,7 @@
       "where": [
         "anywhere"
       ],
-      "timerSeconds": 60,
+      "timerSeconds": 45,
       "addedIn": 1
     },
     {
@@ -513,15 +517,15 @@
         "cs": "Speedrun úklidu (Any%)"
       },
       "task": {
-        "en": "Pick one surface. Clear it in two minutes. World record pace. No glitches.",
-        "cs": "Vyber jeden povrch. Ukliď ho za dvě minuty. Tempo na světový rekord. Žádné glitche."
+        "en": "Pick one surface. Clear it in 45 seconds. World record pace. No glitches.",
+        "cs": "Vyber jeden povrch. Ukliď ho za 45 sekund. Tempo na světový rekord. Žádné glitche."
       },
       "rarity": "uncommon",
       "category": "physical",
       "where": [
         "home"
       ],
-      "timerSeconds": 120,
+      "timerSeconds": 45,
       "addedIn": 1
     },
     {
@@ -531,8 +535,8 @@
         "cs": "Jen špatné odpovědi"
       },
       "task": {
-        "en": "Text someone a normal question (“what should I eat?”) and demand wrong answers only. Screenshot the worst one.",
-        "cs": "Napiš někomu normální otázku („co mám jíst?“) a chtěj jen špatné odpovědi. Tu nejhorší si screenshotni."
+        "en": "Text someone a normal question (“what should I eat?”) and demand wrong answers only. Check the damage later.",
+        "cs": "Napiš někomu normální otázku („co mám jíst?“) a chtěj jen špatné odpovědi. Škody zkontroluj později."
       },
       "rarity": "uncommon",
       "category": "social",
@@ -548,15 +552,15 @@
         "cs": "Pohřeb na moři"
       },
       "task": {
-        "en": "This craving is dying. Stand up and give it a 60-second eulogy. Mention its flaws. Someone in the back is sobbing. It’s not you.",
-        "cs": "Tahle chuť umírá. Postav se a prones nad ní 60sekundovou smuteční řeč. Zmiň její chyby. Někdo vzadu vzlyká. Ty to nejsi."
+        "en": "This craving is dying. Stand up and give it a 45-second eulogy. Mention its flaws. Someone in the back is sobbing. It’s not you.",
+        "cs": "Tahle chuť umírá. Postav se a prones nad ní 45sekundovou smuteční řeč. Zmiň její chyby. Někdo vzadu vzlyká. Ty to nejsi."
       },
       "rarity": "rare",
       "category": "ridiculous",
       "where": [
         "home"
       ],
-      "timerSeconds": 60,
+      "timerSeconds": 45,
       "addedIn": 1
     },
     {
@@ -566,15 +570,15 @@
         "cs": "Vylovená"
       },
       "task": {
-        "en": "Lie on the floor like a freshly landed tuna for 60 seconds. Flop occasionally. Stare at the ceiling. This is your life now.",
-        "cs": "Lehni si na 60 sekund na zem jako čerstvě vylovený tuňák. Občas se zaplácej. Zírej do stropu. Tohle je teď tvůj život."
+        "en": "Lie on the floor like a freshly landed tuna for 45 seconds. Flop occasionally. Stare at the ceiling. This is your life now.",
+        "cs": "Lehni si na 45 sekund na zem jako čerstvě vylovený tuňák. Občas se zaplácej. Zírej do stropu. Tohle je teď tvůj život."
       },
       "rarity": "rare",
       "category": "physical",
       "where": [
         "home"
       ],
-      "timerSeconds": 60,
+      "timerSeconds": 45,
       "addedIn": 1
     },
     {
@@ -584,14 +588,15 @@
         "cs": "Tuňácký tribunál"
       },
       "task": {
-        "en": "Put the craving on trial. Prosecution, defence (make it terrible), verdict, sentence. Execution method is up to the court.",
-        "cs": "Postav chuť před soud. Obžaloba, obhajoba (ať je hrozná), verdikt, trest. Způsob popravy je na soudu."
+        "en": "Put the craving on trial in 45 seconds flat. Prosecution, defence (make it terrible), verdict, sentence. Execution method is up to the court.",
+        "cs": "Postav chuť před soud, na všechno máš 45 sekund. Obžaloba, obhajoba (ať je hrozná), verdikt, trest. Způsob popravy je na soudu."
       },
       "rarity": "rare",
       "category": "ridiculous",
       "where": [
         "anywhere"
       ],
+      "timerSeconds": 45,
       "addedIn": 1
     },
     {
@@ -618,8 +623,8 @@
         "cs": "Námořnická píseň zášti"
       },
       "task": {
-        "en": "Make up and sing a four-line sea shanty about the hook that tried to catch you and failed. Record it. Send it to someone who didn’t ask.",
-        "cs": "Vymysli a zazpívej čtyřveršovou námořnickou píseň o háčku, který tě chtěl chytit a nepovedlo se mu to. Nahraj ji. Pošli ji někomu, kdo o ni nežádal."
+        "en": "Make up a two-line sea shanty about the hook that tried to catch you and failed. Sing it into a voice memo. Send it to someone who didn’t ask.",
+        "cs": "Vymysli dvouveršovou námořnickou píseň o háčku, který tě chtěl chytit a nepovedlo se mu to. Nazpívej ji do hlasovky. Pošli ji někomu, kdo o ni nežádal."
       },
       "rarity": "rare",
       "category": "social",
@@ -636,14 +641,15 @@
         "cs": "Období migrace"
       },
       "task": {
-        "en": "Shoes on. Walk around the block. Bluefin cross entire oceans one stroke at a time; you can do one block.",
-        "cs": "Boty na nohy. Obejdi blok. Tuňáci přeplavou celé oceány tempo po tempu, ty zvládneš jeden blok."
+        "en": "45 seconds of stairs, up and down (no stairs? March on the spot, knees high). Bluefin cross entire oceans one stroke at a time; you can cross a staircase.",
+        "cs": "45 sekund schodů nahoru a dolů (nemáš schody? Pochoduj na místě s vysokými koleny). Tuňáci přeplavou celé oceány tempo po tempu, ty zvládneš jedno schodiště."
       },
       "rarity": "rare",
       "category": "physical",
       "where": [
-        "outside"
+        "home"
       ],
+      "timerSeconds": 45,
       "addedIn": 1
     },
     {
@@ -662,7 +668,7 @@
         "quiet",
         "home"
       ],
-      "timerSeconds": 90,
+      "timerSeconds": 45,
       "addedIn": 1
     },
     {
@@ -672,14 +678,15 @@
         "cs": "Ve světě, kde…"
       },
       "task": {
-        "en": "Record a full movie-trailer voiceover of you defeating this craving. Deep voice. Explosions (mouth-made). End on the title card: OFF THE HOOK.",
-        "cs": "Nahraj voiceover filmového traileru o tom, jak porážíš tuhle chuť. Hluboký hlas. Výbuchy (pusou). Na konci titulek: OFF THE HOOK."
+        "en": "Record a 30-second movie-trailer voiceover of you defeating this craving. Deep voice. Explosions (mouth-made). End on the title card: OFF THE HOOK.",
+        "cs": "Nahraj 30sekundový voiceover filmového traileru o tom, jak porážíš tuhle chuť. Hluboký hlas. Výbuchy (pusou). Na konci titulek: OFF THE HOOK."
       },
       "rarity": "legendary",
       "category": "ridiculous",
       "where": [
         "home"
       ],
+      "timerSeconds": 30,
       "addedIn": 1
     },
     {
@@ -689,15 +696,16 @@
         "cs": "Tuňákový sprint"
       },
       "task": {
-        "en": "Bluefin hit 70 km/h. Your turn. Five minutes outside, as fast as you can walk without it being a crime. The craving can’t keep up. Nothing can.",
-        "cs": "Tuňák obecný zvládne 70 km/h. Teď ty. Pět minut venku, tak rychle, jak se dá jít, aniž by to byl trestný čin. Chuť nestíhá. Nic nestíhá."
+        "en": "Bluefin hit 70 km/h. Your turn: 30 seconds of high knees, as fast as your legs allow. The craving can’t keep up. Nothing can.",
+        "cs": "Tuňák obecný zvládne 70 km/h. Teď ty: 30 sekund běhu na místě s vysokými koleny, tak rychle, jak ti nohy dovolí. Chuť nestíhá. Nic nestíhá."
       },
       "rarity": "legendary",
       "category": "physical",
       "where": [
+        "home",
         "outside"
       ],
-      "timerSeconds": 300,
+      "timerSeconds": 30,
       "addedIn": 1
     }
   ]
