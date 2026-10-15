@@ -468,7 +468,7 @@ p { margin: 0; }
 }
 @keyframes rise { to { transform: translateY(-110vh) translateX(20px); opacity: 0; } }
 
-.field { display: flex; flex-direction: column; gap: 8px; width: 100%; text-align: left; color: var(--muted); font-size: 0.9rem; }
+.field { display: flex; flex-direction: column; gap: 8px; width: 100%; min-width: 0; text-align: left; color: var(--muted); font-size: 0.9rem; }
 textarea {
   font: inherit;
   color: var(--ink);
@@ -968,7 +968,7 @@ button:has(> .haptic-switch) { position: relative; }
 .treasure-form { gap: 18px; padding-top: 8px; }
 .treasure-form .chest { align-self: center; }
 .amount-row { display: flex; align-items: center; gap: 10px; }
-.amount-input, .date-input {
+.amount-input {
   font: inherit;
   font-size: 1.4rem;
   font-weight: 800;
@@ -981,7 +981,43 @@ button:has(> .haptic-switch) { position: relative; }
   color-scheme: dark;
 }
 .amount-input { width: 8ch; flex: none; }
-.date-input { font-size: 1.1rem; width: 100%; min-height: 50px; }
+.date-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  min-height: 52px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 1.1rem;
+  font-weight: 800;
+  overflow: hidden; /* whatever size Safari gives the picker, it stays inside */
+}
+.date-field svg { flex-shrink: 0; color: var(--accent); }
+.date-field:focus-within { outline: 3px solid var(--accent); outline-offset: 2px; }
+.date-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.date-native {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 16px; /* below 16px, iPhone zooms the page when the field is tapped */
+  -webkit-appearance: none;
+  appearance: none;
+}
+.date-native::-webkit-calendar-picker-indicator { position: absolute; inset: 0; width: auto; height: auto; opacity: 0; cursor: pointer; }
 .amount-unit { font-weight: 700; color: var(--ink); }
 .hint { font-size: 0.82rem; color: var(--muted); }
 .form-error { color: var(--coral); font-weight: 700; font-size: 0.9rem; }

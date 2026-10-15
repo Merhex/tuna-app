@@ -20,7 +20,7 @@ import {
 } from '../treasure';
 import { Chest, chestFill } from './Chest';
 import { Haptic } from './Haptic';
-import { Back } from './Icons';
+import { Back, Calendar } from './Icons';
 
 const SYMBOL: Record<Currency, string> = { CZK: 'Kč', EUR: '€', USD: '$' };
 
@@ -217,11 +217,33 @@ function TreasureForm({ onDone }: { onDone: () => void }) {
         {existing && currency !== data.settings.currency && <span class="hint">{t.currencyNote}</span>}
       </div>
 
-      <label class="field">
+      <div class="field">
         <span>{t.countingFrom}</span>
-        <input class="date-input" type="date" max={today} value={startDate} onInput={(e) => setStartDate((e.target as HTMLInputElement).value)} />
+        {/* Our own field showing the date, with the real date picker invisibly on top. iPhone Safari
+            gives its date inputs a minimum width of its own, which pushed the field off the screen. */}
+        <div class="date-field">
+          <span class="date-text">{formatDay(startDate || today, lang)}</span>
+          <Calendar />
+          <input
+            class="date-native"
+            type="date"
+            max={today}
+            value={startDate}
+            aria-label={t.countingFrom}
+            onInput={(e) => setStartDate((e.target as HTMLInputElement).value)}
+            onChange={(e) => setStartDate((e.target as HTMLInputElement).value)}
+            onClick={(e) => {
+              // Desktop browsers only open the picker from their small calendar icon; open it from anywhere.
+              try {
+                (e.currentTarget as HTMLInputElement).showPicker?.();
+              } catch {
+                /* not supported or not allowed: the native behaviour still works */
+              }
+            }}
+          />
+        </div>
         <span class="hint">{t.countingFromHint}</span>
-      </label>
+      </div>
 
       <button class="primary big" onClick={save}>
         {existing ? t.save : t.startCounting}
@@ -239,3 +261,8 @@ function TreasureForm({ onDone }: { onDone: () => void }) {
 
 const formatNumber = (n: number, lang: string) =>
   new Intl.NumberFormat(lang === 'cs' ? 'cs-CZ' : 'en-GB', { maximumFractionDigits: 2, useGrouping: false }).format(n);
+
+const formatDay = (key: string, lang: string) => {
+  const [y, m, d] = key.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString(lang === 'cs' ? 'cs-CZ' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+};

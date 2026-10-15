@@ -76,6 +76,15 @@ export function PlusSquare({ size = 22 }: P) {
   );
 }
 
+export function Calendar({ size = 20 }: P) {
+  return (
+    <svg {...base(size)} viewBox="0 0 24 24">
+      <rect x="3.5" y="5" width="17" height="15.5" rx="3" />
+      <path d="M3.5 10h17M8 3v4M16 3v4" />
+    </svg>
+  );
+}
+
 /** A small treasure chest. */
 export function ChestIcon({ size = 22 }: P) {
   return (
