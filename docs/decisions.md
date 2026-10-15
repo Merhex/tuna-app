@@ -2,7 +2,7 @@
 
 Every product and technical decision, numbered. Code comments refer to these numbers.
 
-**Last number used: D44.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
+**Last number used: D46.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
 
 Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an answer), **Superseded**.
 
@@ -18,6 +18,8 @@ Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an
 - **D2 · Tuna theme throughout.** Decided. Everything happens underwater; the vape is bait on a hook, a craving is a hook.
 - **D3 · Name: “Off the Hook”.** Decided.
 - **D27 · Humour: dark and unhinged.** Decided. Eulogies for the craving, trials, obituaries for household objects. *Guardrail:* the dark jokes target the craving, never her and never self-harm.
+- **D45 · Jungkook Easter eggs.** Decided, built. See below.
+- **D46 · Japan, South Korea and China in the treasure.** Decided, built. See below.
 - **D30 · No card brings a vape back.** Decided. Cards never assume a vape is around and never ask her to picture or remember vaping. *Why:* picturing what you crave makes the craving stronger. The milestone text follows the same rule (D41).
 
 ## Home and the craving flow
@@ -185,3 +187,34 @@ The intro ends with one question: “When did you quit?” That date drives the 
 *Why:* decorations and milestones shouldn't depend on setting up the money counter, and one question at the start is easier than finding the Treasure.
 
 *Code:* the question in `src/components/Intro.tsx`, when it's shown in `src/app.tsx`, the date field in `src/components/DateField.tsx`, the move in `normalise()` in `src/storage.ts`; tests in `src/storage.test.ts`.
+
+## D45 · Jungkook Easter eggs
+
+**Decided, built.**
+
+She's a huge Jungkook fan, so he turns up in two places:
+
+- **The petting joke** (tap the tuna five times fast): about 3 in 10 jokes are about Jungkook, in a purple speech bubble with a purple heart. The dark list stays at 1 in 10; the rest are the usual jokes. 13 jokes, English and Czech, in `petJungkookJokes`.
+- **The treasure's “would already buy” list:** Jungkook things from a photocard (350 Kč) up to a trip to Seoul to see him live (40,000 Kč), with Seoul, Busan and the concert trip as headline trips. Once she can afford one, one item in the list is always a Jungkook thing, with a purple coin. The generic concert ticket became the Jungkook one.
+
+- **Still no goal** (D38). The concert is something the treasure *would already buy*, never something she's saving toward: no progress bar, no “x% of the way to Seoul”.
+- **Wholesome only.** The tuna is a fellow fan, a bit jealous, never creepy about a real person. No vape imagery (D30).
+- Prices are rough guesses, like the other comparisons. The Czech needs a native speaker's read (D32).
+
+*Code:* `jokeKind` and `PET_SETTINGS.jungkookChance` in `src/pet.ts`, the jokes in `src/i18n.ts`, the bubble in `src/components/Home.tsx`; the items and the always-one-Jungkook rule in `src/comparisons.ts`; tests in `src/pet.test.ts` and `src/comparisons.test.ts`.
+
+## D46 · Japan, South Korea and China in the treasure
+
+**Decided, built.** Extends D45.
+
+She'd love to go to Japan, South Korea and China someday, so the treasure's “would already buy” list has 26 things from there, from a tuna-mayo onigiri in a Tokyo konbini (30 Kč) to a month in Tokyo, Seoul and Beijing (90,000 Kč):
+
+- **Food and small things:** onigiri, bubble tea in Shanghai, gachapon, tteokbokki, soup dumplings, Japanese KitKats, ramen, Korean sheet masks, Korean barbecue, Peking duck.
+- **Places:** the Shanghai maglev, the Ghibli Museum, the Chengdu pandas, karaoke in Seoul, a hanbok day at Gyeongbokgung, the Great Wall at Mutianyu, Tokyo DisneySea.
+- **Trips**, which can be the headline: Jeju, the KTX to Busan, the Shinkansen to Kyoto, a ryokan night, a Japan Rail Pass, Beijing, two weeks in China, cherry blossom season in Japan, and all three in one month. The existing Tokyo, Seoul and Busan trips count too.
+
+- **Always one in the list,** like the Jungkook things (D45): once she can afford both, the three items under the headline always include one of each, and the third is anything.
+- **Still no goal** (D38): they're what the treasure would already buy, never a trip she's saving toward.
+- Prices are rough guesses for one person, converted to Kč. The Czech needs a native speaker's read (D32), especially the place names (Čcheng-tu, Mu-tchien-jü, Kjongbokkung, Čedžu).
+
+*Code:* the `asia` flag and `ALWAYS_ONE` in `src/comparisons.ts`; tests in `src/comparisons.test.ts`.

@@ -83,6 +83,22 @@ const en = {
     'Every Polish election someone yells “Na zachód!”: to the West! Every Czech hears “To the toilet!” Honestly? Both are right.',
     'Polish “czerstwa ryba”: stale fish. A Czech hears “čerstvá ryba”, fresh fish, and buys it. Not a language barrier. A business model.',
   ],
+  // She’s a huge Jungkook fan (D45).
+  petJungkookJokes: [
+    'In music, the catchy bit of a song is called a hook. Jungkook is the only hook you’re allowed to bite.',
+    'Jungkook grew up in Busan, home of Korea’s biggest fish market. I’m not saying we’re connected. I’m saying it’s fate.',
+    'Pet me Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday. Seven days a week. Jungkook gets it.',
+    'They call Jungkook the Golden Maknae because he’s good at everything. I’m good at one thing. This. Golden Tuna.',
+    'Jungkook has a bunny smile. I have a tuna smile. It’s mostly mouth. Still counts.',
+    'ARMY says borahae: I purple you. Tuna say blub. So: I blub you. Very much. Keep petting.',
+    'Standing Next to You? I’m more swimming next to you. Close enough, Jungkook.',
+    'ARMY has Jungkook’s back. Your school has yours. Well, swims behind it. No legs, lots of loyalty.',
+    'Euphoria isn’t just a Jungkook song. It’s also what’s happening right now. Behind the gills. Yes. There.',
+    'If Jungkook cooked ramen on a live stream I’d swoon. Then I’d read the ingredients. Then I’d swim. Fast.',
+    'I’m not jealous of Jungkook. Fish don’t get jealous. Why are my scales turning purple? No reason.',
+    'Jungkook hits the high notes. You beat the hooks. Two legends. Only one of them pets fish.',
+    'I learned the choreography to Seven. I have no arms and no legs. It’s mostly wiggling. The fans love it.',
+  ],
 
   intro: [
     {
@@ -333,6 +349,21 @@ const cs: Strings = {
     'Poláci hrdě říkají „Warszawa to stolica Polski“. Myslí hlavní město. Česky to zní jako výsledek rozboru stolice.',
     'Při každých polských volbách někdo křičí „Na zachód!“, tedy na Západ. Každý Čech slyší „na záchod“. Upřímně? Oba mají pravdu.',
     'Polák prodává „czerstwa ryba“, tedy okoralou rybu. Čech slyší „čerstvá ryba“ a koupí ji. To není jazyková bariéra. To je byznys model.',
+  ],
+  petJungkookJokes: [
+    'V hudbě se chytlavé části písničky říká hook, háček. Jungkook je jediný háček, na který se smíš chytit.',
+    'Jungkook vyrostl v Pusanu, kde je největší rybí trh v Koreji. Neříkám, že nás něco spojuje. Říkám, že je to osud.',
+    'Hlaď mě v pondělí, úterý, středu, čtvrtek, pátek, sobotu i neděli. Sedm dní v týdnu. Jungkook by to pochopil.',
+    'Jungkookovi říkají Zlatý maknae, protože umí všechno. Já umím jen jedno. Tohle. Zlatý tuňák.',
+    'Jungkook má králičí úsměv. Já mám tuňáčí úsměv. Je to hlavně pusa. Ale počítá se.',
+    'ARMY říká borahae, I purple you. Tuňáci říkají blub. Takže: blubuju tě. Moc. Hlaď dál.',
+    'Standing Next to You? Já vedle tebe spíš plavu. Jungkooku, to se počítá.',
+    'ARMY stojí za Jungkookem. Tvoje hejno stojí za tebou. No, spíš plave. Nohy nemáme, věrnost jo.',
+    'Euphoria není jen Jungkookova písnička. Je to i to, co se děje právě teď. Za žábrami. Jo. Přesně tam.',
+    'Kdyby Jungkook vařil ramen na živém vysílání, omdlel bych. Pak bych si přečetl ingredience. A pak bych plaval. Rychle.',
+    'Nežárlím na Jungkooka. Ryby nežárlí. Proč mi fialovějí šupiny? Jen tak.',
+    'Jungkook zvládne nejvyšší tóny. Ty zvládneš každý háček. Dvě legendy. Jen jedna z nich hladí ryby.',
+    'Naučil jsem se choreografii na Seven. Nemám ruce ani nohy. Je to hlavně vrtění. Fanoušci šílí.',
   ],
 
   intro: [

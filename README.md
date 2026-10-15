@@ -10,7 +10,7 @@ The roadmap, design decisions and milestone sources live in [`docs/`](docs/). Th
 - **Installable and offline.** It's a PWA: add it to the home screen from Safari and it runs full screen, offline.
 - **English and Czech.** The language is picked from the phone's settings and can be changed in Settings.
 - **Where are you?** At the start of a craving she can switch between *At home* and *Out and about* (remembered). Out of the house, only cards tagged `anywhere` or `outside` are drawn.
-- **Sunken Treasure** (optional): a live counter of the money she's not spending, from a weekly amount and a start date. It never resets; a changed weekly amount only applies from then on. Currency (Kč, €, $) is separate from the language.
+- **Sunken Treasure** (optional): a live counter of the money she's not spending, from a weekly amount and a start date. It never resets; a changed weekly amount only applies from then on. Currency (Kč, €, $) is separate from the language. Below it, what the money would already buy; one of those is always a Jungkook thing (photocards up to a concert trip to Seoul) and one is always from Japan, South Korea or China, once she can afford them. They're in [`src/comparisons.ts`](src/comparisons.ts).
 - **Milestones**, below the treasure: what to expect from quit day to one year, counted from the treasure's start date. Text in [`src/data/milestones.json`](src/data/milestones.json), sources in [`docs/milestones.md`](docs/milestones.md).
 - **Sounds and vibrations** are generated in code (no audio files) and can be turned off in Settings. On iPhone, vibrations need iOS 18+.
 
@@ -27,7 +27,7 @@ Rarity chances, the guaranteed-rare counter and the weighting toward uncaught ca
 
 ## The petting Easter egg
 
-Tap the tuna on the home screen and it closes its eyes. Tap it five times fast and it tells a joke, and 1 in 10 of those comes from the dark list. The jokes are `petJokes` and `petDarkJokes` in [`src/i18n.ts`](src/i18n.ts) (English and Czech). Timing and odds are `PET_SETTINGS` in [`src/pet.ts`](src/pet.ts).
+Tap the tuna on the home screen and it closes its eyes. Tap it five times fast and it tells a joke: 1 in 10 come from the dark list, and about 3 in 10 are about Jungkook, in a purple bubble. The jokes are `petJokes`, `petDarkJokes` and `petJungkookJokes` in [`src/i18n.ts`](src/i18n.ts) (English and Czech). Timing and odds are `PET_SETTINGS` in [`src/pet.ts`](src/pet.ts).
 
 ## Development
 

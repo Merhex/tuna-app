@@ -1,6 +1,7 @@
 /**
  * The petting Easter egg on the home screen: tap the tuna and it closes its eyes; tap it fast
- * enough times in a row and it tells a joke. Now and then the joke is a dark one.
+ * enough times in a row and it tells a joke. Now and then the joke is a dark one, and often it's
+ * about Jungkook, because she's a huge fan (D45).
  */
 export const PET_SETTINGS = {
   /** A tap counts towards the streak if it lands within this long of the previous one. */
@@ -9,7 +10,18 @@ export const PET_SETTINGS = {
   tapsForJoke: 5,
   /** Chance that a joke comes from the dark list. */
   darkChance: 0.1,
+  /** Chance that a joke is about Jungkook (D45). */
+  jungkookChance: 0.3,
 };
+
+export type JokeKind = 'normal' | 'dark' | 'jungkook';
+
+/** Which list the next joke comes from, given a roll in [0, 1). */
+export function jokeKind(roll: number): JokeKind {
+  if (roll < PET_SETTINGS.darkChance) return 'dark';
+  if (roll < PET_SETTINGS.darkChance + PET_SETTINGS.jungkookChance) return 'jungkook';
+  return 'normal';
+}
 
 /** The streak after a tap at `now`, given the previous tap's time and streak. */
 export function nextStreak(prev: { at: number; streak: number } | null, now: number): number {

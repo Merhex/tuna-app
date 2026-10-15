@@ -14,6 +14,8 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 | **Milestones** in the treasure: what to expect from quit day to one year | D41 | |
 | **Seabed decorations** at every milestone, sparkling the first time; after a year the coral keeps changing colour every month | D43 | |
 | **Quit date asked in the intro,** so milestones and decorations work without the money counter | D44 | |
+| **Jungkook Easter eggs:** Jungkook jokes when she pets the tuna; Jungkook things (up to a concert trip to Seoul) in the treasure | D45 | |
+| **Japan, South Korea and China in the treasure:** 26 things to eat, see and do there, always one in the list | D46 | |
 
 ## Next, ranked
 
@@ -39,5 +41,5 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 
 ## Open before release
 
-- A native speaker's read of the Czech in the new cards, the milestones, the decoration names and the quit-date question (D32).
+- A native speaker's read of the Czech in the new cards, the milestones, the decoration names, the quit-date question and the Jungkook jokes and the Jungkook, Japan, Korea and China treasure items (D32, D45, D46).
 - A test on a real iPhone: sounds, vibrations and the install flow can't be checked in a desktop browser (see [qa-log.md](qa-log.md)).
