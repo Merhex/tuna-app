@@ -9,6 +9,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  deployments: read
 
 concurrency:
   group: pages
@@ -37,5 +38,17 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # If an earlier publish hung on GitHub's side, Pages refuses new ones ("due to in progress
+      # deployment") until it is cancelled. Cancel any recent one that is still pending; finished
+      # ones just return an error, which is ignored.
+      - name: Cancel stuck earlier Pages deployments
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for sha in $(gh api "repos/${{ github.repository }}/deployments?environment=github-pages&per_page=5" --jq '.[].sha' | grep -v "${{ github.sha }}" || true); do
+            if gh api -X POST "repos/${{ github.repository }}/pages/deployments/$sha/cancel" >/dev/null 2>&1; then
+              echo "Cancelled stuck deployment $sha"
+            fi
+          done
       - id: deployment
         uses: actions/deploy-pages@v4
