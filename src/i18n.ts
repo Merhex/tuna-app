@@ -1,0 +1,216 @@
+import { createContext } from 'preact';
+import { useContext } from 'preact/hooks';
+import type { Category, Lang, Rarity } from './cards';
+
+/** Czech has three plural forms: 1, 2–4, and 0/5+. */
+const csPlural = (n: number, one: string, few: string, many: string) =>
+  n === 1 ? one : n >= 2 && n <= 4 ? few : many;
+
+const en = {
+  hookButton: "There's a hook!",
+  school: (n: number) => (n === 0 ? 'Beat a hook and your first tuna joins your school.' : `Your school: ${n} tuna`),
+  taglines: [
+    'Keep swimming.',
+    "Don't end up in a can. 🥫",
+    'The cannery called. We hung up.',
+    "You're o-fish-ally tougher than this.",
+    'Sea you on the other side of this craving.',
+    'Hooks are just bait with commitment issues.',
+    'No tin for you. Not today, not ever.',
+  ],
+  aquarium: 'Aquarium',
+  settings: 'Settings',
+  drawFrom: 'Draw from',
+  drawAll: 'All cards',
+  drawFavourites: 'Favourites ♥',
+  washedAshore: 'New catches washed ashore!',
+  ok: 'Nice',
+
+  rateBefore: 'How hard is the hook pulling?',
+  rateAfter: 'And how hard is it pulling now?',
+  rateLow: 'barely',
+  rateHigh: 'brutal',
+  skip: 'Skip',
+  biting: "Something's biting…",
+  newCatch: 'NEW CATCH!',
+  rarity: { common: 'Sardine', uncommon: 'Mackerel', rare: 'Swordfish', legendary: 'Golden Bluefin' } as Record<Rarity, string>,
+  category: {
+    physical: 'Physical',
+    sensory: 'Sensory',
+    ridiculous: 'Ridiculous',
+    social: 'Social',
+    grounding: 'Grounding',
+  } as Record<Category, string>,
+  startTimer: 'Start timer',
+  timeUp: 'Time!',
+  doneIt: 'Done it!',
+  throwBack: 'Throw it back',
+  checkTitle: 'Did the hook let go?',
+  yes: 'Yes!',
+  notYet: 'Not yet',
+  snagged: 'I got snagged',
+  wonTitles: ['Off the hook!', 'Not today, cannery.', 'The hook went home hungry.', 'Line snapped. You swam.'],
+  joinedSchool: 'A new tuna joined your school.',
+  caughtTimes: (n: number) => `caught ×${n}`,
+  backToTank: 'Back to the tank',
+  notYetTitle: "That's fine. Hooks get tired before you do.",
+  notYetBody: 'Draw another card and keep it busy.',
+  drawAnother: 'Draw another card',
+  snaggedTitle: 'Even the best tuna get snagged.',
+  snaggedBody: 'You wriggled free, and that counts. Your school stays. Your aquarium stays. Keep swimming.',
+  baitPrompt: 'What was the bait? (optional, only you see this)',
+  saveAndSwim: 'Save and keep swimming',
+  close: 'Close',
+
+  caughtProgress: (n: number, total: number) => `${n} of ${total} caught`,
+  unknownCard: '???',
+  favourite: 'Favourite',
+  notCaughtYet: 'Not caught yet. Keep fishing.',
+  hooksBeaten: 'Hooks beaten',
+  cardsCaught: 'Cards caught',
+
+  sound: 'Sounds',
+  haptics: 'Vibrations',
+  hapticsIOSNote: 'On iPhone, vibrations need iOS 18 or newer.',
+  reducedMotion: 'Less motion',
+  language: 'Language',
+  backup: 'Back up my aquarium',
+  backupNote: 'Saves a small file with all your progress. Keep it somewhere safe, like iCloud Drive.',
+  restore: 'Restore from backup',
+  restoreConfirm: 'This replaces everything in the app with the backup. Continue?',
+  restored: 'Aquarium restored.',
+  restoreFailed: "That file isn't an Off the Hook backup.",
+  showInstall: 'Show the home-screen guide',
+  about: 'About',
+  aboutBody:
+    'Off the Hook is a distraction tool, not medical advice. If you want more support with quitting, the Czech national quitline is free: 800 350 000. Nicotine replacement is worth talking about with a pharmacist or doctor.',
+
+  installTitle: "Let's get you a tank on your home screen",
+  installWhy:
+    'Added to your home screen, the app opens full screen, works offline, and your aquarium is safe from Safari clearing its data.',
+  iosSteps: [
+    'Tap the Share button in Safari. (Don\'t see it? Tap ••• first.)',
+    'Scroll down and tap “Add to Home Screen”.',
+    'Tap “Add”, then open Off the Hook from your home screen.',
+  ],
+  iosOtherBrowser: 'Tip: this works most reliably in Safari.',
+  androidInstall: 'Add to home screen',
+  androidManual: 'Open the browser menu (⋮) and choose “Install app” or “Add to home screen”.',
+  inAppTitle: "This browser can't install apps",
+  inAppBody: 'Copy the link and open it in Safari (or Chrome on Android).',
+  copyLink: 'Copy link',
+  copied: 'Copied!',
+  desktopNote: "Looks like you're on a computer. The app is made for phones, but you can try it here.",
+  continueBrowser: 'Continue in browser',
+  continueWarn: 'Your collection could get lost if the browser clears its data.',
+};
+
+type Strings = typeof en;
+
+const cs: Strings = {
+  hookButton: 'Je tu háček!',
+  school: (n) =>
+    n === 0
+      ? 'Poraz háček a do hejna se přidá první tuňák.'
+      : `Tvoje hejno: ${n} ${csPlural(n, 'tuňák', 'tuňáci', 'tuňáků')}`,
+  taglines: [
+    'Plav dál.',
+    'Neskonči v konzervě. 🥫',
+    'Volala konzervárna. Zavěsili jsme.',
+    'Jsi tvrdší než tenhle háček.',
+    'Háček je jen návnada se strachem ze závazků.',
+    'Plechovka počká. Navždy.',
+    'Konzervárna pro tebe nemá místo.',
+  ],
+  aquarium: 'Akvárium',
+  settings: 'Nastavení',
+  drawFrom: 'Losovat z',
+  drawAll: 'Všech karet',
+  drawFavourites: 'Oblíbených ♥',
+  washedAshore: 'Moře vyplavilo nové úlovky!',
+  ok: 'Super',
+
+  rateBefore: 'Jak silně háček tahá?',
+  rateAfter: 'A jak silně tahá teď?',
+  rateLow: 'sotva',
+  rateHigh: 'brutálně',
+  skip: 'Přeskočit',
+  biting: 'Něco bere…',
+  newCatch: 'NOVÝ ÚLOVEK!',
+  rarity: { common: 'Sardinka', uncommon: 'Makrela', rare: 'Mečoun', legendary: 'Zlatý tuňák' },
+  category: {
+    physical: 'Pohyb',
+    sensory: 'Smysly',
+    ridiculous: 'Absurdita',
+    social: 'Lidi',
+    grounding: 'Uzemnění',
+  },
+  startTimer: 'Spustit časovač',
+  timeUp: 'Čas!',
+  doneIt: 'Hotovo!',
+  throwBack: 'Hodit zpátky',
+  checkTitle: 'Pustil háček?',
+  yes: 'Jo!',
+  notYet: 'Ještě ne',
+  snagged: 'Háček mě chytil',
+  wonTitles: ['Z háčku venku!', 'Dneska ne, konzervárno.', 'Háček odešel s prázdnou.', 'Vlasec praskl. Plaveš dál.'],
+  joinedSchool: 'Do hejna se přidal nový tuňák.',
+  caughtTimes: (n) => `chyceno ×${n}`,
+  backToTank: 'Zpátky do nádrže',
+  notYetTitle: 'V pohodě. Háček se unaví dřív než ty.',
+  notYetBody: 'Vytáhni další kartu a zaměstnej ho.',
+  drawAnother: 'Vytáhnout další kartu',
+  snaggedTitle: 'I ten nejlepší tuňák se občas zasekne.',
+  snaggedBody: 'Vykroutila ses a to se počítá. Hejno zůstává. Akvárium zůstává. Plav dál.',
+  baitPrompt: 'Co bylo návnadou? (nepovinné, vidíš to jen ty)',
+  saveAndSwim: 'Uložit a plavat dál',
+  close: 'Zavřít',
+
+  caughtProgress: (n, total) => `Chyceno ${n} z ${total}`,
+  unknownCard: '???',
+  favourite: 'Oblíbená',
+  notCaughtYet: 'Ještě nechycená. Lov dál.',
+  hooksBeaten: 'Poražené háčky',
+  cardsCaught: 'Chycené karty',
+
+  sound: 'Zvuky',
+  haptics: 'Vibrace',
+  hapticsIOSNote: 'Na iPhonu fungují vibrace od iOS 18.',
+  reducedMotion: 'Méně animací',
+  language: 'Jazyk',
+  backup: 'Zálohovat akvárium',
+  backupNote: 'Uloží malý soubor s celým tvým postupem. Schovej si ho někam do bezpečí, třeba na iCloud Drive.',
+  restore: 'Obnovit ze zálohy',
+  restoreConfirm: 'Tímhle se vše v aplikaci nahradí zálohou. Pokračovat?',
+  restored: 'Akvárium obnoveno.',
+  restoreFailed: 'Tenhle soubor není záloha Off the Hook.',
+  showInstall: 'Zobrazit návod na plochu',
+  about: 'O aplikaci',
+  aboutBody:
+    'Off the Hook je nástroj na rozptýlení, ne lékařská rada. Pokud chceš s odvykáním víc podpory, Národní linka pro odvykání je zdarma: 800 350 000. O náhradní nikotinové terapii se vyplatí poradit v lékárně nebo s lékařem.',
+
+  installTitle: 'Pořiďme ti nádrž na plochu',
+  installWhy:
+    'Na ploše se appka otevře přes celou obrazovku, funguje offline a tvoje akvárium je v bezpečí, i když Safari maže data.',
+  iosSteps: [
+    'V Safari klepni na tlačítko Sdílet. (Nevidíš ho? Nejdřív klepni na •••.)',
+    'Sjeď dolů a klepni na „Přidat na plochu“.',
+    'Klepni na „Přidat“ a pak otevři Off the Hook z plochy.',
+  ],
+  iosOtherBrowser: 'Tip: nejspolehlivěji to funguje v Safari.',
+  androidInstall: 'Přidat na plochu',
+  androidManual: 'Otevři menu prohlížeče (⋮) a zvol „Instalovat aplikaci“ nebo „Přidat na plochu“.',
+  inAppTitle: 'Tenhle prohlížeč neumí instalovat aplikace',
+  inAppBody: 'Zkopíruj odkaz a otevři ho v Safari (nebo v Chromu na Androidu).',
+  copyLink: 'Zkopírovat odkaz',
+  copied: 'Zkopírováno!',
+  desktopNote: 'Vypadá to, že jsi na počítači. Appka je dělaná pro telefon, ale vyzkoušet ji můžeš i tady.',
+  continueBrowser: 'Pokračovat v prohlížeči',
+  continueWarn: 'Pokud prohlížeč smaže data, můžeš přijít o sbírku.',
+};
+
+export const STRINGS: Record<Lang, Strings> = { en, cs };
+export const LangContext = createContext<Lang>('en');
+export const useT = () => STRINGS[useContext(LangContext)];
+export const useLang = () => useContext(LangContext);
+export const pick = <T,>(list: T[]) => list[Math.floor(Math.random() * list.length)];
