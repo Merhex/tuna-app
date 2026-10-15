@@ -322,6 +322,9 @@ p { margin: 0; }
   animation: speechIn 0.3s cubic-bezier(0.2, 1.4, 0.4, 1), shudder 0.45s 0.3s linear;
 }
 .speech.dark::after { border-bottom-color: #2a0d12; }
+@media (max-height: 600px) {
+  .speech { font-size: 0.88rem; padding: 9px 13px; }
+}
 @keyframes speechIn { from { scale: 0.3; opacity: 0; } }
 @keyframes shudder {
   0%, 100% { rotate: 0deg; }

@@ -45,6 +45,8 @@ describe('jokes', () => {
         expect(list.length).toBeGreaterThanOrEqual(10);
         expect(new Set(list).size).toBe(list.length);
         for (const joke of list) expect(joke).not.toMatch(/['"]/);
+        // Longer than this and, on the smallest iPhones, the bubble reaches the hook on the big button.
+        for (const joke of list) expect(joke.length, joke).toBeLessThanOrEqual(140);
       }
     });
   }
