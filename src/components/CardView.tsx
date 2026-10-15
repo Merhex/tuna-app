@@ -2,6 +2,7 @@ import type { Card } from '../cards';
 import { useLang, useT } from '../i18n';
 import { FishHook } from './Icons';
 import { RarityFish } from './RarityFish';
+import { Haptic } from './Haptic';
 
 /** A side-quest card. `flipped` shows the face; otherwise the back. */
 export function CardView({ card, flipped, isNew }: { card: Card; flipped: boolean; isNew?: boolean }) {
@@ -46,6 +47,7 @@ export function Rating({ value, onPick }: { value?: number; onPick: (n: number) 
             onClick={() => onPick(n)}
           >
             {n}
+            <Haptic />
           </button>
         ))}
       </div>

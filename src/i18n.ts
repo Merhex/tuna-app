@@ -125,7 +125,7 @@ const en = {
 
   sound: 'Sounds',
   haptics: 'Vibrations',
-  hapticsIOSNote: 'On iPhone, vibrations need iOS 18 or newer.',
+  hapticsIOSNote: 'On iPhone, Safari only allows a vibration at the moment you tap a button.',
   reducedMotion: 'Less motion',
   language: 'Language',
   backup: 'Back up my aquarium',
@@ -281,7 +281,7 @@ const cs: Strings = {
 
   sound: 'Zvuky',
   haptics: 'Vibrace',
-  hapticsIOSNote: 'Na iPhonu fungují vibrace od iOS 18.',
+  hapticsIOSNote: 'Na iPhonu Safari dovolí vibraci jen ve chvíli, kdy klepneš na tlačítko.',
   reducedMotion: 'Méně animací',
   language: 'Jazyk',
   backup: 'Zálohovat akvárium',

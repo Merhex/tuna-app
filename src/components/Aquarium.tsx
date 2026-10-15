@@ -5,6 +5,7 @@ import { useLang, useT } from '../i18n';
 import { useApp } from '../state';
 import { Back, Heart } from './Icons';
 import { RarityFish } from './RarityFish';
+import { Haptic } from './Haptic';
 
 const SORTED = [...CARDS].sort((a, b) => RARITIES.indexOf(b.rarity) - RARITIES.indexOf(a.rarity));
 const BADGE_AT = 5;
@@ -42,8 +43,8 @@ export function Aquarium({ onClose }: { onClose: () => void }) {
       </div>
 
       <div class="segmented">
-        <button aria-pressed={!onlyFavs} onClick={() => setOnlyFavs(false)}>{t.drawAll}</button>
-        <button aria-pressed={onlyFavs} onClick={() => setOnlyFavs(true)}><Heart size={14} filled /> {t.drawFavourites}</button>
+        <button aria-pressed={!onlyFavs} onClick={() => setOnlyFavs(false)}>{t.drawAll}<Haptic /></button>
+        <button aria-pressed={onlyFavs} onClick={() => setOnlyFavs(true)}><Heart size={14} filled /> {t.drawFavourites}<Haptic /></button>
       </div>
 
       <div class="tank-grid">
@@ -103,6 +104,7 @@ export function Aquarium({ onClose }: { onClose: () => void }) {
                   onClick={() => toggleFav(open.id)}
                 >
                   <Heart size={16} filled={data.collection[open.id].favourite} /> {t.favourite}
+                  <Haptic />
                 </button>
               </>
             ) : (

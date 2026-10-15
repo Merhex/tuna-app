@@ -5,6 +5,7 @@ import { useT } from '../i18n';
 import { FishHook } from './Icons';
 import { RarityFish } from './RarityFish';
 import { MiniTuna, Tuna } from './Tuna';
+import { Haptic } from './Haptic';
 
 /** First-launch explainer: what the app is for and what the fishy words mean. */
 export function Intro({ onDone }: { onDone: () => void }) {
@@ -89,6 +90,7 @@ export function Intro({ onDone }: { onDone: () => void }) {
           }}
         >
           {last ? t.introStart : t.next}
+          <Haptic />
         </button>
       </footer>
     </main>

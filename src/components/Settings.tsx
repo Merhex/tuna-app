@@ -5,6 +5,7 @@ import { useT } from '../i18n';
 import { isIOS } from '../platform';
 import { useApp } from '../state';
 import { Back, Download, FishHook, Phone, Upload } from './Icons';
+import { Haptic } from './Haptic';
 import { makeBackup, parseBackup, type Settings as S } from '../storage';
 
 export function Settings({
@@ -89,7 +90,7 @@ export function Settings({
             {(['en', 'cs'] as Lang[]).map((l) => (
               <button key={l} aria-pressed={data.settings.lang === l} onClick={() => { haptic.tap(); set('lang', l); }}>
                 {l === 'en' ? 'English' : 'Čeština'}
-              </button>
+              <Haptic /></button>
             ))}
           </div>
         </div>

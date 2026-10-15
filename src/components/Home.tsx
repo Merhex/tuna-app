@@ -7,6 +7,7 @@ import { schoolSize } from '../storage';
 import { FAVOURITES_MIN } from '../draw';
 import { Bowl, FishHook, Gear, Heart, LogbookIcon } from './Icons';
 import { MiniTuna, Tuna } from './Tuna';
+import { Haptic } from './Haptic';
 
 const MAX_SWIMMERS = 36;
 
@@ -91,6 +92,7 @@ export function Home({
         >
           <FishHook size={62} stroke={5.5} />
           <span>{t.hookButton}</span>
+          <Haptic />
         </button>
         <p class="school-count">{t.school(school)}</p>
 
@@ -106,6 +108,7 @@ export function Home({
                 }}
               >
                 {mode === 'all' ? t.drawAll : <><Heart size={14} filled /> {t.drawFavourites}</>}
+                <Haptic />
               </button>
             ))}
           </div>

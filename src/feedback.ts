@@ -1,11 +1,10 @@
 /**
  * Sounds and vibration. Sounds are synthesised with Web Audio, so there are no audio files to load.
  *
- * Vibration: Android supports navigator.vibrate. iPhone Safari doesn't, but on iOS 18+ toggling a
- * native `<input type="checkbox" switch>` gives a short system haptic, so we use that there.
- * It only works during a tap, not from a timer.
+ * Vibration: Android uses navigator.vibrate. iPhone: see the note above `vibrate` below.
  */
 import type { Rarity } from './cards';
+import { isIOS } from './platform';
 
 let enabled = { sound: true, haptics: true };
 export function configureFeedback(opts: { sound: boolean; haptics: boolean }) {
@@ -138,33 +137,17 @@ export const sound = {
 
 // ---------- Vibration ----------
 
-let iosSwitch: HTMLLabelElement | null = null;
-
-function iosTick() {
-  if (!iosSwitch) {
-    const label = document.createElement('label');
-    label.setAttribute('aria-hidden', 'true');
-    label.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0;pointer-events:none;';
-    const input = document.createElement('input');
-    input.type = 'checkbox';
-    input.setAttribute('switch', '');
-    input.tabIndex = -1;
-    label.appendChild(input);
-    document.body.appendChild(label);
-    iosSwitch = label;
-  }
-  iosSwitch.click();
-}
+/**
+ * iPhone Safari has no vibration API. A native `<input type="checkbox" switch>` gives a system haptic
+ * when the user toggles it, but since iOS 26.5 only a real finger tap counts (flipping one from code
+ * no longer vibrates). So on iPhone, tappable buttons carry an invisible switch under the finger
+ * (see components/Haptic.tsx), and these functions do nothing there.
+ */
+export const usesTapSwitchHaptics = () => isIOS() && typeof navigator.vibrate !== 'function';
 
 function vibrate(pattern: number | number[]) {
-  if (!enabled.haptics) return;
-  if ('vibrate' in navigator && typeof navigator.vibrate === 'function') {
-    navigator.vibrate(pattern);
-  } else {
-    // iPhone: one tick per call; patterns collapse to a single tick, plus one follow-up for longer ones.
-    iosTick();
-    if (Array.isArray(pattern) && pattern.length > 2) setTimeout(iosTick, 120);
-  }
+  if (!enabled.haptics || typeof navigator.vibrate !== 'function') return;
+  navigator.vibrate(pattern);
 }
 
 export const haptic = {

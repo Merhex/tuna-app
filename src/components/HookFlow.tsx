@@ -8,6 +8,7 @@ import type { AppData, HookResult } from '../storage';
 import { CardView, Rating } from './CardView';
 import { Close, FishHook } from './Icons';
 import { Tuna } from './Tuna';
+import { Haptic } from './Haptic';
 
 type Step = 'before' | 'drop' | 'card' | 'check' | 'won' | 'notyet' | 'snagged';
 
@@ -166,7 +167,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           {flipped && (
             <div class="card-actions fade-in">
               {card.timerSeconds && <Countdown key={card.id + drawn.length} seconds={card.timerSeconds} />}
-              <button class="primary big" onClick={completeCard}>{t.doneIt}</button>
+              <button class="primary big" onClick={completeCard}>{t.doneIt}<Haptic /></button>
               {!thrownBack && (
                 <button
                   class="secondary"
@@ -177,6 +178,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
                   }}
                 >
                   🎣 {t.throwBack}
+                  <Haptic />
                 </button>
               )}
             </div>
@@ -208,6 +210,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
               }}
             >
               {t.yes}
+              <Haptic />
             </button>
             <button
               class="secondary big"
@@ -218,6 +221,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
               }}
             >
               {t.notYet}
+              <Haptic />
             </button>
           </div>
           {/* Deliberately small and quiet (decision D31). */}
@@ -265,7 +269,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
             </div>
           )}
           <p>{t.joinedSchool}</p>
-          <button class="primary big" onClick={onExit}>{t.backToTank}</button>
+          <button class="primary big" onClick={onExit}>{t.backToTank}<Haptic /></button>
         </section>
       )}
 
@@ -274,7 +278,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           <Tuna mood="cheer" size={110} />
           <h1>{t.notYetTitle}</h1>
           <p class="muted">{t.notYetBody}</p>
-          <button class="primary big" onClick={draw}>{t.drawAnother}</button>
+          <button class="primary big" onClick={draw}>{t.drawAnother}<Haptic /></button>
           <button class="link" onClick={() => { finish('notyet'); onExit(); }}>{t.backToTank}</button>
         </section>
       )}
@@ -296,6 +300,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
             }}
           >
             {t.saveAndSwim}
+            <Haptic />
           </button>
         </section>
       )}
@@ -345,6 +350,7 @@ function Countdown({ seconds }: { seconds: number }) {
           }}
         >
           ⏱ {t.startTimer}
+          <Haptic />
         </button>
       )}
     </div>
