@@ -5,7 +5,7 @@ import { pick, useT } from '../i18n';
 import { useApp } from '../state';
 import { schoolSize } from '../storage';
 import { FAVOURITES_MIN } from '../draw';
-import { Bowl, FishHook, Gear, Heart } from './Icons';
+import { Bowl, FishHook, Gear, Heart, LogbookIcon } from './Icons';
 import { MiniTuna, Tuna } from './Tuna';
 
 const MAX_SWIMMERS = 36;
@@ -56,10 +56,16 @@ export function Home({
       </div>
 
       <header class="topbar">
-        <button class="icon-btn" onClick={() => { sound.tap(); go('aquarium'); }} aria-label={t.aquarium}>
-          <Bowl />
-          <span class="icon-label">{t.aquarium}</span>
-        </button>
+        <div class="topbar-group">
+          <button class="icon-btn" onClick={() => { sound.tap(); go('aquarium'); }} aria-label={t.aquarium}>
+            <Bowl />
+            <span class="icon-label">{t.aquarium}</span>
+          </button>
+          <button class="icon-btn" onClick={() => { sound.tap(); go('logbook'); }} aria-label={t.logbook}>
+            <LogbookIcon />
+            <span class="icon-label">{t.logbook}</span>
+          </button>
+        </div>
         <button class="icon-btn" onClick={() => { sound.tap(); go('settings'); }} aria-label={t.settings}>
           <Gear />
         </button>

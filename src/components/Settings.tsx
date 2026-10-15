@@ -5,7 +5,7 @@ import { useT } from '../i18n';
 import { isIOS } from '../platform';
 import { useApp } from '../state';
 import { Back, Download, FishHook, Phone, Upload } from './Icons';
-import { averagePullDrop, makeBackup, parseBackup, schoolSize, type Settings as S } from '../storage';
+import { makeBackup, parseBackup, type Settings as S } from '../storage';
 
 export function Settings({
   onClose,
@@ -63,17 +63,6 @@ export function Settings({
         <h1 class="screen-title">{t.settings}</h1>
         <span class="topbar-spacer" />
       </header>
-
-      <div class="stats">
-        <div><strong>{schoolSize(data)}</strong><span>{t.hooksBeaten}</span></div>
-        <div><strong>{Object.keys(data.collection).length}</strong><span>{t.cardsCaught}</span></div>
-        {averagePullDrop(data) !== null && (
-          <div class="stat-wide">
-            <strong>−{averagePullDrop(data)!.toFixed(1)}</strong>
-            <span>{t.avgPullDrop}</span>
-          </div>
-        )}
-      </div>
 
       <section class="group">
         <Toggle

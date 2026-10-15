@@ -18,7 +18,10 @@ export interface HookEntry {
   endedAt: string;
   before?: number;
   after?: number;
+  /** Every card drawn, including ones thrown back. */
   cards: string[];
+  /** Cards she actually completed (added later; older entries may not have it). */
+  completed?: string[];
   result: HookResult;
   baitNote?: string;
 }
@@ -43,7 +46,9 @@ export interface AppData {
   settings: Settings;
 }
 
-const store = createStore('off-the-hook', 'data');
+let storeHandle: ReturnType<typeof createStore> | undefined;
+// Opened on first use, so this module can also be imported where IndexedDB doesn't exist (tests).
+const store = () => (storeHandle ??= createStore('off-the-hook', 'data'));
 const KEYS = ['collection', 'hooks', 'drawState', 'settings'] as const;
 
 function defaultLang(): Lang {
@@ -81,8 +86,8 @@ function normalise(raw: Partial<AppData>): AppData {
 
 export async function loadData(): Promise<AppData> {
   try {
-    const version = await get<number>('schemaVersion', store);
-    const values = await getMany(KEYS as unknown as string[], store);
+    const version = await get<number>('schemaVersion', store());
+    const values = await getMany(KEYS as unknown as string[], store());
     const raw: Partial<AppData> = {};
     KEYS.forEach((k, i) => {
       if (values[i] !== undefined) (raw as Record<string, unknown>)[k] = values[i];
@@ -101,7 +106,7 @@ export async function saveData(data: AppData): Promise<void> {
       ['schemaVersion', SCHEMA_VERSION],
       ...KEYS.map((k) => [k, data[k]] as [string, unknown]),
     ],
-    store,
+    store(),
   );
 }
 

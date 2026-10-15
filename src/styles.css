@@ -780,3 +780,99 @@ textarea {
   .term dd { font-size: 0.86rem; }
   .intro-footer { gap: 8px; }
 }
+
+/* ---------- Logbook ---------- */
+.topbar-group { display: flex; gap: 8px; min-width: 0; }
+.stat-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 8px 0 14px; }
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.stat strong { font-family: var(--sans); font-weight: 800; font-size: 1.6rem; line-height: 1.1; }
+.stat strong small { font-size: 0.9rem; color: var(--muted); font-weight: 700; }
+.stat span { color: var(--muted); font-size: 0.78rem; line-height: 1.25; }
+.chart-card {
+  background: #0d2c44;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px 14px 12px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.chart-card h2 { font-size: 1.15rem; }
+.chart { width: 100%; position: relative; }
+.chart svg { display: block; overflow: visible; touch-action: pan-y; }
+.chart svg:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+.chart rect[tabindex]:focus { outline: none; }
+.axis-text { fill: #a9c3d4; font: 600 11px var(--sans); font-variant-numeric: tabular-nums; }
+.value-text { fill: #eaf4fa; font: 800 13px var(--sans); }
+.legend { display: flex; gap: 16px; font-size: 0.82rem; color: var(--muted); margin: 4px 0 2px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.key-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.readout {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(234, 244, 250, 0.06);
+  margin-top: 4px;
+}
+.readout strong { font-size: 1.05rem; font-weight: 800; }
+.readout .drop { color: var(--muted); font-weight: 700; }
+.readout span { font-size: 0.85rem; color: var(--muted); }
+.trend-note { font-weight: 700; font-size: 0.95rem; }
+.chart-empty { color: var(--muted); font-size: 0.92rem; padding: 18px 4px; text-align: center; }
+
+.history h2 { font-size: 1.25rem; margin: 6px 0 4px; }
+.history-day h3 { font-family: var(--display); font-size: 0.95rem; color: var(--muted); margin: 14px 0 6px; }
+/* Only the first letter: Czech month names stay lowercase ("úterý 13. října" → "Úterý 13. října"). */
+.history-day h3::first-letter { text-transform: uppercase; }
+.history-day > ul, .history-cards { list-style: none; margin: 0; padding: 0; }
+.history-day > ul { display: flex; flex-direction: column; gap: 8px; }
+.history-row {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 10px;
+  align-items: start;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.history-icon { display: grid; place-items: center; height: 30px; color: var(--muted); }
+.history-main { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.history-top { display: flex; gap: 8px; align-items: baseline; }
+.history-time { font-weight: 800; font-variant-numeric: tabular-nums; }
+.history-result { font-size: 0.85rem; color: var(--muted); }
+.history-cards { display: flex; flex-direction: column; gap: 2px; }
+.history-cards li { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; min-width: 0; }
+.history-cards li span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.history-cards .rarity-fish { flex-shrink: 0; }
+.bait-note { font-size: 0.85rem; color: var(--muted); font-style: italic; }
+.history-pull { display: inline-flex; align-items: center; gap: 4px; padding-top: 2px; }
+.pull-chip {
+  min-width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  background: color-mix(in srgb, var(--coral) calc((var(--level) - 1) * 11%), #2c6d92);
+}
+.history .secondary.full { margin-top: 14px; }
+
+.pull-chip.empty { background: transparent; border: 1px dashed var(--line); color: var(--muted); }

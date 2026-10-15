@@ -76,6 +76,17 @@ export function PlusSquare({ size = 22 }: P) {
   );
 }
 
+/** Ship's logbook: a book with a falling line on the page. */
+export function LogbookIcon({ size = 22 }: P) {
+  return (
+    <svg {...base(size)} viewBox="0 0 24 24">
+      <path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z" />
+      <path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3" />
+      <path d="M8.5 7.5l3 3 2-2 2.5 3.5" />
+    </svg>
+  );
+}
+
 export function Download({ size = 20 }: P) {
   return (
     <svg {...base(size)} viewBox="0 0 24 24">

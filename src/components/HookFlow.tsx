@@ -96,6 +96,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           before,
           after,
           cards: drawn,
+          completed,
           result,
           ...(baitNote ? { baitNote } : {}),
         },
