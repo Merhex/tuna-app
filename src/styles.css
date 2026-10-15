@@ -31,7 +31,9 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-* { box-sizing: border-box; }
+/* No double-tap zoom anywhere (pinch zoom still works). Set on every element, not just
+   html, because iPhone Safari starts afresh inside each scrolling area. */
+* { box-sizing: border-box; touch-action: manipulation; }
 
 html, body {
   margin: 0;
@@ -55,7 +57,6 @@ button {
   border: none;
   background: none;
   cursor: pointer;
-  touch-action: manipulation;
 }
 button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
