@@ -1,32 +1,22 @@
 /**
- * Bubbles: ride the wave (roadmap #1, prototype). Slow, paced breathing with the tuna: a big bubble
- * grows as she breathes in, stays still on a hold and shrinks as she breathes out. She can just watch,
- * or hold a finger down while breathing in and lift it to breathe out, and the tuna tells her when
- * she's right on the beat.
+ * Bubbles (D54): slow breathing with the tuna, in for 4 and out for 6. A big bubble grows
+ * as she breathes in and shrinks as she breathes out, while a dot goes up one half of a circle and down
+ * the other. She can just watch, or hold a finger down while breathing in and lift it to breathe out,
+ * and the tuna tells her when she's right on the beat.
  *
  * Only the rules and timing live here; drawing, sound and touch are in components/Breathe.tsx.
  */
 
-export type Phase = 'in' | 'hold' | 'out' | 'rest';
-export type PatternId = 'box' | 'gentle';
+export type Phase = 'in' | 'out';
 
 export const BREATHE_SETTINGS = {
-  /** Seconds of each step in one breath. Box has holds after breathing in (hold) and out (rest);
-   *  gentle has none and a longer out-breath, for when holding feels like too much. */
-  patterns: {
-    box: [
-      { phase: 'in', seconds: 4 },
-      { phase: 'hold', seconds: 4 },
-      { phase: 'out', seconds: 4 },
-      { phase: 'rest', seconds: 4 },
-    ],
-    gentle: [
-      { phase: 'in', seconds: 4 },
-      { phase: 'out', seconds: 6 },
-    ],
-  } satisfies Record<PatternId, { phase: Phase; seconds: number }[]>,
-  /** Breaths in a round: about two minutes either way. */
-  breaths: { box: 8, gentle: 12 } satisfies Record<PatternId, number>,
+  /** Seconds of each half of a breath. No holds: the box pattern's holds were confusing in testing. */
+  steps: [
+    { phase: 'in', seconds: 4 },
+    { phase: 'out', seconds: 6 },
+  ] satisfies { phase: Phase; seconds: number }[],
+  /** Breaths in a round: about two minutes. */
+  breaths: 12,
   /** Seconds of "Ready?" before the first breath. */
   leadIn: 3,
   /** How far off the beat (seconds, either way) pressing and lifting her finger can be and still count. */
@@ -42,7 +32,6 @@ export type BreatheEvent =
   | { type: 'over' };
 
 export interface Session {
-  pattern: PatternId;
   /** Seconds since the start, lead-in included. */
   time: number;
   /** Breaths finished (the out-breath done), and how many of those her finger followed. */
@@ -62,9 +51,10 @@ export interface Session {
   events: BreatheEvent[];
 }
 
-export function createSession(pattern: PatternId): Session {
+export type BreatheResult = Pick<Session, 'breaths' | 'onBeat' | 'touched'>;
+
+export function createSession(): Session {
   return {
-    pattern,
     time: 0,
     breaths: 0,
     onBeat: 0,
@@ -79,50 +69,43 @@ export function createSession(pattern: PatternId): Session {
   };
 }
 
-export const breathSeconds = (p: PatternId) => S.patterns[p].reduce((a, s) => a + s.seconds, 0);
-export const roundSeconds = (p: PatternId) => S.leadIn + S.breaths[p] * breathSeconds(p);
+export const BREATH_SECONDS = S.steps.reduce((a, s) => a + s.seconds, 0);
+export const ROUND_SECONDS = S.leadIn + S.breaths * BREATH_SECONDS;
 
-/** When a step starts in breath `n`, in session time. */
-function stepStart(p: PatternId, n: number, step: number) {
-  let t = S.leadIn + n * breathSeconds(p);
-  for (let i = 0; i < step; i++) t += S.patterns[p][i].seconds;
-  return t;
-}
-const outIndex = (p: PatternId) => S.patterns[p].findIndex((s) => s.phase === 'out');
+/** When breath `n` starts breathing in, and breathing out, in session time. */
+const inStart = (n: number) => S.leadIn + n * BREATH_SECONDS;
+const outStart = (n: number) => inStart(n) + S.steps[0].seconds;
 
 export interface Moment {
   phase: Phase | 'ready';
-  /** Which breath (0-based), and which step of it. */
+  /** Which breath (0-based), and which step of it (0: in, 1: out). */
   breath: number;
   step: number;
   /** How far through the step, 0–1. */
   progress: number;
-  /** Whole seconds left in the step, for the countdown: 4, 3, 2, 1. */
+  /** Whole seconds left in the step, for the countdown: 6, 5, 4, 3, 2, 1. */
   count: number;
   /** How full the bubble is, 0 (out) to 1 (in), eased so it starts and ends each breath softly. */
   fill: number;
 }
 
 /** Where the round is at time `t`. Past the end, it stays on the last moment. */
-export function momentAt(p: PatternId, t: number): Moment {
-  const steps = S.patterns[p];
+export function momentAt(t: number): Moment {
   if (t < S.leadIn) {
     return { phase: 'ready', breath: 0, step: 0, progress: t / S.leadIn, count: Math.ceil(S.leadIn - t), fill: 0 };
   }
-  const total = S.breaths[p];
-  const len = breathSeconds(p);
-  let breath = Math.floor((t - S.leadIn) / len);
-  let into = t - S.leadIn - breath * len;
-  if (breath >= total) {
-    breath = total - 1;
-    into = len - 1e-9;
+  let breath = Math.floor((t - S.leadIn) / BREATH_SECONDS);
+  let into = t - S.leadIn - breath * BREATH_SECONDS;
+  if (breath >= S.breaths) {
+    breath = S.breaths - 1;
+    into = BREATH_SECONDS - 1e-9;
   }
-  let step = 0;
-  while (into >= steps[step].seconds && step < steps.length - 1) into -= steps[step++].seconds;
-  const { phase, seconds } = steps[step];
+  const step = into < S.steps[0].seconds ? 0 : 1;
+  if (step === 1) into -= S.steps[0].seconds;
+  const { phase, seconds } = S.steps[step];
   const progress = Math.min(1, into / seconds);
   const ease = (x: number) => (1 - Math.cos(Math.PI * x)) / 2;
-  const fill = phase === 'in' ? ease(progress) : phase === 'hold' ? 1 : phase === 'out' ? 1 - ease(progress) : 0;
+  const fill = phase === 'in' ? ease(progress) : 1 - ease(progress);
   return { phase, breath, step, progress, count: Math.max(1, Math.ceil(seconds - into - 1e-9)), fill };
 }
 
@@ -143,20 +126,16 @@ const near = (times: number[], at: number) => times.some((t) => Math.abs(t - at)
 
 export function step(s: Session, dt: number) {
   if (s.over) return;
-  const p = s.pattern;
   s.time += Math.min(dt, 0.1);
-  const steps = S.patterns[p];
-  const total = S.breaths[p];
-  const end = roundSeconds(p);
 
-  // Announce each new step, so the sound and the words change with it.
-  const m = momentAt(p, Math.min(s.time, end - 1e-6));
-  const index = m.phase === 'ready' ? -1 : m.breath * steps.length + m.step;
+  // Announce each new step, so the sound and the words change with it. A breath is done once its
+  // out-breath is, which is when the next one starts breathing in.
+  const m = momentAt(Math.min(s.time, ROUND_SECONDS - 1e-6));
+  const index = m.phase === 'ready' ? -1 : m.breath * S.steps.length + m.step;
   while (s.announced < index) {
     s.announced++;
-    const at = steps[s.announced % steps.length];
-    // A breath is done once its out-breath is.
-    if (s.announced > 0 && steps[(s.announced - 1) % steps.length].phase === 'out') {
+    const at = S.steps[s.announced % S.steps.length];
+    if (s.announced > 0 && at.phase === 'in') {
       s.breaths++;
       s.events.push({ type: 'breath', n: s.breaths });
     }
@@ -165,23 +144,21 @@ export function step(s: Session, dt: number) {
 
   // Did her finger go down as the breath in started, and come up as the breath out started?
   // Checked once the chance to lift has passed.
-  while (s.nextCheck < total && s.time > stepStart(p, s.nextCheck, outIndex(p)) + S.beatTolerance) {
+  while (s.nextCheck < S.breaths && s.time > outStart(s.nextCheck) + S.beatTolerance) {
     const n = s.nextCheck++;
-    if (near(s.presses, stepStart(p, n, 0)) && near(s.releases, stepStart(p, n, outIndex(p)))) {
+    if (near(s.presses, inStart(n)) && near(s.releases, outStart(n))) {
       s.onBeat++;
       s.events.push({ type: 'onBeat', n: s.onBeat });
     }
-    const keepFrom = stepStart(p, n + 1, 0) - S.beatTolerance;
+    const keepFrom = inStart(n + 1) - S.beatTolerance;
     s.presses = s.presses.filter((t) => t >= keepFrom);
     s.releases = s.releases.filter((t) => t >= keepFrom);
   }
 
-  if (s.time >= end) {
-    // The last out-breath (or rest) has finished.
-    if (s.breaths < total) {
-      s.breaths = total;
-      s.events.push({ type: 'breath', n: total });
-    }
+  if (s.time >= ROUND_SECONDS) {
+    // The last out-breath has finished.
+    s.breaths = S.breaths;
+    s.events.push({ type: 'breath', n: S.breaths });
     s.over = true;
     s.events.push({ type: 'over' });
   }

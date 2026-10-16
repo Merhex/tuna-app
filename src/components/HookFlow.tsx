@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { pickActivity, rememberPick } from '../activities';
+import type { BreatheResult } from '../breathe';
 import { CARDS, cardById, fitsPlace, PLACES, type Card } from '../cards';
 import { drawCard, FAVOURITES_MIN } from '../draw';
 import { fx } from '../feedback';
@@ -8,16 +10,20 @@ import { useApp } from '../state';
 import { cravingInProgress } from '../updates';
 import { schoolSize, type AppData, type HookResult } from '../storage';
 import { CardView, Rating } from './CardView';
+import { BreatheRound } from './Breathe';
 import { DodgeGame, type DodgeScore } from './Dodge';
 import { Close, FishHook, House, Pin } from './Icons';
 import { Tuna } from './Tuna';
 import { Haptic } from './Haptic';
 
-type Step = 'before' | 'drop' | 'card' | 'game' | 'check' | 'won' | 'notyet' | 'snagged';
+type Step = 'before' | 'drop' | 'card' | 'game' | 'breathe' | 'check' | 'won' | 'notyet' | 'snagged';
+
+/** How the last round of Dodge the hooks or Bubbles went. */
+type LastRound = { kind: 'dodge'; score: DodgeScore } | { kind: 'breathe'; result: BreatheResult };
 
 /** How long a new screen ignores taps (see `guard`). */
 const SETTLE_MS = 300;
-/** A hook rated this strong or stronger starts with Dodge the hooks instead of a card (D51). */
+/** A hook rated this strong or stronger starts with Dodge the hooks or Bubbles instead of a card (D51, D54). */
 const GAME_FROM = 8;
 
 export function HookFlow({ onExit }: { onExit: () => void }) {
@@ -32,10 +38,11 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   const [drawn, setDrawn] = useState<string[]>([]);
   const [completed, setCompleted] = useState<string[]>([]);
   const [lastCatch, setLastCatch] = useState<{ isNew: boolean; count: number } | null>(null);
-  // Dodge the hooks (D50): rounds played this hook, and the score of the last one if she played it
-  // after her last card, for the check and win screens.
+  // Rounds of Dodge the hooks (D50) and breaths in Bubbles (D54) this hook, and how the last round went
+  // if she did one after her last card, for the check and win screens.
   const [rounds, setRounds] = useState(0);
-  const [lastRound, setLastRound] = useState<DodgeScore | null>(null);
+  const [breaths, setBreaths] = useState(0);
+  const [lastRound, setLastRound] = useState<LastRound | null>(null);
   const [note, setNote] = useState('');
   // The postcard (D53), drawn as soon as the win screen shows, so a tap opens the share sheet
   // straight away: iPhone only allows sharing right after a tap, not after waiting for a drawing.
@@ -54,7 +61,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
     makePostcard({
       headline: pick(t.postcardHeadlines),
       feat: lastRound
-        ? `${t.dodgeTitle} · ${lastRound.dodged} ${t.hooksDodged(lastRound.dodged)}`
+        ? roundLine(lastRound)
         : last
           ? `${last.title[lang]} · ${t.rarity[last.rarity]}`
           : '',
@@ -83,6 +90,26 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
       if (performance.now() - stepAt.current >= SETTLE_MS) fn(...args);
     };
   const later = (fn: () => void, ms: number) => timers.current.push(window.setTimeout(fn, ms));
+
+  // Straight from a brutal rating (D51): no card or round yet. Then a round says why it came up, and
+  // offers the other one or a card instead (D54).
+  const fromRating = !drawn.length && !rounds && !breaths;
+  const roundLine = (r: LastRound) =>
+    r.kind === 'dodge'
+      ? `${t.dodgeTitle} · ${r.score.dodged} ${t.hooksDodged(r.score.dodged)}`
+      : `${t.breatheTitle} · ${r.result.breaths} ${t.breathsTaken(r.result.breaths)}`;
+  // The tap also lets iPhone play the round's sounds.
+  const toRound = (next: 'game' | 'breathe') => () => {
+    fx.tap();
+    setStep(next);
+  };
+
+  /** A brutal hook starts with one of the two, at random, but never the same three times in a row (D54). */
+  function startBrutal() {
+    const a = pickActivity(data.settings.brutalPicks);
+    update((d) => ({ ...d, settings: { ...d.settings, brutalPicks: rememberPick(d.settings.brutalPicks, a) } }));
+    setStep(a === 'dodge' ? 'game' : 'breathe');
+  }
 
   function draw() {
     // Only cards she can do where she is (D39). Favourites mode needs enough hearted cards that fit here,
@@ -148,6 +175,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           cards: drawn,
           completed,
           ...(rounds ? { rounds } : {}),
+          ...(breaths ? { breaths } : {}),
           result,
           ...(baitNote ? { baitNote } : {}),
         },
@@ -157,15 +185,15 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
 
   function close() {
     // Leaving after finishing at least one card or round counts as "not yet"; otherwise nothing is recorded.
-    if ((completed.length || rounds) && step !== 'won' && step !== 'snagged') finish('notyet');
+    if ((completed.length || rounds || breaths) && step !== 'won' && step !== 'snagged') finish('notyet');
     onExit();
   }
 
   return (
     <main class={`screen hook step-${step}`}>
       <header class="topbar">
-        {/* The game has its own button for ending the round. */}
-        {step !== 'won' && step !== 'game' && (
+        {/* The rounds have their own button for ending them. */}
+        {step !== 'won' && step !== 'game' && step !== 'breathe' && (
           <button class="icon-btn" onClick={close} aria-label={t.close}>
             <Close />
             <Haptic />
@@ -201,7 +229,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
               fx.tap();
               setBefore(n);
               // The tap also lets iPhone play the game's sounds.
-              later(n >= GAME_FROM ? () => setStep('game') : draw, 250);
+              later(n >= GAME_FROM ? startBrutal : draw, 250);
             })}
           />
           <button
@@ -258,19 +286,51 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
       {step === 'game' && (
         <DodgeGame
           calm={data.settings.reducedMotion}
-          // Straight from a brutal rating (D51): say why, and offer a card instead.
-          lead={drawn.length || rounds ? undefined : t.dodgeBrutal(before ?? GAME_FROM)}
-          onSkip={drawn.length || rounds ? undefined : guard(draw)}
+          lead={fromRating ? t.dodgeBrutal(before ?? GAME_FROM) : undefined}
+          others={
+            fromRating
+              ? [
+                  { label: t.breatheInstead, onPick: guard(toRound('breathe')) },
+                  { label: t.drawCard, onPick: guard(draw) },
+                ]
+              : undefined
+          }
           onEnd={(score) => {
             // Leaving before her first touch goes back without counting a round: to the rating if
             // she came straight from it, so she can change it, otherwise to "Not yet".
-            if (!score && !drawn.length && !rounds) {
+            if (!score && fromRating) {
               leftBefore.current = false;
               return setStep('before');
             }
             if (!score) return setStep('notyet');
             setRounds((n) => n + 1);
-            setLastRound(score);
+            setLastRound({ kind: 'dodge', score });
+            setStep('check');
+          }}
+        />
+      )}
+
+      {step === 'breathe' && (
+        <BreatheRound
+          calm={data.settings.reducedMotion}
+          lead={fromRating ? t.breatheBrutal(before ?? GAME_FROM) : undefined}
+          others={
+            fromRating
+              ? [
+                  { label: t.dodgeInstead, onPick: guard(toRound('game')) },
+                  { label: t.drawCard, onPick: guard(draw) },
+                ]
+              : undefined
+          }
+          onEnd={(result) => {
+            // Leaving before a whole breath works like leaving the game before touching it.
+            if (!result && fromRating) {
+              leftBefore.current = false;
+              return setStep('before');
+            }
+            if (!result) return setStep('notyet');
+            setBreaths((n) => n + result.breaths);
+            setLastRound({ kind: 'breathe', result });
             setStep('check');
           }}
         />
@@ -279,10 +339,17 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
       {step === 'check' && (
         <section class="panel center">
           <Tuna mood="happy" size={110} />
-          {lastRound && (
+          {lastRound?.kind === 'dodge' && (
             <p class="dodge-summary">
-              {t.dodgeEulogy(lastRound.dodged)}
-              <span class="muted small">{lastRound.bubbles} {t.bubblesCaught(lastRound.bubbles)}</span>
+              {t.dodgeEulogy(lastRound.score.dodged)}
+              <span class="muted small">{lastRound.score.bubbles} {t.bubblesCaught(lastRound.score.bubbles)}</span>
+            </p>
+          )}
+          {lastRound?.kind === 'breathe' && (
+            <p class="dodge-summary">
+              {t.breatheSummary(lastRound.result.breaths)}
+              {/* Only if she played along with her finger. */}
+              {lastRound.result.touched && <span class="muted small">{t.breathsOnBeat(lastRound.result.onBeat)}</span>}
             </p>
           )}
           <h1>{t.checkTitle}</h1>
@@ -346,9 +413,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           <Tuna mood="smug" size={150} class="bob" />
           <h1 class="won-title">{wonTitle.current}</h1>
           {lastRound ? (
-            <p class="muted">
-              {t.dodgeTitle} · {lastRound.dodged} {t.hooksDodged(lastRound.dodged)}
-            </p>
+            <p class="muted">{roundLine(lastRound)}</p>
           ) : (
             <>
               {lastCatch?.isNew && <p class="new-catch">{t.newCatch}</p>}
@@ -395,21 +460,17 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
         <section class="panel center">
           <Tuna mood="cheer" size={110} />
           <h1>{t.notYetTitle}</h1>
-          {/* After a brutal hook that started with the game (D51), there's no card yet. */}
+          {/* After a brutal hook that started with a round (D51), there's no card yet. */}
           <p class="muted">{drawn.length ? t.notYetBody : t.notYetBodyNoCard}</p>
           <div class="stack">
             <button class="primary big" onClick={guard(draw)}>{drawn.length ? t.drawAnother : t.drawCard}<Haptic /></button>
-            {/* For a craving that outlasts a card (D50). The tap also lets iPhone play the game's sounds. */}
-            <button
-              class="secondary big"
-              onClick={guard(() => {
-                fx.tap();
-                setStep('game');
-              })}
-            >
-              {t.dodgeOffer}
-              <Haptic />
-            </button>
+            {/* For a craving that outlasts a card (D50): both rounds, the one she didn't just do first (D54). */}
+            {(lastRound?.kind === 'dodge' ? (['breathe', 'game'] as const) : (['game', 'breathe'] as const)).map((r) => (
+              <button key={r} class="secondary big" onClick={guard(toRound(r))}>
+                {r === 'game' ? t.dodgeOffer : t.breatheOffer}
+                <Haptic />
+              </button>
+            ))}
           </div>
           <button class="link" onClick={guard(() => { finish('notyet'); onExit(); })}>{t.backToTank}<Haptic /></button>
         </section>

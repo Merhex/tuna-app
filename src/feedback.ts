@@ -206,7 +206,7 @@ export const fx = {
       noise(ac, { dur: 0.12, from: 900, to: 300, gain: 0.05 });
     });
   },
-  /** Bubbles (prototype): breathing in. A soft note that rises for as long as the breath. */
+  /** Bubbles (D54): breathing in. A soft note that rises for as long as the breath. */
   breatheIn(seconds: number) {
     cue([[0, 20]], (ac) => swell(ac, { freq: 196, to: 294, dur: seconds }));
   },
@@ -216,10 +216,6 @@ export const fx = {
       swell(ac, { freq: 294, to: 196, dur: seconds });
       for (let i = 0; i < 3; i++) tone(ac, { freq: 380 + i * 60, to: 700 + i * 90, start: 0.4 + i * (seconds / 3.5), dur: 0.1, gain: 0.04 });
     });
-  },
-  /** Bubbles: a hold starts. Barely there, so she knows the step changed. */
-  breatheHold() {
-    cue([[0, 12]], (ac) => tone(ac, { freq: 587, dur: 0.6, gain: 0.025 }));
   },
   /** Bubbles: her finger followed a whole breath. */
   onBeat() {

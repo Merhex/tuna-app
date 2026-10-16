@@ -1,4 +1,5 @@
 import { createStore, get, setMany, getMany } from 'idb-keyval';
+import type { Activity } from './activities';
 import type { Lang, Place } from './cards';
 import type { DrawState } from './draw';
 import { emptySeabed, type Seabed } from './seabed';
@@ -27,6 +28,8 @@ export interface HookEntry {
   completed?: string[];
   /** Rounds of Dodge the hooks she played (D50); absent when none. */
   rounds?: number;
+  /** Breaths taken in Bubbles, over all its rounds (D54); absent when none. */
+  breaths?: number;
   result: HookResult;
   baitNote?: string;
 }
@@ -47,6 +50,8 @@ export interface Settings {
   place: Place;
   /** Day of the latest milestone she has seen in the treasure, for the "new milestone" dot. */
   milestoneSeen: number;
+  /** What her last brutal hooks started with, newest last, so it's never the same three times running (D54). */
+  brutalPicks: Activity[];
 }
 
 export interface AppData {
@@ -94,6 +99,7 @@ export function defaultData(): AppData {
       currency: defaultCurrency(lang),
       place: 'home',
       milestoneSeen: 0,
+      brutalPicks: [],
     },
     quitDate: null,
     treasure: null,
