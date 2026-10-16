@@ -50,9 +50,9 @@ describe('drawCard', () => {
       commonDraws++;
       if (card.id === target) hits++;
     }
-    // 1 uncaught at weight 3 vs 19 caught at weight 1 → 3/22 ≈ 13.6%
-    expect(hits / commonDraws).toBeGreaterThan(0.11);
-    expect(hits / commonDraws).toBeLessThan(0.16);
+    // 1 uncaught at weight 3 vs 25 caught at weight 1 → 3/28 ≈ 10.7%
+    expect(hits / commonDraws).toBeGreaterThan(0.085);
+    expect(hits / commonDraws).toBeLessThan(0.13);
   });
 
   it('draws only from favourites when given', () => {
@@ -65,9 +65,9 @@ describe('drawCard', () => {
     }
   });
 
-  it('has 51 unique cards with both languages filled in', () => {
-    expect(CARDS).toHaveLength(51);
-    expect(new Set(CARDS.map((c) => c.id)).size).toBe(51);
+  it('has 61 unique cards with both languages filled in', () => {
+    expect(CARDS).toHaveLength(61);
+    expect(new Set(CARDS.map((c) => c.id)).size).toBe(61);
     for (const c of CARDS) {
       expect(c.title.en && c.title.cs && c.task.en && c.task.cs).toBeTruthy();
     }
@@ -99,6 +99,12 @@ describe('where she is (D39, D40)', () => {
   it('has at least two cards of every rarity out of the house', () => {
     // Two, so the guaranteed rare and the no-repeat rule still have something to pick from.
     for (const r of RARITIES) expect(out.filter((c) => c.rarity === r).length, r).toBeGreaterThanOrEqual(2);
+  });
+
+  it('makes every daydream card work anywhere (D52)', () => {
+    const daydreams = CARDS.filter((c) => c.category === 'daydream');
+    expect(daydreams.length).toBeGreaterThan(0);
+    for (const c of daydreams) expect(c.where, c.id).toContain('anywhere');
   });
 
   it('still guarantees a rare or better when drawing only out-of-house cards', () => {

@@ -2,7 +2,7 @@ import deck from './data/cards.json';
 
 export type Lang = 'en' | 'cs';
 export type Rarity = 'common' | 'uncommon' | 'rare' | 'legendary';
-export type Category = 'physical' | 'sensory' | 'ridiculous' | 'social' | 'grounding';
+export type Category = 'physical' | 'sensory' | 'ridiculous' | 'social' | 'grounding' | 'daydream';
 export type Where = 'anywhere' | 'quiet' | 'home' | 'outside';
 
 export interface Card {

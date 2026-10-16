@@ -1,5 +1,5 @@
 {
-  "deckVersion": 2,
+  "deckVersion": 3,
   "cards": [
     {
       "id": "weak-hand-cat",
@@ -898,6 +898,181 @@
       ],
       "timerSeconds": 45,
       "addedIn": 2
+    },
+    {
+      "id": "dd-ramen-queue",
+      "title": {
+        "en": "Eight Seats in Tokyo",
+        "cs": "Osm míst v Tokiu"
+      },
+      "task": {
+        "en": "You’re queuing for a tiny ramen shop in Tokyo. It’s drizzling. Inside, a bowl lands in front of you. Describe it topping by topping: the broth, the egg, the steam on your face. Then eat it slowly in your head.",
+        "cs": "Stojíš frontu do malého ramen bistra v Tokiu. Mrholí. Uvnitř před tebou přistane miska. Popiš ji kousek po kousku: vývar, vajíčko, páru na obličeji. Pak ji v duchu pomalu sněz."
+      },
+      "rarity": "common",
+      "category": "daydream",
+      "where": [
+        "anywhere"
+      ],
+      "addedIn": 3
+    },
+    {
+      "id": "dd-konbini",
+      "title": {
+        "en": "Konbini at 1 a.m.",
+        "cs": "Večerka v jednu ráno"
+      },
+      "task": {
+        "en": "It’s 1 a.m. in a Tokyo konbini. Fill your basket in your head: one snack, one drink, one thing you can’t identify, one KitKat flavour that shouldn’t exist, and one onigiri. Not tuna. Please.",
+        "cs": "Je jedna ráno a jsi v tokijské večerce. Naplň si v duchu košík: jednu dobrotu, jedno pití, jednu věc, kterou nepoznáš, jeden KitKat v příchuti, která by neměla existovat, a jedno onigiri. Ne s tuňákem. Prosím."
+      },
+      "rarity": "common",
+      "category": "daydream",
+      "where": [
+        "anywhere"
+      ],
+      "addedIn": 3
+    },
+    {
+      "id": "dd-jeju-tangerine",
+      "title": {
+        "en": "Tangerine Island",
+        "cs": "Mandarinkový ostrov"
+      },
+      "task": {
+        "en": "Jeju Island, a tangerine orchard by the sea. Pick one off the branch. Peel it in one long strip. Smell your fingers. Eat it slice by slice for 30 seconds. Sweet or sour?",
+        "cs": "Ostrov Čedžu, mandarinkový sad u moře. Utrhni jednu z větve. Oloupej ji jedním dlouhým proužkem. Přičichni si k prstům. Jez ji 30 sekund dílek po dílku. Sladká, nebo kyselá?"
+      },
+      "rarity": "common",
+      "category": "daydream",
+      "where": [
+        "anywhere"
+      ],
+      "timerSeconds": 30,
+      "addedIn": 3
+    },
+    {
+      "id": "dd-kyoto-tea",
+      "title": {
+        "en": "Kyoto, Slowly",
+        "cs": "Kjóto, pomalu"
+      },
+      "task": {
+        "en": "A tea room in Kyoto. Tatami under your knees, steam rising from the bowl. Turn it twice, the way they showed you. How does the matcha smell? Take three slow sips in your head. No slurping.",
+        "cs": "Čajovna v Kjótu. Pod koleny tatami, z misky stoupá pára. Otoč ji dvakrát, jak ti ukázali. Jak voní matcha? Dej si v duchu tři pomalé doušky. Žádné srkání."
+      },
+      "rarity": "uncommon",
+      "category": "daydream",
+      "where": [
+        "anywhere"
+      ],
+      "timerSeconds": 45,
+      "addedIn": 3
+    },
+    {
+      "id": "dd-hanbok-palace",
+      "title": {
+        "en": "Palace Day",
+        "cs": "Den v paláci"
+      },
+      "task": {
+        "en": "You’re in a rented hanbok at Gyeongbokgung Palace. What colour did you pick? Walk through the gate while the guards change. Now plan your three photos: where you stand, the pose, the caption.",
+        "cs": "Jsi v půjčeném hanboku v paláci Kjongbokkung. Jakou barvu sis vybrala? Projdi branou, zrovna se střídají stráže. Teď naplánuj tři fotky: kde stojíš, jaká póza, jaký popisek."
+      },
+      "rarity": "uncommon",
+      "category": "daydream",
+      "where": [
+        "anywhere"
+      ],
+      "addedIn": 3
+    },
+    {
+      "id": "dd-panda-inspection",
+      "title": {
+        "en": "Panda Inspection",
+        "cs": "Inspekce pand"
+      },
+      "task": {
+        "en": "You’re at the panda base in Chengdu. Pick one panda and name it. For 30 seconds, narrate its day like a sports commentator. Bamboo. Rolling. More bamboo. Lazier than a tuna on a Sunday.",
+        "cs": "Jsi v pandí rezervaci v Čcheng-tu. Vyber si jednu pandu a pojmenuj ji. 30 sekund komentuj její den jako sportovní komentátor. Bambus. Válení. Další bambus. Línější než tuňák v neděli."
+      },
+      "rarity": "uncommon",
+      "category": "daydream",
+      "where": [
+        "anywhere"
+      ],
+      "timerSeconds": 30,
+      "addedIn": 3
+    },
+    {
+      "id": "dd-noraebang",
+      "title": {
+        "en": "Karaoke Room, Seoul",
+        "cs": "Karaoke v Soulu"
+      },
+      "task": {
+        "en": "A karaoke room in Seoul: neon everywhere, a tambourine on the table. You get the mic. Pick your three songs, in order. The last one is Seven. It’s mandatory. Who’s on backing vocals?",
+        "cs": "Karaoke místnost v Soulu: všude neony, na stole tamburína. Mikrofon máš ty. Vyber tři písničky, v pořadí. Poslední je Seven. Je povinná. Kdo dělá vokály?"
+      },
+      "rarity": "uncommon",
+      "category": "daydream",
+      "where": [
+        "anywhere"
+      ],
+      "addedIn": 3
+    },
+    {
+      "id": "dd-ryokan-onsen",
+      "title": {
+        "en": "Hot Spring Night",
+        "cs": "Noc u horkého pramene"
+      },
+      "task": {
+        "en": "A ryokan in the mountains. Robe on, tiny slippers off. Step into the hot spring while snow falls on the water. For 45 seconds, just feel the heat in your shoulders. Nothing else to do.",
+        "cs": "Rjokan v horách. Župan na sebe, malinké pantofle dolů. Vlez do horkého pramene, zatímco na hladinu padá sníh. 45 sekund jen cíť teplo v ramenou. Nic jiného dělat nemusíš."
+      },
+      "rarity": "rare",
+      "category": "daydream",
+      "where": [
+        "anywhere"
+      ],
+      "timerSeconds": 45,
+      "addedIn": 3
+    },
+    {
+      "id": "dd-perfect-day",
+      "title": {
+        "en": "One Perfect Day",
+        "cs": "Jeden dokonalý den"
+      },
+      "task": {
+        "en": "Plan one perfect day anywhere in the world, money no object. Breakfast, where you go, who’s with you, what you wear, the last thing you see before sleep. The more specific, the better.",
+        "cs": "Naplánuj jeden dokonalý den kdekoli na světě, na penězích nezáleží. Snídaně, kam jdeš, kdo je s tebou, co máš na sobě, co uvidíš jako poslední před spaním. Čím konkrétnější, tím líp."
+      },
+      "rarity": "rare",
+      "category": "daydream",
+      "where": [
+        "anywhere"
+      ],
+      "addedIn": 3
+    },
+    {
+      "id": "dd-seoul-front-row",
+      "title": {
+        "en": "Front Row, Seoul",
+        "cs": "První řada, Soul"
+      },
+      "task": {
+        "en": "Close your eyes. The stadium in Seoul goes dark and thousands of ARMY Bombs light up purple. Jungkook walks out. What’s the first song? What are you screaming? Stay in that crowd for 60 seconds.",
+        "cs": "Zavři oči. Stadion v Soulu potemní a rozsvítí se tisíce fialových ARMY Bombů. Na pódium vychází Jungkook. Jaká je první písnička? Co ječíš? Zůstaň v tom davu 60 sekund."
+      },
+      "rarity": "legendary",
+      "category": "daydream",
+      "where": [
+        "anywhere"
+      ],
+      "timerSeconds": 60,
+      "addedIn": 3
     }
   ]
 }
