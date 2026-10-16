@@ -15,9 +15,8 @@ import { Ocean } from './components/Ocean';
 import { Intro } from './components/Intro';
 import { Logbook } from './components/Logbook';
 import { Treasure } from './components/Treasure';
-import { Dodge } from './components/Dodge';
 
-export type Screen = 'install' | 'intro' | 'home' | 'hook' | 'aquarium' | 'logbook' | 'treasure' | 'settings' | 'dodge';
+export type Screen = 'install' | 'intro' | 'home' | 'hook' | 'aquarium' | 'logbook' | 'treasure' | 'settings';
 
 export function App() {
   const [data, setData] = useState<AppData | null>(null);
@@ -124,10 +123,8 @@ export function App() {
               setIntroReturn('settings');
               go('intro');
             }}
-            showDodge={() => go('dodge')}
           />
         )}
-        {screen === 'dodge' && <Dodge onClose={() => go('settings')} />}
       </LangContext.Provider>
     </AppContext.Provider>
   );

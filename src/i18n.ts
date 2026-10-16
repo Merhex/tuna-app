@@ -287,14 +287,12 @@ const en = {
   version: 'Version',
   back: 'Back',
 
-  // Dodge the hooks: a prototype, opened from a small button next to the version in Settings.
-  dodgeOpen: 'Dodge the hooks (prototype)',
+  // Dodge the hooks (D50): the mini-game offered on “Not yet”.
+  dodgeOffer: 'Dodge the hooks · 2½ min',
   dodgeTitle: 'Dodge the hooks',
-  dodgePrototype: 'Prototype',
   dodgeHowTo: 'Drag anywhere to swim. Dodge the hooks and catch the bubbles. Two and a half minutes, and you can’t lose.',
-  dodgeStart: 'Start swimming',
   dodgeEnd: 'End the round',
-  dodgeOver: 'Round over',
+  dodgeRounds: (n: number): string => (n === 1 ? 'Dodge the hooks' : `Dodge the hooks ×${n}`),
   dodgeEulogy: (n: number): string =>
     n === 0
       ? 'Not a single hook dared this time.'
@@ -303,8 +301,6 @@ const en = {
         : `Here lie ${n} hooks. They came for a tuna and went home empty. Nobody will miss them.`,
   hooksDodged: (n: number): string => (n === 1 ? 'hook dodged' : 'hooks dodged'),
   bubblesCaught: (n: number): string => (n === 1 ? 'bubble caught' : 'bubbles caught'),
-  bestStreak: 'most bubbles in a row',
-  dodgeAgain: 'Another round',
   continueWarn: 'Your collection could get lost if the browser clears its data.',
 };
 
@@ -583,13 +579,11 @@ const cs: Strings = {
   version: 'Verze',
   back: 'Zpět',
 
-  dodgeOpen: 'Uhni háčkům (prototyp)',
+  dodgeOffer: 'Uhni háčkům · 2½ min',
   dodgeTitle: 'Uhni háčkům',
-  dodgePrototype: 'Prototyp',
   dodgeHowTo: 'Táhni prstem kdekoli a plav. Uhýbej háčkům a chytej bubliny. Dvě a půl minuty a prohrát se nedá.',
-  dodgeStart: 'Začni plavat',
   dodgeEnd: 'Ukončit kolo',
-  dodgeOver: 'Konec kola',
+  dodgeRounds: (n) => (n === 1 ? 'Uhni háčkům' : `Uhni háčkům ×${n}`),
   dodgeEulogy: (n) =>
     n === 0
       ? 'Tentokrát se neodvážil ani jeden háček.'
@@ -601,8 +595,6 @@ const cs: Strings = {
         ),
   hooksDodged: (n) => csPlural(n, 'přelstěný háček', 'přelstěné háčky', 'přelstěných háčků'),
   bubblesCaught: (n) => csPlural(n, 'chycená bublina', 'chycené bubliny', 'chycených bublin'),
-  bestStreak: 'nejvíc bublin v řadě',
-  dodgeAgain: 'Ještě jedno kolo',
   continueWarn: 'Pokud prohlížeč smaže data, můžeš přijít o sbírku.',
 };
 

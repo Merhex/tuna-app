@@ -117,12 +117,19 @@ export function DumbbellChart({ hooks }: { hooks: Rated[] }) {
           </strong>
           <span>
             {when(current.startedAt)}
-            {current.completed?.length ? ` · ${current.completed.map((id) => cardById(id)?.title[lang]).filter(Boolean).join(', ')}` : ''}
+            {used(current, lang, t.dodgeRounds)}
           </span>
         </div>
       )}
     </div>
   );
+}
+
+/** What she used on a hook: the cards she completed, then the game if she played it (D50). */
+function used(h: Rated, lang: Lang, rounds: (n: number) => string) {
+  const names = (h.completed ?? []).map((id) => cardById(id)?.title[lang]).filter(Boolean);
+  if (h.rounds) names.push(rounds(h.rounds));
+  return names.length ? ` · ${names.join(', ')}` : '';
 }
 
 /** Daily average of how strong cravings were when they hit. */

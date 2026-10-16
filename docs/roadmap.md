@@ -19,20 +19,20 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 | **Tea, not coffee:** no coffee anywhere; chai, genmaicha, a Chengdu tea house and a Kyoto tea ceremony in the treasure | D47 | |
 | **Treasure list without a headline:** three random things, all shuffled | D48 | |
 | **Pet counter in the Logbook:** how many times she has petted the tuna, just above the history | D49 | |
+| **Dodge the hooks:** a 2½-minute mini-game offered on “Not yet”, next to drawing another card | D50 | |
 
 ## Next, ranked
 
 | # | Feature | Impact | Effort | Notes |
 | ---: | --- | --- | --- | --- |
-| 1 | **Bubbles: ride the wave.** A tuna blowing slow bubbles to breathe along with, for brutal hooks (8–10) or after “Not yet”. | High | Medium | Phase 2 in the original plan. Cards are under a minute (D37); this covers a craving that outlasts several cards. Slow breathing and urge surfing are standard techniques. |
+| 1 | **Bubbles: ride the wave.** A tuna blowing slow bubbles to breathe along with, for brutal hooks (8–10) or after “Not yet”. | High | Medium | Phase 2 in the original plan. Cards are under a minute (D37); this covers a craving that outlasts several cards. Slow breathing and urge surfing are standard techniques. “Not yet” already offers Dodge the hooks (D50), so decide how the two sit together there. |
 | 2 | **Cards that work for her.** Show “your best lures” (cards with the biggest drop in hook strength) in the Logbook, and weight them a little higher in the draw. | Medium | Small | The data is already stored (D10). Attribution is fuzzy when a hook used several cards: count only the last completed card, or only one-card hooks. |
 | 3 | **Bottles from the app's maker**, unlocking at milestones or washing up at random. | Medium | Medium | Phase 3. Milestone IDs are permanent (D41), so bottles can key on them. Waits on Q3. |
 | 4 | **Lifeline / flare.** One tap on “Not yet” to ask someone for a text. | Medium | Small to large | Phase 3's flare needs a push server (D22). A cheaper version opens Messages with a ready-made text (an `sms:` link), no server. Waits on Q3. |
 | 5 | **Messages in a bottle.** Her own reasons, written on good days, shown during hard ones. | Medium | Small | Phase 2. |
 | 6 | **Tuna facts as rewards** on the win screen. | Low | Small | Phase 2. |
-| 7 | **Dodge the hooks** mini-game. | Medium | Large | Phase 2. Visual distraction like Tetris measurably weakens cravings, but it's the biggest build here. **Prototype live for testing:** opened from the small hook next to the version in Settings, not from the craving flow. Drag to swim, 2½-minute round, no game over; nothing is saved. Tuning knobs are in `DODGE_SETTINGS` (`src/dodge.ts`). |
-| 8 | **Navigation charts.** If-then plans (“If I'm at a party, then I'll…”). | Medium | Medium | Phase 3. Sits awkwardly with D29 (no trigger features); decide that first. |
-| 9 | **Bait insights.** When hooks hit and when slips happen, from times and bait notes. | Medium | Medium | Phase 3. Conflicts with D29 as it stands: needs a decision before building. |
+| 7 | **Navigation charts.** If-then plans (“If I'm at a party, then I'll…”). | Medium | Medium | Phase 3. Sits awkwardly with D29 (no trigger features); decide that first. |
+| 8 | **Bait insights.** When hooks hit and when slips happen, from times and bait notes. | Medium | Medium | Phase 3. Conflicts with D29 as it stands: needs a decision before building. |
 
 ## Ruled out
 
@@ -44,5 +44,5 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 
 ## Open before release
 
-- A native speaker's read of the Czech in the new cards, the milestones, the decoration names, the quit-date question and the Jungkook jokes, the Jungkook, Japan, Korea and China treasure items and the pet counter (D32, D45, D46, D49).
+- A native speaker's read of the Czech in the new cards, the milestones, the decoration names, the quit-date question and the Jungkook jokes, the Jungkook, Japan, Korea and China treasure items, the pet counter and Dodge the hooks (D32, D45, D46, D49, D50).
 - A test on a real iPhone: sounds, vibrations and the install flow can't be checked in a desktop browser (see [qa-log.md](qa-log.md)).

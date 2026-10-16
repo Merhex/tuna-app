@@ -2,81 +2,10 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { createGame, DODGE_SETTINGS, moveBy, resize, step, type Game } from '../dodge';
 import { fx } from '../feedback';
 import { useT } from '../i18n';
-import { useApp } from '../state';
-import { cravingInProgress } from '../updates';
 import { Back, FishHook } from './Icons';
 import { Haptic } from './Haptic';
-import { Tuna } from './Tuna';
 
-type Score = Game['score'];
-
-/** Dodge the hooks (roadmap #7), a prototype opened from a small button in Settings. Nothing is saved. */
-export function Dodge({ onClose }: { onClose: () => void }) {
-  const t = useT();
-  const { data } = useApp();
-  const [score, setScore] = useState<Score | null>(null);
-  const [playing, setPlaying] = useState(false);
-
-  const start = () => {
-    // A tap, so iPhone lets the game's sounds play from here on.
-    fx.tap();
-    setPlaying(true);
-  };
-
-  if (playing) {
-    return (
-      <Pond
-        calm={data.settings.reducedMotion}
-        onEnd={(s) => {
-          setScore(s);
-          setPlaying(false);
-        }}
-      />
-    );
-  }
-
-  return (
-    <main class="screen dodge">
-      <header class="topbar">
-        <button class="icon-btn" onClick={onClose} aria-label={t.back}><Back /><Haptic /></button>
-        <span class="proto-badge">{t.dodgePrototype}</span>
-        <span class="topbar-spacer" />
-      </header>
-      {score ? (
-        <section class="panel center">
-          <Tuna mood="smug" size={150} />
-          <h1>{t.dodgeOver}</h1>
-          <p class="muted">{t.dodgeEulogy(score.dodged)}</p>
-          <div class="stats dodge-stats">
-            <div>
-              <strong>{score.dodged}</strong>
-              <span>{t.hooksDodged(score.dodged)}</span>
-            </div>
-            <div>
-              <strong>{score.bubbles}</strong>
-              <span>{t.bubblesCaught(score.bubbles)}</span>
-            </div>
-            <div class="stat-wide">
-              <strong>{score.bestStreak}</strong>
-              <span>{t.bestStreak}</span>
-            </div>
-          </div>
-          <div class="stack">
-            <button class="primary big" onClick={start}>{t.dodgeAgain}<Haptic /></button>
-            <button class="secondary full" onClick={onClose}>{t.back}<Haptic /></button>
-          </div>
-        </section>
-      ) : (
-        <section class="panel center">
-          <Tuna mood="cheer" size={150} />
-          <h1>{t.dodgeTitle}</h1>
-          <p class="muted">{t.dodgeHowTo}</p>
-          <button class="primary big" onClick={start}>{t.dodgeStart}<Haptic /></button>
-        </section>
-      )}
-    </main>
-  );
-}
+export type DodgeScore = Game['score'];
 
 /** Her finger moves the tuna this much further than it moved, so it crosses the screen without her stretching. */
 const DRAG_GAIN = 1.3;
@@ -85,8 +14,14 @@ const HOOK_SCALE = 0.73;
 /** The tuna art is 200 wide; this makes it about 96 px, matching tunaRx and tunaRy. */
 const TUNA_SCALE = 0.48;
 
-function Pond({ calm, onEnd }: { calm: boolean; onEnd: (s: Score) => void }) {
+/**
+ * One round of Dodge the hooks (D50), full screen, offered on "Not yet" in the craving flow. It waits for
+ * her first touch, so she can read how to play. `onEnd` gets the score, or null if she left before starting.
+ */
+export function DodgeGame({ calm, onEnd }: { calm: boolean; onEnd: (s: DodgeScore | null) => void }) {
   const t = useT();
+  const [started, setStarted] = useState(false);
+  const startedRef = useRef(false);
   const canvas = useRef<HTMLCanvasElement>(null);
   const hud = useRef<HTMLElement>(null);
   const tide = useRef<HTMLDivElement>(null);
@@ -99,12 +34,10 @@ function Pond({ calm, onEnd }: { calm: boolean; onEnd: (s: Score) => void }) {
   const end = () => {
     if (ended.current || !game.current) return;
     ended.current = true;
-    onEnd({ ...game.current.score });
+    onEnd(startedRef.current ? { ...game.current.score } : null);
   };
 
   useEffect(() => {
-    // A round is meant for a craving, so no update reload mid-game (see updates.ts).
-    cravingInProgress.current = true;
     // The backdrop's rising bubbles look too much like the ones to catch.
     document.documentElement.classList.add('dodging');
     const c = canvas.current!;
@@ -137,7 +70,8 @@ function Pond({ calm, onEnd }: { calm: boolean; onEnd: (s: Score) => void }) {
     let shown = { bubbles: -1, dodged: -1 };
     const frame = (now: number) => {
       const g = game.current!;
-      step(g, (now - last) / 1000);
+      // Nothing moves until her first touch.
+      if (startedRef.current) step(g, (now - last) / 1000);
       last = now;
       for (const e of g.events) {
         if (e.type === 'bubble') fx.catchBubble(e.streak);
@@ -161,7 +95,6 @@ function Pond({ calm, onEnd }: { calm: boolean; onEnd: (s: Score) => void }) {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', fit);
       document.documentElement.classList.remove('dodging');
-      cravingInProgress.current = false;
     };
   }, []);
 
@@ -170,7 +103,7 @@ function Pond({ calm, onEnd }: { calm: boolean; onEnd: (s: Score) => void }) {
   };
 
   return (
-    <main class="dodge-pond">
+    <div class="dodge-pond">
       <canvas
         ref={canvas}
         class="dodge-canvas"
@@ -178,6 +111,10 @@ function Pond({ calm, onEnd }: { calm: boolean; onEnd: (s: Score) => void }) {
           if (finger.current) return;
           finger.current = { id: e.pointerId, x: e.clientX, y: e.clientY };
           canvas.current?.setPointerCapture(e.pointerId);
+          if (!startedRef.current) {
+            startedRef.current = true;
+            setStarted(true);
+          }
         }}
         onPointerMove={(e) => {
           const f = finger.current;
@@ -195,7 +132,13 @@ function Pond({ calm, onEnd }: { calm: boolean; onEnd: (s: Score) => void }) {
         <span class="dodge-count"><i class="dodge-bubble" /><span ref={bubbleCount}>0</span></span>
         <span class="dodge-count"><FishHook size={18} stroke={6} /><span ref={hookCount}>0</span></span>
       </header>
-    </main>
+      {!started && (
+        <div class="dodge-hint">
+          <h2>{t.dodgeTitle}</h2>
+          <p>{t.dodgeHowTo}</p>
+        </div>
+      )}
+    </div>
   );
 }
 

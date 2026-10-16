@@ -132,7 +132,7 @@ function HistoryRow({ hook }: { hook: HookEntry }) {
           <span class="history-time">{time}</span>
           <span class="history-result">{label}</span>
         </div>
-        {cards.length > 0 ? (
+        {cards.length > 0 || hook.rounds ? (
           <ul class="history-cards">
             {cards.map((c, i) => (
               <li key={`${c.id}-${i}`}>
@@ -140,6 +140,12 @@ function HistoryRow({ hook }: { hook: HookEntry }) {
                 <span>{c.title[lang]}</span>
               </li>
             ))}
+            {!!hook.rounds && (
+              <li class="history-game">
+                <span class="history-game-icon"><FishHook size={18} stroke={5} /></span>
+                <span>{t.dodgeRounds(hook.rounds)}</span>
+              </li>
+            )}
           </ul>
         ) : (
           <span class="muted small">{t.noCards}</span>

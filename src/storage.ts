@@ -25,6 +25,8 @@ export interface HookEntry {
   cards: string[];
   /** Cards she actually completed (added later; older entries may not have it). */
   completed?: string[];
+  /** Rounds of Dodge the hooks she played (D50); absent when none. */
+  rounds?: number;
   result: HookResult;
   baitNote?: string;
 }
