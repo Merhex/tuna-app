@@ -292,6 +292,11 @@ const en = {
   dodgeTitle: 'Dodge the hooks',
   dodgeHowTo: 'Drag anywhere to swim. Dodge the hooks and catch the bubbles. Two and a half minutes, and you can’t lose.',
   dodgeEnd: 'End the round',
+  // A brutal hook (D51) starts with the game: a line above the how-to, and a way out.
+  dodgeBrutal: (n: number): string => `A ${n}? This one gets the big guns.`,
+  dodgeDrawInstead: 'Draw a card instead',
+  drawCard: 'Draw a card',
+  notYetBodyNoCard: 'Draw a card, or go another round.',
   dodgeRounds: (n: number): string => (n === 1 ? 'Dodge the hooks' : `Dodge the hooks ×${n}`),
   dodgeEulogy: (n: number): string =>
     n === 0
@@ -583,6 +588,10 @@ const cs: Strings = {
   dodgeTitle: 'Uhni háčkům',
   dodgeHowTo: 'Táhni prstem kdekoli a plav. Uhýbej háčkům a chytej bubliny. Dvě a půl minuty a prohrát se nedá.',
   dodgeEnd: 'Ukončit kolo',
+  dodgeBrutal: (n) => `${n}? Na tenhle vytáhneme těžký kalibr.`,
+  dodgeDrawInstead: 'Radši vytáhnout kartu',
+  drawCard: 'Vytáhnout kartu',
+  notYetBodyNoCard: 'Vytáhni kartu, nebo si dej další kolo.',
   dodgeRounds: (n) => (n === 1 ? 'Uhni háčkům' : `Uhni háčkům ×${n}`),
   dodgeEulogy: (n) =>
     n === 0

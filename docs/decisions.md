@@ -2,7 +2,7 @@
 
 Every product and technical decision, numbered. Code comments refer to these numbers.
 
-**Last number used: D50.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
+**Last number used: D51.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
 
 Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an answer), **Superseded**.
 
@@ -36,6 +36,7 @@ Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an
 - **D29 · No trigger-specific features.** Decided. The app doesn’t try to map triggers. A handful of cards fit common moments (gaming, watching series).
 - **D39 · Draw only cards she can do where she is.** Decided, built. See below.
 - **D50 · Dodge the hooks, offered on “Not yet”.** Decided, built. See below.
+- **D51 · A brutal hook (9 or 10) starts with Dodge the hooks.** Decided, built. See below.
 
 ## Cards and rarity
 
@@ -268,7 +269,7 @@ A 2½-minute mini-game (roadmap #7, phase 2). The tuna follows her finger, hooks
 
 *Why a game:* steering between moving things is a visual-spatial task, the kind that competes with craving imagery. In the Tetris studies (Skorka-Brown, Andrade & May, 2014 and 2015), about 3 minutes of play made cravings, nicotine included, roughly a fifth weaker. The round was cut to 2½ minutes after a playtest, because 3 felt too long.
 
-- **Only on “Not yet”,** as a second button under “Draw another card”. Not on the home screen: one big button that goes straight to a card is deliberate (D4, D5), and “card or game?” would be a decision at the worst moment. The game could also crowd out the cards, which get her moving and fill the aquarium. “Not yet” is exactly when a craving has outlasted a card.
+- **On “Not yet”,** as a second button under “Draw another card”, and since D51 straight away for a brutal hook. Not on the home screen: one big button that goes straight to a card is deliberate (D4, D5), and “card or game?” would be a decision at the worst moment. The game could also crowd out the cards, which get her moving and fill the aquarium. “Not yet” is exactly when a craving has outlasted a card.
 - **It waits for her first touch,** with how to play shown until then. Leaving before that goes back to “Not yet” without counting a round.
 - **Then the usual check:** the hooks' eulogy and her bubbles above “Did the hook let go?”, the after rating, and Yes / Not yet / the quiet slip link (D31). Yes adds a tuna to her school like a card does (D11). The game's “hooks dodged” is a separate count and isn't stored.
 - **Stored as `rounds` on the hook** (how many rounds she played), and shown in the Logbook's history. Absent when she didn't play, so older saves and backups need nothing. It's there for comparing hooks with and without the game later (roadmap #2).
@@ -277,3 +278,20 @@ A 2½-minute mini-game (roadmap #7, phase 2). The tuna follows her finger, hooks
 - The Czech needs a native speaker's read (D32).
 
 *Code:* rules in `src/dodge.ts`, drawing and touch in `src/components/Dodge.tsx`, the “Not yet” button and the check in `src/components/HookFlow.tsx`, `rounds` in `src/storage.ts`, the history line in `src/components/Logbook.tsx`; tests in `src/dodge.test.ts`.
+
+## D51 · A brutal hook (9 or 10) starts with Dodge the hooks
+
+**Decided, built.** Extends D50.
+
+When she rates a hook 9 or 10 at the start, the game comes up instead of a card. Above how to play there's a line in the tuna's voice (“A 10? This one gets the big guns.”) and a small “Draw a card instead” link.
+
+*Why:* tucked away on “Not yet”, the game would rarely be found, and a 9 or 10 is when a card that takes under a minute (D37) is least likely to be enough. Going straight in, rather than asking “card or game?”, saves a decision and a tap at the worst moment, and the card is still one tap away.
+
+- **Only with a rating.** Skipping the rating draws a card as before. Hooks rated 1 to 8 are unchanged, and home stays one big button (D4).
+- **Leaving before her first touch goes back to the rating,** so a mis-tap can be corrected. Nothing is recorded.
+- **After the round,** the usual check. “Not yet” then offers “Draw a card” (not “another”, as she hasn't had one) or another round. A hook beaten with the game alone adds a tuna to her school and shows the game on the win screen and in the Logbook.
+- **Brutal hooks with and without the game** can now be compared in the Logbook data (`rounds`, D50), for roadmap #2.
+- **The threshold is `GAME_FROM`** in `src/components/HookFlow.tsx`, easy to move to 8.
+- The Czech needs a native speaker's read (D32).
+
+*Code:* `GAME_FROM` and the game step in `src/components/HookFlow.tsx`, the line and the link (`lead`, `onSkip`) in `src/components/Dodge.tsx`, the text in `src/i18n.ts`.

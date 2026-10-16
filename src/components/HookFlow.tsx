@@ -16,6 +16,8 @@ type Step = 'before' | 'drop' | 'card' | 'game' | 'check' | 'won' | 'notyet' | '
 
 /** How long a new screen ignores taps (see `guard`). */
 const SETTLE_MS = 300;
+/** A hook rated this strong or stronger starts with Dodge the hooks instead of a card (D51). */
+const GAME_FROM = 9;
 
 export function HookFlow({ onExit }: { onExit: () => void }) {
   const t = useT();
@@ -178,7 +180,8 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
               leftBefore.current = true;
               fx.tap();
               setBefore(n);
-              later(draw, 250);
+              // The tap also lets iPhone play the game's sounds.
+              later(n >= GAME_FROM ? () => setStep('game') : draw, 250);
             })}
           />
           <button
@@ -235,8 +238,16 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
       {step === 'game' && (
         <DodgeGame
           calm={data.settings.reducedMotion}
+          // Straight from a brutal rating (D51): say why, and offer a card instead.
+          lead={drawn.length || rounds ? undefined : t.dodgeBrutal(before ?? GAME_FROM)}
+          onSkip={drawn.length || rounds ? undefined : guard(draw)}
           onEnd={(score) => {
-            // Leaving before her first touch goes back without counting a round.
+            // Leaving before her first touch goes back without counting a round: to the rating if
+            // she came straight from it, so she can change it, otherwise to "Not yet".
+            if (!score && !drawn.length && !rounds) {
+              leftBefore.current = false;
+              return setStep('before');
+            }
             if (!score) return setStep('notyet');
             setRounds((n) => n + 1);
             setLastRound(score);
@@ -299,7 +310,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
         </section>
       )}
 
-      {step === 'won' && card && (
+      {step === 'won' && (
         <section class="panel center celebrate">
           <div class="bubbles" aria-hidden="true">
             {Array.from({ length: 14 }, (_, i) => (
@@ -347,9 +358,10 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
         <section class="panel center">
           <Tuna mood="cheer" size={110} />
           <h1>{t.notYetTitle}</h1>
-          <p class="muted">{t.notYetBody}</p>
+          {/* After a brutal hook that started with the game (D51), there's no card yet. */}
+          <p class="muted">{drawn.length ? t.notYetBody : t.notYetBodyNoCard}</p>
           <div class="stack">
-            <button class="primary big" onClick={guard(draw)}>{t.drawAnother}<Haptic /></button>
+            <button class="primary big" onClick={guard(draw)}>{drawn.length ? t.drawAnother : t.drawCard}<Haptic /></button>
             {/* For a craving that outlasts a card (D50). The tap also lets iPhone play the game's sounds. */}
             <button
               class="secondary big"

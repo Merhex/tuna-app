@@ -15,10 +15,21 @@ const HOOK_SCALE = 0.73;
 const TUNA_SCALE = 0.48;
 
 /**
- * One round of Dodge the hooks (D50), full screen, offered on "Not yet" in the craving flow. It waits for
- * her first touch, so she can read how to play. `onEnd` gets the score, or null if she left before starting.
+ * One round of Dodge the hooks, full screen, in the craving flow: on "Not yet" (D50), or right away for a
+ * brutal hook (D51). It waits for her first touch, so she can read how to play. `onEnd` gets the score, or
+ * null if she left before starting. `lead` and `onSkip` add a line above the how-to and a way out to a card.
  */
-export function DodgeGame({ calm, onEnd }: { calm: boolean; onEnd: (s: DodgeScore | null) => void }) {
+export function DodgeGame({
+  calm,
+  lead,
+  onSkip,
+  onEnd,
+}: {
+  calm: boolean;
+  lead?: string;
+  onSkip?: () => void;
+  onEnd: (s: DodgeScore | null) => void;
+}) {
   const t = useT();
   const [started, setStarted] = useState(false);
   const startedRef = useRef(false);
@@ -29,6 +40,7 @@ export function DodgeGame({ calm, onEnd }: { calm: boolean; onEnd: (s: DodgeScor
   const hookCount = useRef<HTMLSpanElement>(null);
   const game = useRef<Game | null>(null);
   const finger = useRef<{ id: number; x: number; y: number } | null>(null);
+  const shownAt = useRef(performance.now());
   const ended = useRef(false);
 
   const end = () => {
@@ -109,6 +121,8 @@ export function DodgeGame({ calm, onEnd }: { calm: boolean; onEnd: (s: DodgeScor
         class="dodge-canvas"
         onPointerDown={(e) => {
           if (finger.current) return;
+          // A double tap on the previous screen shouldn't start the round before she's read how to play.
+          if (!startedRef.current && performance.now() - shownAt.current < 300) return;
           finger.current = { id: e.pointerId, x: e.clientX, y: e.clientY };
           canvas.current?.setPointerCapture(e.pointerId);
           if (!startedRef.current) {
@@ -134,8 +148,15 @@ export function DodgeGame({ calm, onEnd }: { calm: boolean; onEnd: (s: DodgeScor
       </header>
       {!started && (
         <div class="dodge-hint">
+          {lead && <p class="dodge-lead">{lead}</p>}
           <h2>{t.dodgeTitle}</h2>
           <p>{t.dodgeHowTo}</p>
+          {onSkip && (
+            <button class="link" onClick={onSkip}>
+              {t.dodgeDrawInstead}
+              <Haptic />
+            </button>
+          )}
         </div>
       )}
     </div>
