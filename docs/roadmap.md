@@ -18,6 +18,7 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 | **Japan, South Korea and China in the treasure:** 29 things to eat, see and do there, always one in the list | D46 | |
 | **Tea, not coffee:** no coffee anywhere; chai, genmaicha, a Chengdu tea house and a Kyoto tea ceremony in the treasure | D47 | |
 | **Treasure list without a headline:** three random things, all shuffled | D48 | |
+| **Pet counter in the Logbook:** how many times she has petted the tuna, just above the history | D49 | |
 
 ## Next, ranked
 
@@ -43,5 +44,5 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 
 ## Open before release
 
-- A native speaker's read of the Czech in the new cards, the milestones, the decoration names, the quit-date question and the Jungkook jokes and the Jungkook, Japan, Korea and China treasure items (D32, D45, D46).
+- A native speaker's read of the Czech in the new cards, the milestones, the decoration names, the quit-date question and the Jungkook jokes, the Jungkook, Japan, Korea and China treasure items and the pet counter (D32, D45, D46, D49).
 - A test on a real iPhone: sounds, vibrations and the install flow can't be checked in a desktop browser (see [qa-log.md](qa-log.md)).

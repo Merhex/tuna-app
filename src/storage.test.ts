@@ -26,4 +26,11 @@ describe('storage', () => {
     expect(restored.quitDate).toBe('2026-09-20');
     expect(restored.seabed).toEqual(data.seabed);
   });
+
+  it('starts counting pets at zero for old backups, and keeps the count through a restore (D49)', () => {
+    const data = parseBackup(backup({}));
+    expect(data.pets).toBe(0);
+    data.pets = 128;
+    expect(parseBackup(makeBackup(data)).pets).toBe(128);
+  });
 });

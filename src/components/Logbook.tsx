@@ -1,11 +1,11 @@
-import { useState } from 'preact/hooks';
+import { useMemo, useState } from 'preact/hooks';
 import { CARDS, cardById, type Lang } from '../cards';
-import { localeOf, useLang, useT } from '../i18n';
+import { localeOf, pick, useLang, useT } from '../i18n';
 import { dailyTrend, dayKey, ratedHooks, trendChange } from '../stats';
 import { useApp } from '../state';
 import { averagePullDrop, schoolSize, type HookEntry } from '../storage';
 import { DumbbellChart, fmt, Legend, TrendChart } from './Charts';
-import { Back, FishHook } from './Icons';
+import { Back, FishHook, Heart } from './Icons';
 import { RarityFish } from './RarityFish';
 import { MiniTuna, Tuna } from './Tuna';
 import { Haptic } from './Haptic';
@@ -74,6 +74,8 @@ export function Logbook({ onClose }: { onClose: () => void }) {
             )}
           </section>
 
+          <PetCount />
+
           <section class="history">
             <h2>{t.history}</h2>
             {groupByDay(history.slice(0, limit)).map(([key, entries]) => (
@@ -91,6 +93,24 @@ export function Logbook({ onClose }: { onClose: () => void }) {
         </>
       )}
     </main>
+  );
+}
+
+/** How many times she has petted the tuna on the home screen, with a random quip (D49). */
+function PetCount() {
+  const t = useT();
+  const lang = useLang();
+  const { data } = useApp();
+  const quip = useMemo(() => pick(t.petCountQuips), [t]);
+
+  return (
+    <section class="pet-count">
+      <span class="pet-count-heart" aria-hidden="true"><Heart size={20} filled /></span>
+      <p>
+        <strong>{data.pets.toLocaleString(localeOf(lang))}</strong> {t.petCount(data.pets)}
+        <span class="muted small">{data.pets ? quip : t.petCountNone}</span>
+      </p>
+    </section>
   );
 }
 

@@ -2,7 +2,7 @@
 
 Every product and technical decision, numbered. Code comments refer to these numbers.
 
-**Last number used: D48.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
+**Last number used: D49.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
 
 Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an answer), **Superseded**.
 
@@ -67,6 +67,7 @@ Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an
 - **D38 · Sunken Treasure: money not spent, live.** Decided. Optional; weekly amount, currency and start date; ticks live and never resets. *Deliberately no savings goal, now or later:* a goal is closed. Once it's reached there's a finish line, and a finish line can become the excuse to start vaping again. The counter is open-ended instead: it keeps growing, so the effort keeps showing, with nothing to “finish”. No “I bought one” subtraction either.
 - **D41 · Milestones in the Sunken Treasure.** Decided, built. See below.
 - **D43 · Seabed decorations at milestones.** Decided, built. See below.
+- **D49 · Count every pet of the tuna, shown in the Logbook.** Decided, built. See below.
 
 ## Technical
 
@@ -244,3 +245,16 @@ The “would already buy” list used to start with a headline: the most expensi
 - The Jungkook thing and the Japan, South Korea or China thing are still always there once she can afford them (D45, D46).
 
 *Code:* `pickComparisons` in `src/comparisons.ts`, the list in `src/components/Treasure.tsx`; tests in `src/comparisons.test.ts`.
+
+## D49 · Count every pet of the tuna, shown in the Logbook
+
+**Decided, built.**
+
+Every tap on the tuna on the home screen counts as a pet (D45's Easter egg). The Logbook shows the total in a small strip just above the history: a coral heart, the number, and one quip picked at random each time the Logbook opens (“Best-petted fish in the ocean.”).
+
+- **Counting starts with this version.** Older pets weren't stored, so the count starts at 0. At 0 the strip says the tuna is waiting for its first pet, which also points out the Easter egg.
+- **It only goes up.** Like the school (D11), nothing resets it.
+- **Stored as `pets`,** next to the other data, and included in backups. Older saves and backups load with 0.
+- The Czech needs a native speaker's read (D32).
+
+*Code:* the count in `PettableTuna` in `src/components/Home.tsx`, the strip (`PetCount`) in `src/components/Logbook.tsx`, the text in `src/i18n.ts`, `pets` in `src/storage.ts`; tests in `src/storage.test.ts`.
