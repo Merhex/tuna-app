@@ -274,7 +274,7 @@ A 2½-minute mini-game (roadmap #7, phase 2). The tuna follows her finger, hooks
 - **On “Not yet”,** as a second button under “Draw another card”, and since D51 straight away for a brutal hook. Not on the home screen: one big button that goes straight to a card is deliberate (D4, D5), and “card or game?” would be a decision at the worst moment. The game could also crowd out the cards, which get her moving and fill the aquarium. “Not yet” is exactly when a craving has outlasted a card.
 - **It waits for her first touch,** with how to play shown until then. Leaving before that goes back to “Not yet” without counting a round.
 - **Then the usual check:** the hooks' eulogy and her bubbles above “Did the hook let go?”, the after rating, and Yes / Not yet / the quiet slip link (D31). Yes adds a tuna to her school like a card does (D11). The game's “hooks dodged” is a separate count and isn't stored.
-- **Stored as `rounds` on the hook** (how many rounds she played), and shown in the Logbook's history. Absent when she didn't play, so older saves and backups need nothing. It's there for comparing hooks with and without the game later (roadmap #2).
+- **Stored as `rounds` on the hook** (how many rounds she played), and shown in the Logbook's history. Absent when she didn't play, so older saves and backups need nothing. It's there for comparing hooks with and without the game later (roadmap: “Cards that work for her”).
 - **No vibration on iPhone during play:** only a real tap vibrates there (D33), and dragging doesn't count. Android vibrates on a nick.
 - **Tuning** (round length, hook speeds and counts, bubble speed, how much a nick eases things) is in `DODGE_SETTINGS`.
 - The Czech needs a native speaker's read (D32).
@@ -292,7 +292,7 @@ When she rates a hook 8, 9 or 10 at the start, the game comes up instead of a ca
 - **Only with a rating.** Skipping the rating draws a card as before. Hooks rated 1 to 7 are unchanged, and home stays one big button (D4).
 - **Leaving before her first touch goes back to the rating,** so a mis-tap can be corrected. Nothing is recorded.
 - **After the round,** the usual check. “Not yet” then offers “Draw a card” (not “another”, as she hasn't had one) or another round. A hook beaten with the game alone adds a tuna to her school and shows the game on the win screen and in the Logbook.
-- **Brutal hooks with and without the game** can now be compared in the Logbook data (`rounds`, D50), for roadmap #2.
+- **Brutal hooks with and without the game** can now be compared in the Logbook data (`rounds`, D50), for the roadmap's “Cards that work for her”.
 - **The threshold is `GAME_FROM`** in `src/components/HookFlow.tsx`. It started at 9 and was lowered to 8 after testing, so the game comes up more often.
 - The Czech needs a native speaker's read (D32).
 
@@ -332,6 +332,28 @@ The win screen has a **Send a postcard** button under “Back to the tank”. It
 - **1080 × 1350 PNG** (4:5, fits chats and stories), in the app's fonts and colours.
 - The Czech needs a native speaker's read (D32).
 
-*Why:* support from other people is one of the strongest helps when quitting, and a celebrated win gets reinforced. Sharing a good moment is easier than asking for help in a bad one (the flare, roadmap #4).
+*Why:* support from other people is one of the strongest helps when quitting, and a celebrated win gets reinforced. Sharing a good moment is easier than asking for help in a bad one (the roadmap's lifeline / flare).
 
 *Code:* drawing and sharing in `src/postcard.ts`, the button in `src/components/HookFlow.tsx`, the text in `src/i18n.ts`; tests in `src/postcard.test.ts`.
+
+## D54 · Bubbles: a brutal hook starts with breathing or the game, at random
+
+**Decided, built.** Extends D50 and D51. Roadmap #1, “Bubbles: ride the wave”.
+
+Bubbles is two minutes of slow breathing with the tuna. The tuna sits in a big bubble that grows as she breathes in and shrinks as she breathes out, while little bubbles leave its mouth. A dot goes up the left half of a circle breathing in and down the right half breathing out, with “Breathe in” / “Breathe out” above and a countdown below. Soft tones rise and fall with the breath; Android vibrates as each half starts.
+
+- **In for 4, out for 6, no holds.** A prototype also had box breathing (4-4-4-4) on a square, but in testing the holds and the square were confusing, so it was dropped. A longer out-breath is the calming part.
+- **12 breaths,** about two minutes after a 3-second “Ready?”. The back button (“That's enough”) ends it early.
+- **Her finger is optional.** She can just watch, or keep a finger down while breathing in and lift it to breathe out. Pressing and lifting within 0.9 s of the beat counts the breath as on the beat, and the tuna cheers (“Perfect bubble.”). The bubble brightens while her finger is down.
+- **A brutal hook (8 to 10) starts with Bubbles or Dodge the hooks, at random,** never the same one three times in a row. The last two picks are kept in settings (`brutalPicks`). Like D51, it goes straight in: no “game or breathing?” question at the worst moment.
+- **The other one, or a card, is one tap away:** under how it works, “Dodge the hooks instead” and “Draw a card” (or “Breathe instead” and “Draw a card” on the game), each with a line in the tuna's voice (“A 9? Let's slow this one right down.”). They replace D51's “Draw a card instead”.
+- **It waits for Start,** with the stage dimmed behind how it works. Leaving before finishing a breath counts nothing and goes back, to the rating if she came straight from it (like the game, D50).
+- **“Not yet” offers both,** for any hook: Dodge the hooks · 2½ min and Breathe with the tuna · 2 min, the one she didn't just do first. After a card, the game comes first.
+- **Then the usual check:** how many big breaths (and how many on the beat, if she used her finger) above “Did the hook let go?”, then Yes / Not yet / the quiet slip link (D31). Yes adds a tuna to her school. The win screen and the postcard (D53) say “Bubbles · 12 big breaths”.
+- **Stored as `breaths` on the hook** (breaths over all its rounds), next to `rounds`, and shown in the Logbook's history (“Bubbles · 12 breaths”). Absent when she didn't breathe, so older saves and backups need nothing.
+- **“Less motion”** drops the little bubbles and the dot's glow. The big bubble still grows and shrinks: it's the guide.
+- The Czech needs a native speaker's read (D32).
+
+*Why:* slow breathing with a long out-breath calms the body, and riding a craving out instead of fighting it (urge surfing) is a standard way through one. The game works the other way, by crowding out craving imagery (D50). Which helps her more at a 10 isn't known, so picking at random and recording `rounds` and `breaths` with the before and after ratings lets the Logbook data answer it later (roadmap: “Cards that work for her”). Two activities also wear thin more slowly than one.
+
+*Code:* the timing and beat in `src/breathe.ts` (`BREATHE_SETTINGS`), the pick in `src/activities.ts`, the round in `src/components/Breathe.tsx`, the swap links in `src/components/OtherWays.tsx`, the flow in `src/components/HookFlow.tsx`, the sounds in `src/feedback.ts`, `breaths` and `brutalPicks` in `src/storage.ts`, the history line in `src/components/Logbook.tsx`; tests in `src/breathe.test.ts` and `src/activities.test.ts`.

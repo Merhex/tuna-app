@@ -5,7 +5,7 @@ import { dailyTrend, dayKey, ratedHooks, trendChange } from '../stats';
 import { useApp } from '../state';
 import { averagePullDrop, schoolSize, type HookEntry } from '../storage';
 import { DumbbellChart, fmt, Legend, TrendChart } from './Charts';
-import { Back, FishHook, Heart } from './Icons';
+import { Back, BubbleIcon, FishHook, Heart } from './Icons';
 import { RarityFish } from './RarityFish';
 import { MiniTuna, Tuna } from './Tuna';
 import { Haptic } from './Haptic';
@@ -132,7 +132,7 @@ function HistoryRow({ hook }: { hook: HookEntry }) {
           <span class="history-time">{time}</span>
           <span class="history-result">{label}</span>
         </div>
-        {cards.length > 0 || hook.rounds ? (
+        {cards.length > 0 || hook.rounds || hook.breaths ? (
           <ul class="history-cards">
             {cards.map((c, i) => (
               <li key={`${c.id}-${i}`}>
@@ -144,6 +144,12 @@ function HistoryRow({ hook }: { hook: HookEntry }) {
               <li class="history-game">
                 <span class="history-game-icon"><FishHook size={18} stroke={5} /></span>
                 <span>{t.dodgeRounds(hook.rounds)}</span>
+              </li>
+            )}
+            {!!hook.breaths && (
+              <li class="history-game">
+                <span class="history-game-icon"><BubbleIcon size={20} /></span>
+                <span>{t.breatheLog(hook.breaths)}</span>
               </li>
             )}
           </ul>

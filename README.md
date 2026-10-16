@@ -14,6 +14,7 @@ The roadmap, design decisions and milestone sources live in [`docs/`](docs/). Th
 - **Milestones**, below the treasure: what to expect from quit day to one year, counted from the treasure's start date. Text in [`src/data/milestones.json`](src/data/milestones.json), sources in [`docs/milestones.md`](docs/milestones.md).
 - **Daydream cards** walk her through picturing something she'd love, from Kyoto tea to front row at Jungkook in Seoul. They work anywhere ([D52](docs/decisions.md)).
 - **Postcards:** the win screen can send a picture of the win through the share sheet. It never mentions vaping, and nothing leaves the phone unless she picks someone ([D53](docs/decisions.md)).
+- **Dodge the hooks and Bubbles:** a 2½-minute game and two minutes of slow breathing with the tuna (in 4, out 6). A brutal hook (8 to 10) starts with one of them at random, and "Not yet" offers both ([D50, D51, D54](docs/decisions.md)). Timings are in `DODGE_SETTINGS` (`src/dodge.ts`) and `BREATHE_SETTINGS` (`src/breathe.ts`).
 - **Sounds and vibrations** are generated in code (no audio files) and can be turned off in Settings. On iPhone, vibrations need iOS 18+.
 
 ## Adding or editing cards

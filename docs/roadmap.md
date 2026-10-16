@@ -23,19 +23,19 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 | **Brutal hooks start with the game:** an 8, 9 or 10 opens Dodge the hooks instead of a card, with “Draw a card instead” one tap away | D51 | |
 | **Daydream cards:** 10 cards that walk her through picturing something she'd love (Kyoto tea, Jeju tangerines, front row at Jungkook in Seoul), all doable anywhere | D52 | Deck v3 |
 | **Postcards:** share a picture of a win from the win screen | D53 | |
+| **Bubbles:** two minutes of slow breathing with the tuna (in 4, out 6). A brutal hook starts with it or Dodge the hooks at random, with the other or a card one tap away; “Not yet” offers both | D54 | |
 
 ## Next, ranked
 
 | # | Feature | Impact | Effort | Notes |
 | ---: | --- | --- | --- | --- |
-| 1 | **Bubbles: ride the wave.** A tuna blowing slow bubbles to breathe along with, for brutal hooks (8–10) or after “Not yet”. | High | Medium | Phase 2 in the original plan. Cards are under a minute (D37); this covers a craving that outlasts several cards. Slow breathing and urge surfing are standard techniques. Dodge the hooks now takes brutal hooks (8–10, D51) and sits on “Not yet” (D50), so decide where Bubbles fits alongside it. **Prototype live for testing:** opened from the small bubble next to the version in Settings, not from the craving flow. The tuna sits in a bubble that grows as she breathes in and shrinks as she breathes out, with a dot going round a square (box: 4-4-4-4) or a circle (gentle: in 4, out 6, no holds), a countdown, and soft rising and falling tones. About 2 minutes, with “That's enough” to stop early. Holding a finger down while breathing in is optional; the tuna cheers when she's on the beat. Nothing is saved. Timings are in `BREATHE_SETTINGS` (`src/breathe.ts`). |
-| 2 | **Cards that work for her.** Show “your best lures” (cards with the biggest drop in hook strength) in the Logbook, and weight them a little higher in the draw. | Medium | Small | The data is already stored (D10). Attribution is fuzzy when a hook used several cards: count only the last completed card, or only one-card hooks. |
-| 3 | **Bottles from the app's maker**, unlocking at milestones or washing up at random. | Medium | Medium | Phase 3. Milestone IDs are permanent (D41), so bottles can key on them. Waits on Q3. |
-| 4 | **Lifeline / flare.** One tap on “Not yet” to ask someone for a text. | Medium | Small to large | Phase 3's flare needs a push server (D22). A cheaper version opens Messages with a ready-made text (an `sms:` link), no server. Waits on Q3. |
-| 5 | **Messages in a bottle.** Her own reasons, written on good days, shown during hard ones. | Medium | Small | Phase 2. |
-| 6 | **Tuna facts as rewards** on the win screen. | Low | Small | Phase 2. |
-| 7 | **Navigation charts.** If-then plans (“If I'm at a party, then I'll…”). | Medium | Medium | Phase 3. Sits awkwardly with D29 (no trigger features); decide that first. |
-| 8 | **Bait insights.** When hooks hit and when slips happen, from times and bait notes. | Medium | Medium | Phase 3. Conflicts with D29 as it stands: needs a decision before building. |
+| 1 | **Cards that work for her.** Show “your best lures” (cards with the biggest drop in hook strength) in the Logbook, and weight them a little higher in the draw. | Medium | Small | The data is already stored (D10). Attribution is fuzzy when a hook used several cards: count only the last completed card, or only one-card hooks. Brutal hooks can also be split by game (`rounds`) and breathing (`breaths`), which are picked at random (D54). |
+| 2 | **Bottles from the app's maker**, unlocking at milestones or washing up at random. | Medium | Medium | Phase 3. Milestone IDs are permanent (D41), so bottles can key on them. Waits on Q3. |
+| 3 | **Lifeline / flare.** One tap on “Not yet” to ask someone for a text. | Medium | Small to large | Phase 3's flare needs a push server (D22). A cheaper version opens Messages with a ready-made text (an `sms:` link), no server. Waits on Q3. |
+| 4 | **Messages in a bottle.** Her own reasons, written on good days, shown during hard ones. | Medium | Small | Phase 2. |
+| 5 | **Tuna facts as rewards** on the win screen. | Low | Small | Phase 2. |
+| 6 | **Navigation charts.** If-then plans (“If I'm at a party, then I'll…”). | Medium | Medium | Phase 3. Sits awkwardly with D29 (no trigger features); decide that first. |
+| 7 | **Bait insights.** When hooks hit and when slips happen, from times and bait notes. | Medium | Medium | Phase 3. Conflicts with D29 as it stands: needs a decision before building. |
 
 ## Ruled out
 
@@ -47,5 +47,5 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 
 ## Open before release
 
-- A native speaker's read of the Czech in the new cards, the milestones, the decoration names, the quit-date question and the Jungkook jokes, the Jungkook, Japan, Korea and China treasure items, the pet counter, Dodge the hooks, the daydream cards and the postcards (D32, D45, D46, D49, D50, D51, D52, D53).
+- A native speaker's read of the Czech in the new cards, the milestones, the decoration names, the quit-date question and the Jungkook jokes, the Jungkook, Japan, Korea and China treasure items, the pet counter, Dodge the hooks, the daydream cards, the postcards and Bubbles (D32, D45, D46, D49, D50, D51, D52, D53, D54).
 - A test on a real iPhone: sounds, vibrations, the install flow and the postcard share sheet can't be checked in a desktop browser (see [qa-log.md](qa-log.md)).
