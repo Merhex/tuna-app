@@ -8,8 +8,6 @@ import { CZK_PER, type Currency } from './treasure';
 export interface Comparison {
   id: string;
   czk: number;
-  /** Trips get an emoji when shown as the headline. */
-  travel?: string;
   /** Jungkook things: one is always in the list when she can afford one (D45). */
   jungkook?: true;
   /** Japan, South Korea and China, where she'd love to go: one is always in the list too (D46). */
@@ -42,44 +40,44 @@ export const COMPARISONS: Comparison[] = [
   { id: 'netflix', czk: 300, en: ['a month of Netflix to rewatch the same show again', (n) => `${n} months of Netflix to rewatch the same show again`], cs: (n) => `${n}× měsíc Netflixu na pětadvacáté zhlédnutí stejného seriálu` },
   { id: 'jk-photocard', czk: 350, jungkook: true, en: ['a Jungkook photocard. The rare one. You know the one.', (n) => `${n} Jungkook photocards. The rare ones. Trade wisely.`], cs: (n) => `${n}× fotokartička s Jungkookem. Ta vzácná. Víš, která.` },
   { id: 'kr-noraebang', czk: 350, asia: true, jungkook: true, en: ['an hour in a Seoul karaoke room. Seven is mandatory.', (n) => `${n} hours in a Seoul karaoke room. Seven is mandatory.`], cs: (n) => `${n}× hodina v soulském karaoke. Seven je povinná.` },
-  { id: 'train-vienna', czk: 400, travel: '🚆', en: ['a train ticket Prague → Vienna', (n) => `${n} train tickets Prague → Vienna`], cs: (n) => `${n}× vlak Praha → Vídeň` },
+  { id: 'train-vienna', czk: 400, en: ['a train ticket Prague → Vienna', (n) => `${n} train tickets Prague → Vienna`], cs: (n) => `${n}× vlak Praha → Vídeň` },
   { id: 'kr-hanbok', czk: 450, asia: true, en: ['a day in a rented hanbok, which gets you into Gyeongbokgung Palace for free', (n) => `${n} days in a rented hanbok, which gets you into Gyeongbokgung Palace for free`], cs: (n) => `${n}× den v půjčeném hanboku. V něm tě do paláce Kjongbokkung pustí zadarmo.` },
   { id: 'sushi', czk: 600, en: ['a sushi dinner (no tuna, out of respect)', (n) => `${n} sushi dinners (no tuna, out of respect)`], cs: (n) => `${n}× večeře v sushi baru (bez tuňáka, z úcty)` },
   { id: 'jk-golden', czk: 600, jungkook: true, en: ['Jungkook’s album Golden. For the songs. And the photocard.', (n) => `${n} copies of Golden. For the songs. Mostly the photocards.`], cs: (n) => `${n}× Jungkookovo album Golden. Kvůli písničkám. A fotokartičkám.` },
-  { id: 'bus-berlin', czk: 600, travel: '🚌', en: ['a bus ticket Prague → Berlin', (n) => `${n} bus tickets Prague → Berlin`], cs: (n) => `${n}× autobus Praha → Berlín` },
-  { id: 'hostel', czk: 600, travel: '🛏️', en: ['a night in a hostel bunk above someone who snores', (n) => `${n} nights in a hostel bunk above someone who snores`], cs: (n) => `${n}× noc v hostelu na palandě nad někým, kdo chrápe` },
+  { id: 'bus-berlin', czk: 600, en: ['a bus ticket Prague → Berlin', (n) => `${n} bus tickets Prague → Berlin`], cs: (n) => `${n}× autobus Praha → Berlín` },
+  { id: 'hostel', czk: 600, en: ['a night in a hostel bunk above someone who snores', (n) => `${n} nights in a hostel bunk above someone who snores`], cs: (n) => `${n}× noc v hostelu na palandě nad někým, kdo chrápe` },
   { id: 'kr-bbq', czk: 600, asia: true, en: ['a Korean barbecue dinner in Seoul, grilled at your own table', (n) => `${n} Korean barbecue dinners in Seoul, grilled at your own table`], cs: (n) => `${n}× korejské barbecue v Soulu, které si griluješ sama u stolu` },
   { id: 'jp-tea-ceremony', czk: 600, asia: true, en: ['a tea ceremony in Kyoto. Very calm. Very slow. No slurping.', (n) => `${n} tea ceremonies in Kyoto. Very calm. Very slow. No slurping.`], cs: (n) => `${n}× čajový obřad v Kjótu. Klid. Pomalu. Žádné srkání.` },
   { id: 'massage', czk: 900, en: ['an hour-long massage', (n) => `${n} hour-long massages`], cs: (n) => `${n}× hodinová masáž` },
   { id: 'cn-great-wall', czk: 900, asia: true, en: ['a day on the Great Wall at Mutianyu, with a toboggan ride back down', (n) => `${n} days on the Great Wall at Mutianyu, with a toboggan ride back down`], cs: (n) => `${n}× den na Velké čínské zdi v Mu-tchien-jü a dolů po bobové dráze` },
-  { id: 'kr-jeju', czk: 900, travel: '🍊', asia: true, en: ['a flight from Seoul to Jeju Island, for the tangerines', (n) => `${n} flights from Seoul to Jeju Island, for the tangerines`], cs: (n) => `${n}× letenka ze Soulu na ostrov Čedžu, kvůli mandarinkám` },
-  { id: 'kr-ktx', czk: 1000, travel: '🚄', asia: true, en: ['a KTX bullet train Seoul → Busan. No zombies this time.', (n) => `${n} KTX bullet trains Seoul → Busan. No zombies this time.`], cs: (n) => `${n}× rychlovlak KTX Soul → Pusan. Tentokrát bez zombií.` },
+  { id: 'kr-jeju', czk: 900, asia: true, en: ['a flight from Seoul to Jeju Island, for the tangerines', (n) => `${n} flights from Seoul to Jeju Island, for the tangerines`], cs: (n) => `${n}× letenka ze Soulu na ostrov Čedžu, kvůli mandarinkám` },
+  { id: 'kr-ktx', czk: 1000, asia: true, en: ['a KTX bullet train Seoul → Busan. No zombies this time.', (n) => `${n} KTX bullet trains Seoul → Busan. No zombies this time.`], cs: (n) => `${n}× rychlovlak KTX Soul → Pusan. Tentokrát bez zombií.` },
   { id: 'cn-peking-duck', czk: 1200, asia: true, en: ['a whole Peking duck in Beijing. Ducks aren’t fish. Not my problem.', (n) => `${n} whole Peking ducks in Beijing. Ducks aren’t fish. Not my problem.`], cs: (n) => `${n}× celá pekingská kachna v Pekingu. Kachny nejsou ryby. Není to můj problém.` },
   { id: 'jk-army-bomb', czk: 1500, jungkook: true, en: ['an ARMY Bomb, to wave at Jungkook from very far away', (n) => `${n} ARMY Bombs, to wave at Jungkook from very far away`], cs: (n) => `${n}× ARMY Bomb na mávání Jungkookovi z velké dálky` },
   { id: 'jp-disneysea', czk: 1500, asia: true, en: ['a day at Tokyo DisneySea, the only sea I’ll let you visit without me', (n) => `${n} days at Tokyo DisneySea, the only sea I’ll let you visit without me`], cs: (n) => `${n}× den v Tokyo DisneySea, jediném moři, kam tě pustím beze mě` },
-  { id: 'flight-london', czk: 2000, travel: '✈️', en: ['a one-way flight to London. Mind the gap.', (n) => `${n} one-way flights to London. Mind the gap.`], cs: (n) => `${n}× letenka do Londýna. Mind the gap.` },
-  { id: 'jp-shinkansen', czk: 2200, travel: '🚅', asia: true, en: ['a Shinkansen ticket Tokyo → Kyoto, at 285 km/h', (n) => `${n} Shinkansen tickets Tokyo → Kyoto, at 285 km/h`], cs: (n) => `${n}× šinkansen Tokio → Kjóto, 285 km/h` },
-  { id: 'flight-barcelona', czk: 2500, travel: '✈️', en: ['a one-way flight to Barcelona', (n) => `${n} one-way flights to Barcelona`], cs: (n) => `${n}× letenka do Barcelony` },
-  { id: 'flight-lisbon', czk: 3500, travel: '✈️', en: ['a return flight to Lisbon, pastéis de nata extra', (n) => `${n} return flights to Lisbon, pastéis de nata extra`], cs: (n) => `${n}× zpáteční letenka do Lisabonu, pastéis de nata navíc` },
+  { id: 'flight-london', czk: 2000, en: ['a one-way flight to London. Mind the gap.', (n) => `${n} one-way flights to London. Mind the gap.`], cs: (n) => `${n}× letenka do Londýna. Mind the gap.` },
+  { id: 'jp-shinkansen', czk: 2200, asia: true, en: ['a Shinkansen ticket Tokyo → Kyoto, at 285 km/h', (n) => `${n} Shinkansen tickets Tokyo → Kyoto, at 285 km/h`], cs: (n) => `${n}× šinkansen Tokio → Kjóto, 285 km/h` },
+  { id: 'flight-barcelona', czk: 2500, en: ['a one-way flight to Barcelona', (n) => `${n} one-way flights to Barcelona`], cs: (n) => `${n}× letenka do Barcelony` },
+  { id: 'flight-lisbon', czk: 3500, en: ['a return flight to Lisbon, pastéis de nata extra', (n) => `${n} return flights to Lisbon, pastéis de nata extra`], cs: (n) => `${n}× zpáteční letenka do Lisabonu, pastéis de nata navíc` },
   { id: 'jk-ticket', czk: 4000, jungkook: true, en: ['a ticket to see Jungkook live (front row, elbows out, screaming included)', (n) => `${n} tickets to see Jungkook live (front row, elbows out, screaming included)`], cs: (n) => `${n}× lístek na Jungkooka naživo (první řada, lokty od těla, ječení v ceně)` },
-  { id: 'jp-ryokan', czk: 4500, travel: '♨️', asia: true, en: ['a night in a ryokan with a hot spring. Robe and tiny slippers included.', (n) => `${n} nights in a ryokan with a hot spring. Robe and tiny slippers included.`], cs: (n) => `${n}× noc v rjokanu s horkým pramenem. Župan a malinké pantofle v ceně.` },
+  { id: 'jp-ryokan', czk: 4500, asia: true, en: ['a night in a ryokan with a hot spring. Robe and tiny slippers included.', (n) => `${n} nights in a ryokan with a hot spring. Robe and tiny slippers included.`], cs: (n) => `${n}× noc v rjokanu s horkým pramenem. Župan a malinké pantofle v ceně.` },
   { id: 'aquarium', czk: 5000, en: ['a real aquarium, for your real fish friends', (n) => `${n} real aquariums, for your real fish friends`], cs: (n) => `${n}× opravdové akvárium pro opravdové rybí kamarády` },
-  { id: 'flight-iceland', czk: 6000, travel: '🌋', en: ['a return flight to Iceland, to stare at volcanoes', (n) => `${n} return flights to Iceland, to stare at volcanoes`], cs: (n) => `${n}× zpáteční letenka na Island, koukat na sopky` },
-  { id: 'interrail', czk: 8000, travel: '🚆', en: ['an Interrail pass: 7 days, all of Europe', (n) => `${n} Interrail passes: 7 days, all of Europe`], cs: (n) => `${n}× Interrail: 7 dní, celá Evropa` },
-  { id: 'jp-rail-pass', czk: 8000, travel: '🚅', asia: true, en: ['a 7-day Japan Rail Pass: bullet trains all week', (n) => `${n} 7-day Japan Rail Passes: bullet trains all week`], cs: (n) => `${n}× Japan Rail Pass na 7 dní: celý týden šinkansenem` },
-  { id: 'rome', czk: 9000, travel: '🏛️', en: ['a weekend in Rome (flights + 2 nights)', (n) => `${n} weekends in Rome (flights + 2 nights)`], cs: (n) => `${n}× víkend v Římě (letenky + 2 noci)` },
+  { id: 'flight-iceland', czk: 6000, en: ['a return flight to Iceland, to stare at volcanoes', (n) => `${n} return flights to Iceland, to stare at volcanoes`], cs: (n) => `${n}× zpáteční letenka na Island, koukat na sopky` },
+  { id: 'interrail', czk: 8000, en: ['an Interrail pass: 7 days, all of Europe', (n) => `${n} Interrail passes: 7 days, all of Europe`], cs: (n) => `${n}× Interrail: 7 dní, celá Evropa` },
+  { id: 'jp-rail-pass', czk: 8000, asia: true, en: ['a 7-day Japan Rail Pass: bullet trains all week', (n) => `${n} 7-day Japan Rail Passes: bullet trains all week`], cs: (n) => `${n}× Japan Rail Pass na 7 dní: celý týden šinkansenem` },
+  { id: 'rome', czk: 9000, en: ['a weekend in Rome (flights + 2 nights)', (n) => `${n} weekends in Rome (flights + 2 nights)`], cs: (n) => `${n}× víkend v Římě (letenky + 2 noci)` },
   { id: 'jk-soundcheck', czk: 12000, jungkook: true, en: ['a VIP soundcheck ticket: hear Jungkook warm up before everyone else', (n) => `${n} VIP soundcheck tickets: hear Jungkook warm up before everyone else`], cs: (n) => `${n}× VIP lístek na soundcheck: slyšet Jungkooka rozezpívávat se dřív než všichni ostatní` },
   { id: 'coffin', czk: 15000, en: ['a very nice coffin. No longer needed. Love that.', (n) => `${n} very nice coffins. No longer needed. Love that.`], cs: (n) => `${n}× moc pěkná rakev. Už ji nepotřebuješ. Paráda.` },
-  { id: 'cn-beijing', czk: 17000, travel: '🏮', asia: true, en: ['a return flight to Beijing, to see the Forbidden City (now allowed)', (n) => `${n} return flights to Beijing, to see the Forbidden City (now allowed)`], cs: (n) => `${n}× zpáteční letenka do Pekingu, do Zakázaného města (už povoleného)` },
-  { id: 'seoul', czk: 20000, travel: '🇰🇷', asia: true, jungkook: true, en: ['a return flight to Seoul. The HYBE building is very photogenic.', (n) => `${n} return flights to Seoul. The HYBE building is very photogenic.`], cs: (n) => `${n}× zpáteční letenka do Soulu. Budova HYBE je moc fotogenická.` },
-  { id: 'tokyo', czk: 22000, travel: '✈️', asia: true, en: ['a return flight to Tokyo', (n) => `${n} return flights to Tokyo`], cs: (n) => `${n}× zpáteční letenka do Tokia` },
-  { id: 'busan', czk: 26000, travel: '🐟', asia: true, jungkook: true, en: ['a trip to Busan, Jungkook’s hometown. Skip the fish market. For me.', (n) => `${n} trips to Busan, Jungkook’s hometown. Skip the fish market. For me.`], cs: (n) => `${n}× výlet do Pusanu, Jungkookova rodného města. Rybí trh vynech. Kvůli mně.` },
-  { id: 'bali', czk: 30000, travel: '🏝️', en: ['two weeks in Bali, doing absolutely nothing', (n) => `${n} two-week trips to Bali, doing absolutely nothing`], cs: (n) => `${n}× dva týdny na Bali, nicneděláním` },
-  { id: 'jk-concert-trip', czk: 40000, travel: '💜', asia: true, jungkook: true, en: ['a trip to Seoul to see Jungkook live: flights, hotel, ticket, ARMY Bomb', (n) => `${n} trips to Seoul to see Jungkook live: flights, hotel, ticket, ARMY Bomb`], cs: (n) => `${n}× výlet do Soulu na Jungkooka naživo: letenky, hotel, lístek, ARMY Bomb` },
-  { id: 'cn-tour', czk: 55000, travel: '🐉', asia: true, en: ['two weeks in China: the Great Wall, the Terracotta Army and Shanghai at night', (n) => `${n} two-week trips around China: the Great Wall, the Terracotta Army and Shanghai at night`], cs: (n) => `${n}× dva týdny v Číně: Velká zeď, terakotová armáda a Šanghaj v noci` },
-  { id: 'maldives', czk: 60000, travel: '🦈', en: ['a trip to swim with whale sharks in the Maldives', (n) => `${n} trips to swim with whale sharks in the Maldives`], cs: (n) => `${n}× plavání se žraloky velrybími na Maledivách` },
-  { id: 'jp-sakura', czk: 70000, travel: '🌸', asia: true, en: ['two weeks in Japan in cherry blossom season', (n) => `${n} two-week trips to Japan in cherry blossom season`], cs: (n) => `${n}× dva týdny v Japonsku, když kvetou sakury` },
-  { id: 'east-asia', czk: 90000, travel: '🌏', asia: true, en: ['a month in Tokyo, Seoul and Beijing, all in one trip', (n) => `${n} month-long trips to Tokyo, Seoul and Beijing`], cs: (n) => `${n}× měsíc v Tokiu, Soulu a Pekingu, všechno v jednom výletu` },
+  { id: 'cn-beijing', czk: 17000, asia: true, en: ['a return flight to Beijing, to see the Forbidden City (now allowed)', (n) => `${n} return flights to Beijing, to see the Forbidden City (now allowed)`], cs: (n) => `${n}× zpáteční letenka do Pekingu, do Zakázaného města (už povoleného)` },
+  { id: 'seoul', czk: 20000, asia: true, jungkook: true, en: ['a return flight to Seoul. The HYBE building is very photogenic.', (n) => `${n} return flights to Seoul. The HYBE building is very photogenic.`], cs: (n) => `${n}× zpáteční letenka do Soulu. Budova HYBE je moc fotogenická.` },
+  { id: 'tokyo', czk: 22000, asia: true, en: ['a return flight to Tokyo', (n) => `${n} return flights to Tokyo`], cs: (n) => `${n}× zpáteční letenka do Tokia` },
+  { id: 'busan', czk: 26000, asia: true, jungkook: true, en: ['a trip to Busan, Jungkook’s hometown. Skip the fish market. For me.', (n) => `${n} trips to Busan, Jungkook’s hometown. Skip the fish market. For me.`], cs: (n) => `${n}× výlet do Pusanu, Jungkookova rodného města. Rybí trh vynech. Kvůli mně.` },
+  { id: 'bali', czk: 30000, en: ['two weeks in Bali, doing absolutely nothing', (n) => `${n} two-week trips to Bali, doing absolutely nothing`], cs: (n) => `${n}× dva týdny na Bali, nicneděláním` },
+  { id: 'jk-concert-trip', czk: 40000, asia: true, jungkook: true, en: ['a trip to Seoul to see Jungkook live: flights, hotel, ticket, ARMY Bomb', (n) => `${n} trips to Seoul to see Jungkook live: flights, hotel, ticket, ARMY Bomb`], cs: (n) => `${n}× výlet do Soulu na Jungkooka naživo: letenky, hotel, lístek, ARMY Bomb` },
+  { id: 'cn-tour', czk: 55000, asia: true, en: ['two weeks in China: the Great Wall, the Terracotta Army and Shanghai at night', (n) => `${n} two-week trips around China: the Great Wall, the Terracotta Army and Shanghai at night`], cs: (n) => `${n}× dva týdny v Číně: Velká zeď, terakotová armáda a Šanghaj v noci` },
+  { id: 'maldives', czk: 60000, en: ['a trip to swim with whale sharks in the Maldives', (n) => `${n} trips to swim with whale sharks in the Maldives`], cs: (n) => `${n}× plavání se žraloky velrybími na Maledivách` },
+  { id: 'jp-sakura', czk: 70000, asia: true, en: ['two weeks in Japan in cherry blossom season', (n) => `${n} two-week trips to Japan in cherry blossom season`], cs: (n) => `${n}× dva týdny v Japonsku, když kvetou sakury` },
+  { id: 'east-asia', czk: 90000, asia: true, en: ['a month in Tokyo, Seoul and Beijing, all in one trip', (n) => `${n} month-long trips to Tokyo, Seoul and Beijing`], cs: (n) => `${n}× měsíc v Tokiu, Soulu a Pekingu, všechno v jednom výletu` },
 ];
 
 export const countOf = (c: Comparison, amount: number, currency: Currency) => Math.floor((amount * CZK_PER[currency]) / c.czk);
@@ -94,17 +92,14 @@ export function describeComparison(c: Comparison, n: number, lang: Lang): string
 const ALWAYS_ONE: ((c: Comparison) => boolean | undefined)[] = [(c) => c.jungkook, (c) => c.asia];
 
 /**
- * The biggest trip she can already afford as the headline (she loves travelling), plus a few others.
- * The others always include a Jungkook thing and something from Japan, South Korea or China, when
- * she can afford them. `seed` picks which others; changing it shows a new set.
+ * A few things she can already afford, all picked at random (D48). They always include a Jungkook
+ * thing and something from Japan, South Korea or China, when she can afford them. `seed` picks
+ * which; changing it shows a new set.
  */
-export function pickComparisons(amount: number, currency: Currency, seed: number, others = 3) {
+export function pickComparisons(amount: number, currency: Currency, seed: number, count = 3): Comparison[] {
   const affordable = COMPARISONS.filter((c) => countOf(c, amount, currency) >= 1);
-  const trips = affordable.filter((c) => c.travel);
-  const headline = trips[trips.length - 1] ?? null;
-  const rest = affordable.filter((c) => c !== headline);
   // Deterministic shuffle so the list doesn't jump around while the counter ticks.
-  const shuffled = rest
+  const shuffled = affordable
     .map((c, i) => ({ c, k: Math.sin((i + 1) * 12.9898 + seed * 78.233) }))
     .sort((a, b) => a.k - b.k)
     .map((x) => x.c);
@@ -115,6 +110,5 @@ export function pickComparisons(amount: number, currency: Currency, seed: number
   }
   for (const c of shuffled) picked.add(c);
   // Back in shuffled order, so the guaranteed ones aren't always on top.
-  const shown = [...picked].slice(0, others).sort((a, b) => shuffled.indexOf(a) - shuffled.indexOf(b));
-  return { headline, others: shown };
+  return [...picked].slice(0, count).sort((a, b) => shuffled.indexOf(a) - shuffled.indexOf(b));
 }

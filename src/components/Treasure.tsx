@@ -192,7 +192,7 @@ function Counter() {
   const amount = savedAt(treasure, quitDate, now);
   const money = moneyParts(amount, currency, lang);
   const perWeek = currentRate(treasure);
-  const { headline, others } = pickComparisons(amount, currency, seed);
+  const buys = pickComparisons(amount, currency, seed);
   const since = new Date(startTime(quitDate)).toLocaleDateString(localeOf(lang), {
     day: 'numeric',
     month: 'long',
@@ -216,17 +216,12 @@ function Counter() {
 
       <div class="buys">
         <h2>{t.buysTitle}</h2>
-        {!headline && !others.length ? (
+        {!buys.length ? (
           <p class="muted">{t.firstCoins}</p>
         ) : (
           <>
-            {headline && (
-              <p class="buy-headline">
-                <span aria-hidden="true">{headline.travel}</span> {describeComparison(headline, countOf(headline, amount, currency), lang)}
-              </p>
-            )}
             <ul class="buy-list">
-              {others.map((c) => (
+              {buys.map((c) => (
                 <li key={c.id} class={c.jungkook ? 'jungkook' : undefined}>
                   {describeComparison(c, countOf(c, amount, currency), lang)}
                 </li>

@@ -2,7 +2,7 @@
 
 Every product and technical decision, numbered. Code comments refer to these numbers.
 
-**Last number used: D47.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
+**Last number used: D48.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
 
 Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an answer), **Superseded**.
 
@@ -21,6 +21,7 @@ Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an
 - **D45 · Jungkook Easter eggs.** Decided, built. See below.
 - **D46 · Japan, South Korea and China in the treasure.** Decided, built. See below.
 - **D47 · Tea, not coffee.** Decided, built. See below.
+- **D48 · The treasure list is three random things, no headline.** Decided, built. See below.
 - **D30 · No card brings a vape back.** Decided. Cards never assume a vape is around and never ask her to picture or remember vaping. *Why:* picturing what you crave makes the craving stronger. The milestone text follows the same rule (D41).
 
 ## Home and the craving flow
@@ -196,7 +197,7 @@ The intro ends with one question: “When did you quit?” That date drives the 
 She's a huge Jungkook fan, so he turns up in two places:
 
 - **The petting joke** (tap the tuna five times fast): about 3 in 10 jokes are about Jungkook, in a purple speech bubble with a purple heart. The dark list stays at 1 in 10; the rest are the usual jokes. 13 jokes, English and Czech, in `petJungkookJokes`.
-- **The treasure's “would already buy” list:** Jungkook things from a photocard (350 Kč) up to a trip to Seoul to see him live (40,000 Kč), with Seoul, Busan and the concert trip as headline trips. Once she can afford one, one item in the list is always a Jungkook thing, with a purple coin. The generic concert ticket became the Jungkook one.
+- **The treasure's “would already buy” list:** Jungkook things from a photocard (350 Kč) up to a trip to Seoul to see him live (40,000 Kč). Once she can afford one, one item in the list is always a Jungkook thing, with a purple coin. The generic concert ticket became the Jungkook one.
 
 - **Still no goal** (D38). The concert is something the treasure *would already buy*, never something she's saving toward: no progress bar, no “x% of the way to Seoul”.
 - **Wholesome only.** The tuna is a fellow fan, a bit jealous, never creepy about a real person. No vape imagery (D30).
@@ -212,9 +213,9 @@ She'd love to go to Japan, South Korea and China someday, so the treasure's “w
 
 - **Food and small things:** onigiri, bubble tea in Shanghai, genmaicha (rice tea) from Kyoto, a pot of tea in a Chengdu tea house, gachapon, tteokbokki, soup dumplings, Japanese KitKats, ramen, Korean sheet masks, Korean barbecue, Peking duck, a tea ceremony in Kyoto.
 - **Places:** the Shanghai maglev, the Ghibli Museum, the Chengdu pandas, karaoke in Seoul, a hanbok day at Gyeongbokgung, the Great Wall at Mutianyu, Tokyo DisneySea.
-- **Trips**, which can be the headline: Jeju, the KTX to Busan, the Shinkansen to Kyoto, a ryokan night, a Japan Rail Pass, Beijing, two weeks in China, cherry blossom season in Japan, and all three in one month. The existing Tokyo, Seoul and Busan trips count too.
+- **Trips:** Jeju, the KTX to Busan, the Shinkansen to Kyoto, a ryokan night, a Japan Rail Pass, Beijing, two weeks in China, cherry blossom season in Japan, and all three in one month. The existing Tokyo, Seoul and Busan trips count too.
 
-- **Always one in the list,** like the Jungkook things (D45): once she can afford both, the three items under the headline always include one of each, and the third is anything.
+- **Always one in the list,** like the Jungkook things (D45): once she can afford both, the three items always include one of each, and the third is anything.
 - **Still no goal** (D38): they're what the treasure would already buy, never a trip she's saving toward.
 - Prices are rough guesses for one person, converted to Kč. The Czech needs a native speaker's read (D32), especially the place names (Čcheng-tu, Mu-tchien-jü, Kjongbokkung, Čedžu).
 
@@ -230,3 +231,16 @@ She drinks tea (chai, homemade rice tea), never coffee, so nothing in the app me
 - The Nose Sommelier card suggests sniffing her tea instead of coffee. Same card, same ID (D13), only the text changed.
 
 *Code:* `src/comparisons.ts`, `src/data/cards.json`.
+
+## D48 · The treasure list is three random things, no headline
+
+**Decided, built.**
+
+The “would already buy” list used to start with a headline: the most expensive trip she could already afford, in big bold type with an emoji. It's gone. The list is now three things, all picked at random, and Shuffle changes all three.
+
+*Why:* the headline didn't shuffle and only changed when the treasure passed the next trip's price. With a few hundred Kč saved, that meant a train to Vienna at the top for weeks, whatever she tapped. It also looked like the box's title rather than one of the things it would buy.
+
+- The trips stay in the list as ordinary items.
+- The Jungkook thing and the Japan, South Korea or China thing are still always there once she can afford them (D45, D46).
+
+*Code:* `pickComparisons` in `src/comparisons.ts`, the list in `src/components/Treasure.tsx`; tests in `src/comparisons.test.ts`.
