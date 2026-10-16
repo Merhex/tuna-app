@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
-import { cardById } from '../cards';
-import { useLang, useT } from '../i18n';
+import { cardById, type Lang } from '../cards';
+import { localeOf, useLang, useT } from '../i18n';
 import type { DayPoint, Rated } from '../stats';
 
 // Validated together (dataviz palette check, dark mode, against CHART_SURFACE): lightness band,
@@ -23,8 +23,8 @@ function useWidth<T extends HTMLElement>() {
   return [ref, width] as const;
 }
 
-export const fmt = (lang: string, v: number, digits = 1) =>
-  new Intl.NumberFormat(lang, { maximumFractionDigits: digits, minimumFractionDigits: Number.isInteger(v) ? 0 : digits }).format(v);
+export const fmt = (lang: Lang, v: number, digits = 1) =>
+  new Intl.NumberFormat(localeOf(lang), { maximumFractionDigits: digits, minimumFractionDigits: Number.isInteger(v) ? 0 : digits }).format(v);
 
 const H = 190;
 const M = { l: 26, r: 22, t: 14, b: 26 };
@@ -67,8 +67,8 @@ export function DumbbellChart({ hooks }: { hooks: Rated[] }) {
   const x = (i: number) => M.l + slot * (i + 0.5);
   const current = shown[sel];
   const when = (iso: string) =>
-    new Date(iso).toLocaleString(lang, { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-  const shortDate = (iso: string) => new Date(iso).toLocaleDateString(lang, { day: 'numeric', month: 'short' });
+    new Date(iso).toLocaleString(localeOf(lang), { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  const shortDate = (iso: string) => new Date(iso).toLocaleDateString(localeOf(lang), { day: 'numeric', month: 'short' });
 
   return (
     <div ref={ref} class="chart">
@@ -140,7 +140,7 @@ export function TrendChart({ points }: { points: DayPoint[] }) {
   const area = `${line} L${x(points[points.length - 1])},${yScale(1)} L${x(points[0])},${yScale(1)} Z`;
   const nearest = (px: number) =>
     points.reduce((best, p, i) => (Math.abs(x(p) - px) < Math.abs(x(points[best]) - px) ? i : best), 0);
-  const day = (p: DayPoint) => p.date.toLocaleDateString(lang, { weekday: 'short', day: 'numeric', month: 'short' });
+  const day = (p: DayPoint) => p.date.toLocaleDateString(localeOf(lang), { weekday: 'short', day: 'numeric', month: 'short' });
   const current = points[sel];
   // Put an end label on the side of its dot away from the neighbouring point, so it never sits on the line.
   const labelY = (p: DayPoint, neighbour: DayPoint) => {
@@ -176,8 +176,8 @@ export function TrendChart({ points }: { points: DayPoint[] }) {
           ))}
           <text x={x(first)} y={labelY(first, points[1])} text-anchor="start" class="value-text">{fmt(lang, first.avgBefore)}</text>
           <text x={x(last)} y={labelY(last, points[points.length - 2])} text-anchor="end" class="value-text">{fmt(lang, last.avgBefore)}</text>
-          <text x={M.l} y={H - 6} class="axis-text">{first.date.toLocaleDateString(lang, { day: 'numeric', month: 'short' })}</text>
-          <text x={width - M.r} y={H - 6} text-anchor="end" class="axis-text">{last.date.toLocaleDateString(lang, { day: 'numeric', month: 'short' })}</text>
+          <text x={M.l} y={H - 6} class="axis-text">{first.date.toLocaleDateString(localeOf(lang), { day: 'numeric', month: 'short' })}</text>
+          <text x={width - M.r} y={H - 6} text-anchor="end" class="axis-text">{last.date.toLocaleDateString(localeOf(lang), { day: 'numeric', month: 'short' })}</text>
         </svg>
       )}
       {current && (

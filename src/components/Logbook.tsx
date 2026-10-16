@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks';
-import { CARDS, cardById } from '../cards';
-import { useLang, useT } from '../i18n';
+import { CARDS, cardById, type Lang } from '../cards';
+import { localeOf, useLang, useT } from '../i18n';
 import { dailyTrend, dayKey, ratedHooks, trendChange } from '../stats';
 import { useApp } from '../state';
 import { averagePullDrop, schoolSize, type HookEntry } from '../storage';
@@ -99,7 +99,7 @@ function HistoryRow({ hook }: { hook: HookEntry }) {
   const lang = useLang();
   // Older entries don't record which cards were completed; fall back to the cards drawn.
   const cards = (hook.completed ?? hook.cards).map((id) => cardById(id)).filter((c) => !!c);
-  const time = new Date(hook.startedAt).toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
+  const time = new Date(hook.startedAt).toLocaleTimeString(localeOf(lang), { hour: '2-digit', minute: '2-digit' });
   const label = hook.result === 'passed' ? t.resultPassed : hook.result === 'notyet' ? t.notYet : t.resultSnagged;
 
   return (
@@ -150,12 +150,12 @@ function groupByDay(hooks: HookEntry[]): [string, HookEntry[]][] {
   return [...groups.entries()];
 }
 
-function dayLabel(key: string, lang: string, t: { today: string; yesterday: string }) {
+function dayLabel(key: string, lang: Lang, t: { today: string; yesterday: string }) {
   const now = new Date();
   const today = dayKey(now.toISOString());
   const yesterday = dayKey(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1, 12).toISOString());
   if (key === today) return t.today;
   if (key === yesterday) return t.yesterday;
   const [y, m, d] = key.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString(lang, { weekday: 'long', day: 'numeric', month: 'long' });
+  return new Date(y, m - 1, d).toLocaleDateString(localeOf(lang), { weekday: 'long', day: 'numeric', month: 'long' });
 }

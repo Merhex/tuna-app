@@ -1,3 +1,5 @@
+import type { Lang } from '../cards';
+import { localeOf } from '../i18n';
 import { Calendar } from './Icons';
 
 /**
@@ -47,7 +49,7 @@ export function DateField({
 }
 
 /** A YYYY-MM-DD day written out, like "15 October 2026" or "15. října 2026". */
-export function formatDay(key: string, lang: string): string {
+export function formatDay(key: string, lang: Lang): string {
   const [y, m, d] = key.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString(lang === 'cs' ? 'cs-CZ' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  return new Date(y, m - 1, d).toLocaleDateString(localeOf(lang), { day: 'numeric', month: 'long', year: 'numeric' });
 }

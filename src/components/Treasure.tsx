@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'preact/hooks';
+import type { Lang } from '../cards';
 import { countOf, describeComparison, pickComparisons } from '../comparisons';
 import { fx } from '../feedback';
-import { useLang, useT } from '../i18n';
+import { localeOf, useLang, useT } from '../i18n';
 import { daysSince, isQuitDate, MILESTONES, milestoneProgress, reachedOn } from '../milestones';
 import { DECORATION_NAMES } from '../seabed';
 import { useApp } from '../state';
@@ -102,7 +103,7 @@ function Milestones() {
     }
   }, [current.day]);
 
-  const locale = lang === 'cs' ? 'cs-CZ' : 'en-GB';
+  const locale = localeOf(lang);
   const today = todayKey(now);
 
   return (
@@ -192,7 +193,7 @@ function Counter() {
   const money = moneyParts(amount, currency, lang);
   const perWeek = currentRate(treasure);
   const { headline, others } = pickComparisons(amount, currency, seed);
-  const since = new Date(startTime(quitDate)).toLocaleDateString(lang === 'cs' ? 'cs-CZ' : 'en-GB', {
+  const since = new Date(startTime(quitDate)).toLocaleDateString(localeOf(lang), {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -351,5 +352,5 @@ function TreasureForm({ onDone }: { onDone: () => void }) {
   );
 }
 
-const formatNumber = (n: number, lang: string) =>
-  new Intl.NumberFormat(lang === 'cs' ? 'cs-CZ' : 'en-GB', { maximumFractionDigits: 2, useGrouping: false }).format(n);
+const formatNumber = (n: number, lang: Lang) =>
+  new Intl.NumberFormat(localeOf(lang), { maximumFractionDigits: 2, useGrouping: false }).format(n);

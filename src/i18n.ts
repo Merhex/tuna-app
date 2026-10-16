@@ -1,4 +1,4 @@
-import { createContext } from 'preact';
+import { createContext, type ComponentChild } from 'preact';
 import { useContext } from 'preact/hooks';
 import type { Category, Lang, Rarity } from './cards';
 
@@ -234,14 +234,18 @@ const en = {
   restoreFailed: "That file isn’t an Off the Hook backup.",
   showInstall: 'Show the home-screen guide',
   about: 'About',
-  aboutBody:
-    'Off the Hook is a distraction tool, not medical advice. If you want more support with quitting, the Czech national quitline is free: 800 350 000. Nicotine replacement is worth talking about with a pharmacist or doctor.',
+  // The quitline number is passed in as a tappable link.
+  aboutBody: (quitline: ComponentChild): ComponentChild[] => [
+    'Off the Hook is a distraction tool, not medical advice. If you want more support with quitting, the Czech national quitline is free: ',
+    quitline,
+    '. Nicotine replacement is worth talking about with a pharmacist or doctor.',
+  ],
 
   installTitle: "Let’s get you a tank on your home screen",
   installWhy:
     'Added to your home screen, the app opens full screen, works offline, and your aquarium is safe from Safari clearing its data.',
   iosSteps: [
-    'Tap the Share button in Safari. (Don\'t see it? Tap ••• first.)',
+    'Tap the Share button in Safari. (Don’t see it? Tap ••• first.)',
     'Scroll down and tap “Add to Home Screen”.',
     'Tap “Add”, then open Off the Hook from your home screen.',
   ],
@@ -484,8 +488,11 @@ const cs: Strings = {
   restoreFailed: 'Tenhle soubor není záloha Off the Hook.',
   showInstall: 'Zobrazit návod na plochu',
   about: 'O aplikaci',
-  aboutBody:
-    'Off the Hook je nástroj na rozptýlení, ne lékařská rada. Pokud chceš s odvykáním víc podpory, Národní linka pro odvykání je zdarma: 800 350 000. O náhradní nikotinové terapii se vyplatí poradit v lékárně nebo s lékařem.',
+  aboutBody: (quitline) => [
+    'Off the Hook je nástroj na rozptýlení, ne lékařská rada. Pokud chceš s odvykáním víc podpory, Národní linka pro odvykání je zdarma: ',
+    quitline,
+    '. O náhradní nikotinové terapii se vyplatí poradit v lékárně nebo s lékařem.',
+  ],
 
   installTitle: 'Pořiďme ti nádrž na plochu',
   installWhy:
@@ -514,3 +521,5 @@ export const LangContext = createContext<Lang>('en');
 export const useT = () => STRINGS[useContext(LangContext)];
 export const useLang = () => useContext(LangContext);
 export const pick = <T,>(list: T[]) => list[Math.floor(Math.random() * list.length)];
+/** The locale for dates, times and numbers. English is British, so dates and times read the same on every screen. */
+export const localeOf = (lang: Lang) => (lang === 'cs' ? 'cs-CZ' : 'en-GB');

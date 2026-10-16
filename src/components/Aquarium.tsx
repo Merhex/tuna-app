@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 import { CARDS, RARITIES, type Card } from '../cards';
 import { fx } from '../feedback';
-import { useLang, useT } from '../i18n';
+import { localeOf, useLang, useT } from '../i18n';
 import { useApp } from '../state';
 import { Back, Heart } from './Icons';
 import { RarityFish } from './RarityFish';
@@ -18,7 +18,9 @@ export function Aquarium({ onClose }: { onClose: () => void }) {
   const [open, setOpen] = useState<Card | null>(null);
   const caught = Object.keys(data.collection).length;
 
-  const shown = onlyFavs ? SORTED.filter((c) => data.collection[c.id]?.favourite) : SORTED;
+  // Her catches first, then the ones still out there (each rarest first), so the tank opens on what she has.
+  const caughtFirst = [...SORTED.filter((c) => data.collection[c.id]), ...SORTED.filter((c) => !data.collection[c.id])];
+  const shown = onlyFavs ? caughtFirst.filter((c) => data.collection[c.id]?.favourite) : caughtFirst;
 
   const toggleFav = (id: string) => {
     fx.tap();
@@ -95,7 +97,7 @@ export function Aquarium({ onClose }: { onClose: () => void }) {
                 <p class="card-task">{open.task[lang]}</p>
                 <p class="muted small">
                   {t.caughtTimes(data.collection[open.id].count)} ·{' '}
-                  {new Date(data.collection[open.id].firstCaught).toLocaleDateString(lang)}
+                  {new Date(data.collection[open.id].firstCaught).toLocaleDateString(localeOf(lang), { day: 'numeric', month: 'long', year: 'numeric' })}
                 </p>
                 <button
                   class={`fav-btn ${data.collection[open.id].favourite ? 'on' : ''}`}
