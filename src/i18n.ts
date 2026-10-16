@@ -186,6 +186,16 @@ const en = {
   noCards: 'No card finished',
   logEmpty: 'Your logbook is empty. Beat your first hook and it shows up here.',
   showMore: 'Show more',
+  // How many times she has petted the tuna, above the history (D49). One quip is picked at random.
+  petCount: (n: number): string => (n === 1 ? 'time you’ve petted the tuna' : 'times you’ve petted the tuna'),
+  petCountQuips: [
+    'It remembers every single one.',
+    'Best-petted fish in the ocean.',
+    'The tuna’s verdict: not enough.',
+    'Somewhere, a sardine is jealous.',
+    'No other tuna gets treated like this.',
+  ],
+  petCountNone: 'The tuna on the home screen is waiting for its first pet.',
 
   placeLabel: 'Where are you?',
   placeHome: 'At home',
@@ -455,6 +465,15 @@ const cs: Strings = {
   noCards: 'Žádná splněná karta',
   logEmpty: 'Tvůj deník je zatím prázdný. Poraz první háček a objeví se tady.',
   showMore: 'Zobrazit další',
+  petCount: () => 'pohlazení tuňáka',
+  petCountQuips: [
+    'Pamatuje si každé jedno.',
+    'Nejvíc hlazená ryba v oceánu.',
+    'Tuňákův verdikt: málo.',
+    'Někde teď žárlí jedna sardinka.',
+    'Takovou péči nemá žádný jiný tuňák.',
+  ],
+  petCountNone: 'Tuňák na hlavní obrazovce čeká na první pohlazení.',
 
   placeLabel: 'Kde jsi?',
   placeHome: 'Doma',

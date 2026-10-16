@@ -61,12 +61,14 @@ export interface AppData {
   treasure: Treasure | null;
   /** Decorations earned at milestones (D43). */
   seabed: Seabed;
+  /** Every tap on the tuna on the home screen, ever (D49). Shown in the Logbook. */
+  pets: number;
 }
 
 let storeHandle: ReturnType<typeof createStore> | undefined;
 // Opened on first use, so this module can also be imported where IndexedDB doesn't exist (tests).
 const store = () => (storeHandle ??= createStore('off-the-hook', 'data'));
-const KEYS = ['collection', 'hooks', 'drawState', 'settings', 'quitDate', 'treasure', 'seabed'] as const;
+const KEYS = ['collection', 'hooks', 'drawState', 'settings', 'quitDate', 'treasure', 'seabed', 'pets'] as const;
 
 function defaultLang(): Lang {
   return navigator.language?.toLowerCase().startsWith('cs') ? 'cs' : 'en';
@@ -94,6 +96,7 @@ export function defaultData(): AppData {
     quitDate: null,
     treasure: null,
     seabed: emptySeabed(),
+    pets: 0,
   };
 }
 
@@ -114,6 +117,7 @@ function normalise(raw: Partial<AppData>): AppData {
     quitDate: raw.quitDate ?? legacy?.startDate ?? null,
     treasure: legacy ? { rates: legacy.rates } : null,
     seabed: { ...d.seabed, ...raw.seabed },
+    pets: raw.pets ?? d.pets,
   };
 }
 

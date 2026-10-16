@@ -151,10 +151,11 @@ function tell(list: string[]) {
 /**
  * Easter egg: tapping the tuna pets it (eyes close, hearts float up). Five fast taps in a row and
  * it tells a joke; one in ten is a dark one, delivered with a wide-eyed stare, and about one in
- * three is about Jungkook, in a purple bubble with a purple heart (D45).
+ * three is about Jungkook, in a purple bubble with a purple heart (D45). Every tap is counted (D49).
  */
 function PettableTuna() {
   const t = useT();
+  const { update } = useApp();
   const [petting, setPetting] = useState(false);
   const [hearts, setHearts] = useState<{ id: number; dx: number; rot: number; purple: boolean }[]>([]);
   const [joke, setJoke] = useState<{ id: number; text: string; kind: JokeKind } | null>(null);
@@ -178,6 +179,8 @@ function PettableTuna() {
     const streak = nextStreak(lastPet.current, now);
     lastPet.current = { at: now, streak };
     const id = ++nextId.current;
+    // Every tap is a pet; the total shows in the Logbook (D49).
+    update((d) => ({ ...d, pets: d.pets + 1 }));
 
     setPetting(true);
     clearTimeout(pettingTimer.current);

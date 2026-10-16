@@ -27,7 +27,7 @@ Rarity chances, the guaranteed-rare counter and the weighting toward uncaught ca
 
 ## The petting Easter egg
 
-Tap the tuna on the home screen and it closes its eyes. Tap it five times fast and it tells a joke: 1 in 10 come from the dark list, and about 3 in 10 are about Jungkook, in a purple bubble. The jokes are `petJokes`, `petDarkJokes` and `petJungkookJokes` in [`src/i18n.ts`](src/i18n.ts) (English and Czech). Timing and odds are `PET_SETTINGS` in [`src/pet.ts`](src/pet.ts).
+Tap the tuna on the home screen and it closes its eyes. Tap it five times fast and it tells a joke: 1 in 10 come from the dark list, and about 3 in 10 are about Jungkook, in a purple bubble. The jokes are `petJokes`, `petDarkJokes` and `petJungkookJokes` in [`src/i18n.ts`](src/i18n.ts) (English and Czech). Timing and odds are `PET_SETTINGS` in [`src/pet.ts`](src/pet.ts). Every tap is counted, and the Logbook shows the total just above the history (`PetCount` in [`src/components/Logbook.tsx`](src/components/Logbook.tsx)).
 
 ## Development
 
