@@ -14,10 +14,12 @@ export function Settings({
   onClose,
   showInstall,
   showIntro,
+  showDodge,
 }: {
   onClose: () => void;
   showInstall: () => void;
   showIntro: () => void;
+  showDodge: () => void;
 }) {
   const t = useT();
   const { data, update } = useApp();
@@ -149,6 +151,8 @@ export function Settings({
         <p class="muted small version">
           {t.version} {__APP_VERSION__} ·{' '}
           {new Date(__BUILD_TIME__).toLocaleString(localeOf(data.settings.lang), { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+          {/* Dodge the hooks prototype: small and quiet on purpose, so it's only found by whoever is testing it. */}
+          <button class="lab-btn" onClick={showDodge} aria-label={t.dodgeOpen}><FishHook size={14} stroke={6} /><Haptic /></button>
         </p>
       </section>
     </main>

@@ -286,6 +286,25 @@ const en = {
   continueBrowser: 'Continue in browser',
   version: 'Version',
   back: 'Back',
+
+  // Dodge the hooks: a prototype, opened from a small button next to the version in Settings.
+  dodgeOpen: 'Dodge the hooks (prototype)',
+  dodgeTitle: 'Dodge the hooks',
+  dodgePrototype: 'Prototype',
+  dodgeHowTo: 'Drag anywhere to swim. Dodge the hooks and catch the bubbles. Three minutes, and you can’t lose.',
+  dodgeStart: 'Start swimming',
+  dodgeEnd: 'End the round',
+  dodgeOver: 'Round over',
+  dodgeEulogy: (n: number): string =>
+    n === 0
+      ? 'Not a single hook dared this time.'
+      : n === 1
+        ? 'Here lies 1 hook. It came for a tuna and went home empty. Nobody will miss it.'
+        : `Here lie ${n} hooks. They came for a tuna and went home empty. Nobody will miss them.`,
+  hooksDodged: (n: number): string => (n === 1 ? 'hook dodged' : 'hooks dodged'),
+  bubblesCaught: (n: number): string => (n === 1 ? 'bubble caught' : 'bubbles caught'),
+  bestStreak: 'most bubbles in a row',
+  dodgeAgain: 'Another round',
   continueWarn: 'Your collection could get lost if the browser clears its data.',
 };
 
@@ -563,6 +582,27 @@ const cs: Strings = {
   continueBrowser: 'Pokračovat v prohlížeči',
   version: 'Verze',
   back: 'Zpět',
+
+  dodgeOpen: 'Uhni háčkům (prototyp)',
+  dodgeTitle: 'Uhni háčkům',
+  dodgePrototype: 'Prototyp',
+  dodgeHowTo: 'Táhni prstem kdekoli a plav. Uhýbej háčkům a chytej bubliny. Tři minuty a prohrát se nedá.',
+  dodgeStart: 'Začni plavat',
+  dodgeEnd: 'Ukončit kolo',
+  dodgeOver: 'Konec kola',
+  dodgeEulogy: (n) =>
+    n === 0
+      ? 'Tentokrát se neodvážil ani jeden háček.'
+      : csPlural(
+          n,
+          `Zde leží ${n} háček. Přišel si pro tuňáka a odešel s prázdnou. Nikomu chybět nebude.`,
+          `Zde leží ${n} háčky. Přišly si pro tuňáka a odešly s prázdnou. Nikomu chybět nebudou.`,
+          `Zde leží ${n} háčků. Přišlo si pro tuňáka a odešlo s prázdnou. Nikomu chybět nebude.`,
+        ),
+  hooksDodged: (n) => csPlural(n, 'přelstěný háček', 'přelstěné háčky', 'přelstěných háčků'),
+  bubblesCaught: (n) => csPlural(n, 'chycená bublina', 'chycené bubliny', 'chycených bublin'),
+  bestStreak: 'nejvíc bublin v řadě',
+  dodgeAgain: 'Ještě jedno kolo',
   continueWarn: 'Pokud prohlížeč smaže data, můžeš přijít o sbírku.',
 };
 

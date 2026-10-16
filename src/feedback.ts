@@ -173,6 +173,17 @@ export const fx = {
     const at = [0, 0.08, 0.16, 0.24, 0.32];
     cue(at.map((s): Beat => [s * 1000, 10]), (ac) => at.forEach((s, i) => bubble(ac, s, 600 + (i % 2) * 180 + i * 40)));
   },
+  /** Dodge the hooks: a bubble caught. Climbs a little with every one in a row. Too frequent to vibrate. */
+  catchBubble(streak: number) {
+    cue([], (ac) => bubble(ac, 0, 460 + Math.min(streak, 12) * 35));
+  },
+  /** Dodge the hooks: a hook nicked the tuna. A soft bonk, not an alarm. */
+  nick() {
+    cue([[0, 40]], (ac) => {
+      tone(ac, { freq: 240, to: 120, dur: 0.18, type: 'triangle', gain: 0.1 });
+      noise(ac, { dur: 0.12, from: 900, to: 300, gain: 0.05 });
+    });
+  },
   /** ...or a joke it really shouldn't have: dun, dun, DUNNN. */
   ominous() {
     cue([[0, 120], [300, 120], [650, 400]], (ac) => {
@@ -211,6 +222,6 @@ export function beatsToPattern(beats: Beat[]): number[] {
 }
 
 function playBeats(beats: Beat[]) {
-  if (!enabled.haptics || typeof navigator.vibrate !== 'function') return;
+  if (!beats.length || !enabled.haptics || typeof navigator.vibrate !== 'function') return;
   navigator.vibrate(beatsToPattern(beats));
 }

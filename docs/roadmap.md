@@ -30,7 +30,7 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 | 4 | **Lifeline / flare.** One tap on “Not yet” to ask someone for a text. | Medium | Small to large | Phase 3's flare needs a push server (D22). A cheaper version opens Messages with a ready-made text (an `sms:` link), no server. Waits on Q3. |
 | 5 | **Messages in a bottle.** Her own reasons, written on good days, shown during hard ones. | Medium | Small | Phase 2. |
 | 6 | **Tuna facts as rewards** on the win screen. | Low | Small | Phase 2. |
-| 7 | **Dodge the hooks** mini-game. | Medium | Large | Phase 2. Visual distraction like Tetris measurably weakens cravings, but it's the biggest build here. |
+| 7 | **Dodge the hooks** mini-game. | Medium | Large | Phase 2. Visual distraction like Tetris measurably weakens cravings, but it's the biggest build here. **Prototype live for testing:** opened from the small hook next to the version in Settings, not from the craving flow. Drag to swim, 3-minute round, no game over; nothing is saved. Tuning knobs are in `DODGE_SETTINGS` (`src/dodge.ts`). |
 | 8 | **Navigation charts.** If-then plans (“If I'm at a party, then I'll…”). | Medium | Medium | Phase 3. Sits awkwardly with D29 (no trigger features); decide that first. |
 | 9 | **Bait insights.** When hooks hit and when slips happen, from times and bait notes. | Medium | Medium | Phase 3. Conflicts with D29 as it stands: needs a decision before building. |
 
