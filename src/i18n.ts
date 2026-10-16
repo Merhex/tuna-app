@@ -293,7 +293,7 @@ const en = {
   dodgeHowTo: 'Drag anywhere to swim. Dodge the hooks and catch the bubbles. Two and a half minutes, and you can’t lose.',
   dodgeEnd: 'End the round',
   // A brutal hook (D51) starts with the game: a line above the how-to, and a way out.
-  dodgeBrutal: (n: number): string => `A ${n}? This one gets the big guns.`,
+  dodgeBrutal: (n: number): string => `${n === 8 ? 'An' : 'A'} ${n}? This one gets the big guns.`,
   dodgeDrawInstead: 'Draw a card instead',
   drawCard: 'Draw a card',
   notYetBodyNoCard: 'Draw a card, or go another round.',

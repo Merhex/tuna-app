@@ -17,7 +17,7 @@ type Step = 'before' | 'drop' | 'card' | 'game' | 'check' | 'won' | 'notyet' | '
 /** How long a new screen ignores taps (see `guard`). */
 const SETTLE_MS = 300;
 /** A hook rated this strong or stronger starts with Dodge the hooks instead of a card (D51). */
-const GAME_FROM = 9;
+const GAME_FROM = 8;
 
 export function HookFlow({ onExit }: { onExit: () => void }) {
   const t = useT();

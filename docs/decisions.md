@@ -36,7 +36,7 @@ Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an
 - **D29 · No trigger-specific features.** Decided. The app doesn’t try to map triggers. A handful of cards fit common moments (gaming, watching series).
 - **D39 · Draw only cards she can do where she is.** Decided, built. See below.
 - **D50 · Dodge the hooks, offered on “Not yet”.** Decided, built. See below.
-- **D51 · A brutal hook (9 or 10) starts with Dodge the hooks.** Decided, built. See below.
+- **D51 · A brutal hook (8 to 10) starts with Dodge the hooks.** Decided, built. See below.
 
 ## Cards and rarity
 
@@ -279,19 +279,19 @@ A 2½-minute mini-game (roadmap #7, phase 2). The tuna follows her finger, hooks
 
 *Code:* rules in `src/dodge.ts`, drawing and touch in `src/components/Dodge.tsx`, the “Not yet” button and the check in `src/components/HookFlow.tsx`, `rounds` in `src/storage.ts`, the history line in `src/components/Logbook.tsx`; tests in `src/dodge.test.ts`.
 
-## D51 · A brutal hook (9 or 10) starts with Dodge the hooks
+## D51 · A brutal hook (8 to 10) starts with Dodge the hooks
 
 **Decided, built.** Extends D50.
 
-When she rates a hook 9 or 10 at the start, the game comes up instead of a card. Above how to play there's a line in the tuna's voice (“A 10? This one gets the big guns.”) and a small “Draw a card instead” link.
+When she rates a hook 8, 9 or 10 at the start, the game comes up instead of a card. Above how to play there's a line in the tuna's voice (“A 10? This one gets the big guns.”) and a small “Draw a card instead” link.
 
-*Why:* tucked away on “Not yet”, the game would rarely be found, and a 9 or 10 is when a card that takes under a minute (D37) is least likely to be enough. Going straight in, rather than asking “card or game?”, saves a decision and a tap at the worst moment, and the card is still one tap away.
+*Why:* tucked away on “Not yet”, the game would rarely be found, and a hook that strong is when a card that takes under a minute (D37) is least likely to be enough. Going straight in, rather than asking “card or game?”, saves a decision and a tap at the worst moment, and the card is still one tap away.
 
-- **Only with a rating.** Skipping the rating draws a card as before. Hooks rated 1 to 8 are unchanged, and home stays one big button (D4).
+- **Only with a rating.** Skipping the rating draws a card as before. Hooks rated 1 to 7 are unchanged, and home stays one big button (D4).
 - **Leaving before her first touch goes back to the rating,** so a mis-tap can be corrected. Nothing is recorded.
 - **After the round,** the usual check. “Not yet” then offers “Draw a card” (not “another”, as she hasn't had one) or another round. A hook beaten with the game alone adds a tuna to her school and shows the game on the win screen and in the Logbook.
 - **Brutal hooks with and without the game** can now be compared in the Logbook data (`rounds`, D50), for roadmap #2.
-- **The threshold is `GAME_FROM`** in `src/components/HookFlow.tsx`, easy to move to 8.
+- **The threshold is `GAME_FROM`** in `src/components/HookFlow.tsx`. It started at 9 and was lowered to 8 after testing, so the game comes up more often.
 - The Czech needs a native speaker's read (D32).
 
 *Code:* `GAME_FROM` and the game step in `src/components/HookFlow.tsx`, the line and the link (`lead`, `onSkip`) in `src/components/Dodge.tsx`, the text in `src/i18n.ts`.

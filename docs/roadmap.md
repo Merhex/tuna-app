@@ -20,13 +20,13 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 | **Treasure list without a headline:** three random things, all shuffled | D48 | |
 | **Pet counter in the Logbook:** how many times she has petted the tuna, just above the history | D49 | |
 | **Dodge the hooks:** a 2½-minute mini-game offered on “Not yet”, next to drawing another card | D50 | |
-| **Brutal hooks start with the game:** a 9 or 10 opens Dodge the hooks instead of a card, with “Draw a card instead” one tap away | D51 | |
+| **Brutal hooks start with the game:** an 8, 9 or 10 opens Dodge the hooks instead of a card, with “Draw a card instead” one tap away | D51 | |
 
 ## Next, ranked
 
 | # | Feature | Impact | Effort | Notes |
 | ---: | --- | --- | --- | --- |
-| 1 | **Bubbles: ride the wave.** A tuna blowing slow bubbles to breathe along with, for brutal hooks (8–10) or after “Not yet”. | High | Medium | Phase 2 in the original plan. Cards are under a minute (D37); this covers a craving that outlasts several cards. Slow breathing and urge surfing are standard techniques. Dodge the hooks now takes brutal hooks (9–10, D51) and sits on “Not yet” (D50), so decide where Bubbles fits alongside it. |
+| 1 | **Bubbles: ride the wave.** A tuna blowing slow bubbles to breathe along with, for brutal hooks (8–10) or after “Not yet”. | High | Medium | Phase 2 in the original plan. Cards are under a minute (D37); this covers a craving that outlasts several cards. Slow breathing and urge surfing are standard techniques. Dodge the hooks now takes brutal hooks (8–10, D51) and sits on “Not yet” (D50), so decide where Bubbles fits alongside it. |
 | 2 | **Cards that work for her.** Show “your best lures” (cards with the biggest drop in hook strength) in the Logbook, and weight them a little higher in the draw. | Medium | Small | The data is already stored (D10). Attribution is fuzzy when a hook used several cards: count only the last completed card, or only one-card hooks. |
 | 3 | **Bottles from the app's maker**, unlocking at milestones or washing up at random. | Medium | Medium | Phase 3. Milestone IDs are permanent (D41), so bottles can key on them. Waits on Q3. |
 | 4 | **Lifeline / flare.** One tap on “Not yet” to ask someone for a text. | Medium | Small to large | Phase 3's flare needs a push server (D22). A cheaper version opens Messages with a ready-made text (an `sms:` link), no server. Waits on Q3. |
