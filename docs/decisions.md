@@ -22,6 +22,7 @@ Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an
 - **D46 · Japan, South Korea and China in the treasure.** Decided, built. See below.
 - **D47 · Tea, not coffee.** Decided, built. See below.
 - **D48 · The treasure list is three random things, no headline.** Decided, built. See below.
+- **D53 · Postcards: share a win.** Decided, built. See below.
 - **D30 · No card brings a vape back.** Decided. Cards never assume a vape is around and never ask her to picture or remember vaping. *Why:* picturing what you crave makes the craving stronger. The milestone text follows the same rule (D41).
 
 ## Home and the craving flow
@@ -45,13 +46,14 @@ Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an
 - **D8 · Duplicates still count.** Decided. “Caught ×3”, a badge at 5.
 - **D12 · Where-can-I-do-it tags on every card.** Decided. `anywhere`, `quiet`, `home`, `outside`. Drawing by location was planned for later; it’s now D39.
 - **D13 · Card IDs are permanent.** Decided. Titles and tasks can change; an ID never changes or gets reused.
-- **D14 · Five categories, mixed in every deck.** Decided. Physical, sensory, ridiculous, social, grounding.
+- **D14 · Five categories, mixed in every deck.** Decided. Physical, sensory, ridiculous, social, grounding. A sixth, daydream, joined in D52.
 - **D15 · Starting deck of 40 cards.** Decided: 20 common, 11 uncommon, 7 rare, 2 legendary. Grown to 51 by D40.
 - **D16 · Tier chances 55 / 28 / 14 / 3.** Decided. In `DRAW_SETTINGS` (`src/draw.ts`).
 - **D17 · Guaranteed rare after 8 draws** without one. Decided.
 - **D18 · Uncaught cards weigh 3× in the draw.** Decided.
 - **D37 · Every card takes under a minute.** Decided. Timers 60 seconds or less; tests enforce it.
 - **D40 · At least half the deck works out of the house.** Decided, built. See below.
+- **D52 · Daydream cards: picture something she'd love.** Decided, built. See below.
 
 ## Onboarding, feel and language
 
@@ -295,3 +297,41 @@ When she rates a hook 8, 9 or 10 at the start, the game comes up instead of a ca
 - The Czech needs a native speaker's read (D32).
 
 *Code:* `GAME_FROM` and the game step in `src/components/HookFlow.tsx`, the line and the link (`lead`, `onSkip`) in `src/components/Dodge.tsx`, the text in `src/i18n.ts`.
+
+## D52 · Daydream cards: picture something she'd love
+
+**Decided, built.** Deck v3.
+
+Ten new cards in a sixth category, **Daydream** (*Snění*): each one walks her through picturing something she'd love, with a few questions about what she sees, hears, smells and tastes. They're the places and things from the treasure (D45, D46, D47):
+
+- **Common:** ramen in Tokyo, a 1 a.m. konbini run, a tangerine on Jeju.
+- **Uncommon:** a tea ceremony in Kyoto, a hanbok day at Gyeongbokgung, the Chengdu pandas, a karaoke room in Seoul (Seven is mandatory).
+- **Rare:** a ryokan hot spring in the snow, one perfect day anywhere in the world.
+- **Legendary:** front row at a Jungkook concert in Seoul.
+
+- **All tagged `anywhere`:** they're done in her head, so they work on the tram or in a meeting. The deck goes from 51 to 61 cards, and more of it works out of the house (D40).
+- **Under a minute** (D37): timers of 30 to 60 seconds, or none.
+- **Never the vape** (D30): picturing what you crave makes the craving stronger, so the cards picture something else instead. That's the whole point.
+- **Still no goal** (D38): they're daydreams, never a trip she's saving toward.
+- The Czech needs a native speaker's read (D32), especially the place names (Kjongbokkung, Čedžu, Čcheng-tu, rjokan).
+
+*Why:* cravings are kept going by vivid mental pictures of the thing you want (elaborated intrusion theory, Kavanagh, Andrade and May). A competing picture takes up the same mental space, which is also why visual games like Tetris, and Dodge the hooks (D50), ease cravings.
+
+*Code:* the cards in `src/data/cards.json` (`addedIn: 3`), the `daydream` category in `src/cards.ts` and `src/i18n.ts`; tests in `src/draw.test.ts`.
+
+## D53 · Postcards: share a win
+
+**Decided, built.**
+
+The win screen has a **Send a postcard** button under “Back to the tank”. It opens the share sheet with a picture of the win, so she can send it to a friend, a group chat or her story:
+
+- **On the postcard:** a headline picked at random (“Greetings from the open sea!”, “Wish you were here. The hook wasn’t.”), the smug tuna, a stamp, the hook strength before and after (when she rated both), the card and its rarity (or Dodge the hooks and the hooks dodged), “Tuna no. 12 in my school” and the date.
+- **Never mentions vaping** (D30). A hook is just a hook to whoever gets it, so she decides how much to say.
+- **She chooses who sees it.** Nothing is sent anywhere unless she picks someone in the share sheet. No server (D22). It's a light answer to part of Q3: the app's maker sees wins when she wants to share them.
+- **Drawn as the win screen opens,** so the tap goes straight to the share sheet: iPhone only allows sharing right after a tap. Where files can't be shared (most computers), it downloads instead.
+- **1080 × 1350 PNG** (4:5, fits chats and stories), in the app's fonts and colours.
+- The Czech needs a native speaker's read (D32).
+
+*Why:* support from other people is one of the strongest helps when quitting, and a celebrated win gets reinforced. Sharing a good moment is easier than asking for help in a bad one (the flare, roadmap #4).
+
+*Code:* drawing and sharing in `src/postcard.ts`, the button in `src/components/HookFlow.tsx`, the text in `src/i18n.ts`; tests in `src/postcard.test.ts`.

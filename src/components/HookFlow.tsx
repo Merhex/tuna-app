@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { CARDS, fitsPlace, PLACES, type Card } from '../cards';
+import { CARDS, cardById, fitsPlace, PLACES, type Card } from '../cards';
 import { drawCard, FAVOURITES_MIN } from '../draw';
 import { fx } from '../feedback';
-import { pick, useT } from '../i18n';
+import { localeOf, pick, useT } from '../i18n';
+import { makePostcard, sharePostcard } from '../postcard';
 import { useApp } from '../state';
 import { cravingInProgress } from '../updates';
-import type { AppData, HookResult } from '../storage';
+import { schoolSize, type AppData, type HookResult } from '../storage';
 import { CardView, Rating } from './CardView';
 import { DodgeGame, type DodgeScore } from './Dodge';
 import { Close, FishHook, House, Pin } from './Icons';
@@ -36,6 +37,9 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   const [rounds, setRounds] = useState(0);
   const [lastRound, setLastRound] = useState<DodgeScore | null>(null);
   const [note, setNote] = useState('');
+  // The postcard (D53), drawn as soon as the win screen shows, so a tap opens the share sheet
+  // straight away: iPhone only allows sharing right after a tap, not after waiting for a drawing.
+  const [postcard, setPostcard] = useState<File | 'failed' | null>(null);
   const startedAt = useRef(new Date().toISOString());
   const wonTitle = useRef(pick(t.wonTitles));
   const timers = useRef<number[]>([]);
@@ -43,6 +47,22 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   const leftBefore = useRef(false);
 
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
+  useEffect(() => {
+    if (step !== 'won') return;
+    const lang = data.settings.lang;
+    const last = cardById(completed[completed.length - 1] ?? '');
+    makePostcard({
+      headline: pick(t.postcardHeadlines),
+      feat: lastRound
+        ? `${t.dodgeTitle} · ${lastRound.dodged} ${t.hooksDodged(lastRound.dodged)}`
+        : last
+          ? `${last.title[lang]} · ${t.rarity[last.rarity]}`
+          : '',
+      pull: before !== undefined && after !== undefined ? { label: t.pullChange, before, after } : undefined,
+      school: t.postcardSchool(schoolSize(data)),
+      date: new Intl.DateTimeFormat(localeOf(lang), { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date()),
+    }).then(setPostcard, () => setPostcard('failed'));
+  }, [step]);
   useEffect(() => {
     cravingInProgress.current = true;
     return () => {
@@ -350,7 +370,24 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
             </div>
           )}
           <p>{t.joinedSchool}</p>
-          <button class="primary big" onClick={guard(onExit)}>{t.backToTank}<Haptic /></button>
+          <div class="stack">
+            <button class="primary big" onClick={guard(onExit)}>{t.backToTank}<Haptic /></button>
+            {/* Hidden if the drawing failed: there's nothing to send. */}
+            {postcard !== 'failed' && (
+              <button
+                class="secondary"
+                disabled={!postcard}
+                onClick={guard(() => {
+                  if (!postcard) return;
+                  fx.tap();
+                  void sharePostcard(postcard);
+                })}
+              >
+                {t.postcardSend}
+                <Haptic />
+              </button>
+            )}
+          </div>
         </section>
       )}
 

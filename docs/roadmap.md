@@ -21,6 +21,8 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 | **Pet counter in the Logbook:** how many times she has petted the tuna, just above the history | D49 | |
 | **Dodge the hooks:** a 2½-minute mini-game offered on “Not yet”, next to drawing another card | D50 | |
 | **Brutal hooks start with the game:** an 8, 9 or 10 opens Dodge the hooks instead of a card, with “Draw a card instead” one tap away | D51 | |
+| **Daydream cards:** 10 cards that walk her through picturing something she'd love (Kyoto tea, Jeju tangerines, front row at Jungkook in Seoul), all doable anywhere | D52 | Deck v3 |
+| **Postcards:** share a picture of a win from the win screen | D53 | |
 
 ## Next, ranked
 
@@ -45,5 +47,5 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 
 ## Open before release
 
-- A native speaker's read of the Czech in the new cards, the milestones, the decoration names, the quit-date question and the Jungkook jokes, the Jungkook, Japan, Korea and China treasure items, the pet counter and Dodge the hooks (D32, D45, D46, D49, D50, D51).
-- A test on a real iPhone: sounds, vibrations and the install flow can't be checked in a desktop browser (see [qa-log.md](qa-log.md)).
+- A native speaker's read of the Czech in the new cards, the milestones, the decoration names, the quit-date question and the Jungkook jokes, the Jungkook, Japan, Korea and China treasure items, the pet counter, Dodge the hooks, the daydream cards and the postcards (D32, D45, D46, D49, D50, D51, D52, D53).
+- A test on a real iPhone: sounds, vibrations, the install flow and the postcard share sheet can't be checked in a desktop browser (see [qa-log.md](qa-log.md)).

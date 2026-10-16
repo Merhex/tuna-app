@@ -12,6 +12,8 @@ The roadmap, design decisions and milestone sources live in [`docs/`](docs/). Th
 - **Where are you?** At the start of a craving she can switch between *At home* and *Out and about* (remembered). Out of the house, only cards tagged `anywhere` or `outside` are drawn.
 - **Sunken Treasure** (optional): a live counter of the money she's not spending, from a weekly amount and a start date. It never resets; a changed weekly amount only applies from then on. Currency (Kč, €, $) is separate from the language. Below it, what the money would already buy; one of those is always a Jungkook thing (photocards up to a concert trip to Seoul) and one is always from Japan, South Korea or China, once she can afford them. They're in [`src/comparisons.ts`](src/comparisons.ts).
 - **Milestones**, below the treasure: what to expect from quit day to one year, counted from the treasure's start date. Text in [`src/data/milestones.json`](src/data/milestones.json), sources in [`docs/milestones.md`](docs/milestones.md).
+- **Daydream cards** walk her through picturing something she'd love, from Kyoto tea to front row at Jungkook in Seoul. They work anywhere ([D52](docs/decisions.md)).
+- **Postcards:** the win screen can send a picture of the win through the share sheet. It never mentions vaping, and nothing leaves the phone unless she picks someone ([D53](docs/decisions.md)).
 - **Sounds and vibrations** are generated in code (no audio files) and can be turned off in Settings. On iPhone, vibrations need iOS 18+.
 
 ## Adding or editing cards
