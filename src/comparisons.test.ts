@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { COMPARISONS, describeComparison, pickComparisons } from './comparisons';
 
 describe('comparisons', () => {
-  it('are in price order, so the headline is the biggest trip she can afford', () => {
+  it('are kept in price order', () => {
     const prices = COMPARISONS.map((c) => c.czk);
     expect(prices).toEqual([...prices].sort((a, b) => a - b));
   });
@@ -18,35 +18,46 @@ describe('comparisons', () => {
 
 describe('pickComparisons', () => {
   it('shows nothing before the first coins', () => {
-    expect(pickComparisons(10, 'CZK', 0)).toEqual({ headline: null, others: [] });
+    expect(pickComparisons(10, 'CZK', 0)).toEqual([]);
   });
-  it('heads with the biggest trip she can afford', () => {
-    expect(pickComparisons(4000, 'CZK', 0).headline?.id).toBe('flight-lisbon');
-    expect(pickComparisons(45000, 'CZK', 0).headline?.id).toBe('jk-concert-trip');
+  it('picks everything at random, so no item stays put when she shuffles (D48)', () => {
+    for (const amount of [500, 5000, 50000]) {
+      const always = new Set(pickComparisons(amount, 'CZK', 0).map((c) => c.id));
+      for (let seed = 1; seed < 20; seed++) {
+        const ids = new Set(pickComparisons(amount, 'CZK', seed).map((c) => c.id));
+        for (const id of [...always]) if (!ids.has(id)) always.delete(id);
+      }
+      expect([...always], `${amount} Kč`).toEqual([]);
+    }
+  });
+  it('only lists things she can afford', () => {
+    for (let seed = 0; seed < 20; seed++) {
+      for (const c of pickComparisons(500, 'CZK', seed)) expect(c.czk).toBeLessThanOrEqual(500);
+    }
   });
   it('always lists a Jungkook thing once she can afford one (D45)', () => {
     for (const amount of [350, 800, 2000, 5000, 50000]) {
       for (let seed = 0; seed < 50; seed++) {
-        const { others } = pickComparisons(amount, 'CZK', seed);
-        expect(others).toHaveLength(3);
-        expect(others.some((c) => c.jungkook), `${amount} Kč, seed ${seed}`).toBe(true);
+        const picks = pickComparisons(amount, 'CZK', seed);
+        expect(picks).toHaveLength(3);
+        expect(picks.some((c) => c.jungkook), `${amount} Kč, seed ${seed}`).toBe(true);
       }
     }
   });
   it('always lists something from Japan, South Korea or China once she can afford it (D46)', () => {
     for (const amount of [30, 60, 350, 800, 2000, 5000, 50000]) {
       for (let seed = 0; seed < 50; seed++) {
-        const { others } = pickComparisons(amount, 'CZK', seed);
-        expect(others.some((c) => c.asia), `${amount} Kč, seed ${seed}`).toBe(true);
-        expect(new Set(others).size).toBe(others.length);
-        if (amount >= 350) expect(others.some((c) => c.jungkook), `${amount} Kč, seed ${seed}`).toBe(true);
+        const picks = pickComparisons(amount, 'CZK', seed);
+        expect(picks.some((c) => c.asia), `${amount} Kč, seed ${seed}`).toBe(true);
+        expect(new Set(picks).size).toBe(picks.length);
+        if (amount >= 350) expect(picks.some((c) => c.jungkook), `${amount} Kč, seed ${seed}`).toBe(true);
       }
     }
   });
   it('shows things from all three countries as the seed changes', () => {
     const seen = new Set<string>();
     for (let seed = 0; seed < 100; seed++) {
-      for (const c of pickComparisons(5000, 'CZK', seed).others) if (c.asia) seen.add(c.id.slice(0, 3));
+      for (const c of pickComparisons(5000, 'CZK', seed)) if (c.asia) seen.add(c.id.slice(0, 3));
     }
     expect([...seen].filter((p) => ['jp-', 'kr-', 'cn-'].includes(p)).sort()).toEqual(['cn-', 'jp-', 'kr-']);
   });
@@ -56,7 +67,7 @@ describe('pickComparisons', () => {
   it('shows different Jungkook things as the seed changes', () => {
     const seen = new Set<string>();
     for (let seed = 0; seed < 50; seed++) {
-      for (const c of pickComparisons(5000, 'CZK', seed).others) if (c.jungkook) seen.add(c.id);
+      for (const c of pickComparisons(5000, 'CZK', seed)) if (c.jungkook) seen.add(c.id);
     }
     expect(seen.size).toBeGreaterThan(1);
   });

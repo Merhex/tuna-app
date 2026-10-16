@@ -1112,7 +1112,6 @@ button:has(> .haptic-switch) { position: relative; }
   gap: 10px;
 }
 .buys h2 { font-size: 1.05rem; color: var(--muted); }
-.buy-headline { font-family: var(--display); font-weight: 800; font-size: 1.2rem; line-height: 1.25; color: var(--ink); }
 .buy-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .buy-list li { padding-left: 22px; position: relative; line-height: 1.35; }
 .buy-list li::before { content: ''; position: absolute; left: 2px; top: 0.45em; width: 11px; height: 11px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffe9a3, #e0a419); }

@@ -17,6 +17,7 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 | **Jungkook Easter eggs:** Jungkook jokes when she pets the tuna; Jungkook things (up to a concert trip to Seoul) in the treasure | D45 | |
 | **Japan, South Korea and China in the treasure:** 29 things to eat, see and do there, always one in the list | D46 | |
 | **Tea, not coffee:** no coffee anywhere; chai, genmaicha, a Chengdu tea house and a Kyoto tea ceremony in the treasure | D47 | |
+| **Treasure list without a headline:** three random things, all shuffled | D48 | |
 
 ## Next, ranked
 
