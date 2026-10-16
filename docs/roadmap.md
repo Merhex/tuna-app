@@ -15,7 +15,8 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 | **Seabed decorations** at every milestone, sparkling the first time; after a year the coral keeps changing colour every month | D43 | |
 | **Quit date asked in the intro,** so milestones and decorations work without the money counter | D44 | |
 | **Jungkook Easter eggs:** Jungkook jokes when she pets the tuna; Jungkook things (up to a concert trip to Seoul) in the treasure | D45 | |
-| **Japan, South Korea and China in the treasure:** 26 things to eat, see and do there, always one in the list | D46 | |
+| **Japan, South Korea and China in the treasure:** 29 things to eat, see and do there, always one in the list | D46 | |
+| **Tea, not coffee:** no coffee anywhere; chai, genmaicha, a Chengdu tea house and a Kyoto tea ceremony in the treasure | D47 | |
 
 ## Next, ranked
 

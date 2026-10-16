@@ -2,7 +2,7 @@
 
 Every product and technical decision, numbered. Code comments refer to these numbers.
 
-**Last number used: D46.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
+**Last number used: D47.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
 
 Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an answer), **Superseded**.
 
@@ -20,6 +20,7 @@ Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an
 - **D27 · Humour: dark and unhinged.** Decided. Eulogies for the craving, trials, obituaries for household objects. *Guardrail:* the dark jokes target the craving, never her and never self-harm.
 - **D45 · Jungkook Easter eggs.** Decided, built. See below.
 - **D46 · Japan, South Korea and China in the treasure.** Decided, built. See below.
+- **D47 · Tea, not coffee.** Decided, built. See below.
 - **D30 · No card brings a vape back.** Decided. Cards never assume a vape is around and never ask her to picture or remember vaping. *Why:* picturing what you crave makes the craving stronger. The milestone text follows the same rule (D41).
 
 ## Home and the craving flow
@@ -207,9 +208,9 @@ She's a huge Jungkook fan, so he turns up in two places:
 
 **Decided, built.** Extends D45.
 
-She'd love to go to Japan, South Korea and China someday, so the treasure's “would already buy” list has 26 things from there, from a tuna-mayo onigiri in a Tokyo konbini (30 Kč) to a month in Tokyo, Seoul and Beijing (90,000 Kč):
+She'd love to go to Japan, South Korea and China someday, so the treasure's “would already buy” list has 29 things from there, from a tuna-mayo onigiri in a Tokyo konbini (30 Kč) to a month in Tokyo, Seoul and Beijing (90,000 Kč):
 
-- **Food and small things:** onigiri, bubble tea in Shanghai, gachapon, tteokbokki, soup dumplings, Japanese KitKats, ramen, Korean sheet masks, Korean barbecue, Peking duck.
+- **Food and small things:** onigiri, bubble tea in Shanghai, genmaicha (rice tea) from Kyoto, a pot of tea in a Chengdu tea house, gachapon, tteokbokki, soup dumplings, Japanese KitKats, ramen, Korean sheet masks, Korean barbecue, Peking duck, a tea ceremony in Kyoto.
 - **Places:** the Shanghai maglev, the Ghibli Museum, the Chengdu pandas, karaoke in Seoul, a hanbok day at Gyeongbokgung, the Great Wall at Mutianyu, Tokyo DisneySea.
 - **Trips**, which can be the headline: Jeju, the KTX to Busan, the Shinkansen to Kyoto, a ryokan night, a Japan Rail Pass, Beijing, two weeks in China, cherry blossom season in Japan, and all three in one month. The existing Tokyo, Seoul and Busan trips count too.
 
@@ -218,3 +219,14 @@ She'd love to go to Japan, South Korea and China someday, so the treasure's “w
 - Prices are rough guesses for one person, converted to Kč. The Czech needs a native speaker's read (D32), especially the place names (Čcheng-tu, Mu-tchien-jü, Kjongbokkung, Čedžu).
 
 *Code:* the `asia` flag and `ALWAYS_ONE` in `src/comparisons.ts`; tests in `src/comparisons.test.ts`.
+
+## D47 · Tea, not coffee
+
+**Decided, built.**
+
+She drinks tea (chai, homemade rice tea), never coffee, so nothing in the app mentions coffee:
+
+- The treasure's “fancy coffee” is now a fancy spiced chai, and three tea things joined the Japan, Korea and China list (D46): genmaicha from Kyoto (“rice tea, like your homemade one, but well travelled”), a Chengdu tea house and a Kyoto tea ceremony.
+- The Nose Sommelier card suggests sniffing her tea instead of coffee. Same card, same ID (D13), only the text changed.
+
+*Code:* `src/comparisons.ts`, `src/data/cards.json`.
