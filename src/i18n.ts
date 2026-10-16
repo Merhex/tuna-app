@@ -316,6 +316,32 @@ const en = {
         ? 'Here lies 1 hook. It came for a tuna and went home empty. Nobody will miss it.'
         : `Here lie ${n} hooks. They came for a tuna and went home empty. Nobody will miss them.`,
   hooksDodged: (n: number): string => (n === 1 ? 'hook dodged' : 'hooks dodged'),
+
+  // Bubbles: ride the wave (roadmap #1, prototype): breathing with the tuna, opened from Settings.
+  breatheOpen: 'Bubbles (prototype)',
+  prototype: 'Prototype',
+  breatheTitle: 'Bubbles',
+  breatheHowTo:
+    'Breathe along with the tuna for about two minutes. The bubble grows as you breathe in and shrinks as you breathe out. Just watch, or hold a finger down while you breathe in and lift it to breathe out.',
+  breathePattern: 'Breathing pattern',
+  breatheBox: 'Box',
+  breatheGentle: 'Gentle',
+  breatheBoxNote: 'In for 4, hold for 4, out for 4, hold for 4.',
+  breatheGentleNote: 'In for 4, out for 6. No holding.',
+  breatheStart: 'Start',
+  breatheEnd: 'That’s enough',
+  breatheReady: 'Ready?',
+  breatheIn: 'Breathe in',
+  breatheHold: 'Hold',
+  breatheOut: 'Breathe out',
+  breatheTouchHint: 'Finger down as you breathe in. Lift it to breathe out.',
+  breatheCheers: ['Right on the beat.', 'Nice and slow.', 'Perfect bubble.', 'That’s the one.', 'Smooth as the open sea.'],
+  breatheOver: 'Ahh. Better.',
+  breatheSummary: (n: number): string =>
+    n === 0 ? 'Even one breath counts. Come back any time.' : `${n} big ${n === 1 ? 'breath' : 'breaths'}, bubbled all the way to the surface.`,
+  breathsTaken: (n: number): string => (n === 1 ? 'big breath' : 'big breaths'),
+  breathsOnBeat: 'on the beat',
+  breatheAgain: 'Again',
   bubblesCaught: (n: number): string => (n === 1 ? 'bubble caught' : 'bubbles caught'),
   continueWarn: 'Your collection could get lost if the browser clears its data.',
 };
@@ -623,6 +649,33 @@ const cs: Strings = {
           `Zde leží ${n} háčků. Přišlo si pro tuňáka a odešlo s prázdnou. Nikomu chybět nebude.`,
         ),
   hooksDodged: (n) => csPlural(n, 'přelstěný háček', 'přelstěné háčky', 'přelstěných háčků'),
+
+  breatheOpen: 'Bubliny (prototyp)',
+  prototype: 'Prototyp',
+  breatheTitle: 'Bubliny',
+  breatheHowTo:
+    'Dýchej s tuňákem asi dvě minuty. Bublina roste, když se nadechuješ, a zmenšuje se, když vydechuješ. Můžeš se jen dívat, nebo při nádechu drž prst na displeji a při výdechu ho zvedni.',
+  breathePattern: 'Způsob dýchání',
+  breatheBox: 'Čtverec',
+  breatheGentle: 'Zlehka',
+  breatheBoxNote: 'Nádech na 4, zadržet na 4, výdech na 4, zadržet na 4.',
+  breatheGentleNote: 'Nádech na 4, výdech na 6. Bez zadržování.',
+  breatheStart: 'Začít',
+  breatheEnd: 'Stačilo',
+  breatheReady: 'Připravená?',
+  breatheIn: 'Nádech',
+  breatheHold: 'Zadrž',
+  breatheOut: 'Výdech',
+  breatheTouchHint: 'Při nádechu drž prst na displeji. Při výdechu ho zvedni.',
+  breatheCheers: ['Přesně do rytmu.', 'Pěkně pomalu.', 'Dokonalá bublina.', 'Přesně tak.', 'Klidně jako širé moře.'],
+  breatheOver: 'Áách. Hned líp.',
+  breatheSummary: (n) =>
+    n === 0
+      ? 'I jeden nádech se počítá. Vrať se kdykoli.'
+      : `${n} ${csPlural(n, 'velký nádech', 'velké nádechy', 'velkých nádechů')}, s bublinami až k hladině.`,
+  breathsTaken: (n) => csPlural(n, 'velký nádech', 'velké nádechy', 'velkých nádechů'),
+  breathsOnBeat: 'do rytmu',
+  breatheAgain: 'Znovu',
   bubblesCaught: (n) => csPlural(n, 'chycená bublina', 'chycené bubliny', 'chycených bublin'),
   continueWarn: 'Pokud prohlížeč smaže data, můžeš přijít o sbírku.',
 };

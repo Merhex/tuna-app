@@ -74,6 +74,28 @@ function noise(ac: AudioContext, { start = 0, dur = 0.3, from = 800, to = 3000, 
 const bubble = (ac: AudioContext, start = 0, base = 500) =>
   tone(ac, { freq: base, to: base * 2.2, start, dur: 0.09, gain: 0.14 });
 
+/** A long, soft note that fades in, glides from `freq` to `to` and fades out: a breath you can hear. */
+function swell(ac: AudioContext, { freq, to, dur, gain = 0.05 }: { freq: number; to: number; dur: number; gain?: number }) {
+  const t = ac.currentTime;
+  const g = ac.createGain();
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(gain, t + Math.min(0.8, dur / 3));
+  g.gain.setValueAtTime(gain, t + dur * 0.7);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  g.connect(ac.destination);
+  // A sine with a quieter octave above it, so it's warm rather than a test tone.
+  for (const [mul, level] of [[1, 1], [2, 0.25]]) {
+    const osc = ac.createOscillator();
+    const lg = ac.createGain();
+    lg.gain.value = level;
+    osc.frequency.setValueAtTime(freq * mul, t);
+    osc.frequency.exponentialRampToValueAtTime(to * mul, t + dur);
+    osc.connect(lg).connect(g);
+    osc.start(t);
+    osc.stop(t + dur + 0.05);
+  }
+}
+
 /**
  * A cue is one sound plus a vibration rhythm built from the same timings, so what she hears and what
  * she feels can't drift apart. Each beat is [start ms, length ms]. Vibration rhythms play on phones
@@ -182,6 +204,28 @@ export const fx = {
     cue([[0, 40]], (ac) => {
       tone(ac, { freq: 240, to: 120, dur: 0.18, type: 'triangle', gain: 0.1 });
       noise(ac, { dur: 0.12, from: 900, to: 300, gain: 0.05 });
+    });
+  },
+  /** Bubbles (prototype): breathing in. A soft note that rises for as long as the breath. */
+  breatheIn(seconds: number) {
+    cue([[0, 20]], (ac) => swell(ac, { freq: 196, to: 294, dur: seconds }));
+  },
+  /** Bubbles: breathing out. The note falls again, and a few slow bubbles leave the tuna's mouth. */
+  breatheOut(seconds: number) {
+    cue([[0, 20]], (ac) => {
+      swell(ac, { freq: 294, to: 196, dur: seconds });
+      for (let i = 0; i < 3; i++) tone(ac, { freq: 380 + i * 60, to: 700 + i * 90, start: 0.4 + i * (seconds / 3.5), dur: 0.1, gain: 0.04 });
+    });
+  },
+  /** Bubbles: a hold starts. Barely there, so she knows the step changed. */
+  breatheHold() {
+    cue([[0, 12]], (ac) => tone(ac, { freq: 587, dur: 0.6, gain: 0.025 }));
+  },
+  /** Bubbles: her finger followed a whole breath. */
+  onBeat() {
+    cue([], (ac) => {
+      tone(ac, { freq: 880, dur: 0.25, type: 'triangle', gain: 0.04 });
+      tone(ac, { freq: 1319, start: 0.1, dur: 0.35, type: 'triangle', gain: 0.035 });
     });
   },
   /** ...or a joke it really shouldn't have: dun, dun, DUNNN. */

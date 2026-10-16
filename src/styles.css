@@ -1336,3 +1336,72 @@ button:has(> .haptic-switch) { position: relative; }
 .dodge-summary { display: flex; flex-direction: column; gap: 2px; max-width: 340px; }
 .history-game { color: var(--muted); }
 .history-game-icon { width: 30px; display: inline-flex; justify-content: center; }
+
+/* ---------- Bubbles: ride the wave (prototype, roadmap #1) ---------- */
+/* Opened from a small, quiet button next to the version in Settings. */
+.lab-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin: -8px 0 -8px 2px;
+  vertical-align: middle;
+  border-radius: 50%;
+  color: var(--muted);
+  opacity: 0.5;
+}
+.proto-badge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.breathe .panel { gap: 14px; }
+.breathe-stats { width: 100%; margin: 0; text-align: left; }
+/* Full screen. A finger anywhere is a breath in, so the page mustn't scroll or select. */
+.breathe-pond {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.breathing .bg-bubbles { display: none; }
+.breathe-center {
+  position: absolute;
+  inset: 0;
+  padding: calc(env(safe-area-inset-top, 0px) + 64px) 16px calc(env(safe-area-inset-bottom, 0px) + 16px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-align: center;
+  pointer-events: none;
+}
+.breathe-word { font-family: var(--display); font-weight: 700; font-size: 1.9rem; line-height: 1.2; min-height: 1.2em; }
+.breathe-stage { position: relative; width: min(340px, calc(100vw - 32px), 52dvh); aspect-ratio: 1; }
+.breathe-stage > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.breathe-track { fill: none; stroke: var(--line); stroke-width: 3; }
+.breathe-bubble { fill: rgba(94, 196, 240, 0.12); stroke: rgba(234, 244, 250, 0.75); stroke-width: 2.5; transition: fill 0.25s, stroke 0.25s; }
+.breathe-shine { fill: rgba(255, 255, 255, 0.75); }
+.breathe-little { fill: rgba(94, 196, 240, 0.25); stroke: rgba(234, 244, 250, 0.8); stroke-width: 1.5; }
+.breathe-dot { fill: var(--accent); }
+.breathe-dot.glow { filter: drop-shadow(0 0 6px var(--accent)); }
+/* Her finger is down: the bubble brightens, so she can see it counts. */
+.pressing .breathe-bubble { fill: rgba(94, 196, 240, 0.22); stroke: #fff; }
+.breathe-tuna { position: absolute; left: 50%; top: 50%; width: calc(120 / 340 * 100%); transform: translate(-50%, -50%); line-height: 0; }
+.breathe-tuna svg { width: 100%; height: auto; }
+.breathe-count { font-family: var(--display); font-weight: 700; font-size: 3rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.breathe-cheer { min-height: 1.5em; color: var(--accent); font-weight: 700; opacity: 0; transition: opacity 0.4s; }
+.breathe-cheer.show { opacity: 1; }
+.breathe-hint { max-width: 300px; transition: opacity 0.6s; }
+.breathe-hint.gone { opacity: 0; }

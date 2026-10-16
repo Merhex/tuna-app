@@ -15,8 +15,9 @@ import { Ocean } from './components/Ocean';
 import { Intro } from './components/Intro';
 import { Logbook } from './components/Logbook';
 import { Treasure } from './components/Treasure';
+import { Breathe } from './components/Breathe';
 
-export type Screen = 'install' | 'intro' | 'home' | 'hook' | 'aquarium' | 'logbook' | 'treasure' | 'settings';
+export type Screen = 'install' | 'intro' | 'home' | 'hook' | 'aquarium' | 'logbook' | 'treasure' | 'settings' | 'breathe';
 
 export function App() {
   const [data, setData] = useState<AppData | null>(null);
@@ -123,8 +124,10 @@ export function App() {
               setIntroReturn('settings');
               go('intro');
             }}
+            showBreathe={() => go('breathe')}
           />
         )}
+        {screen === 'breathe' && <Breathe onClose={() => go('settings')} />}
       </LangContext.Provider>
     </AppContext.Provider>
   );

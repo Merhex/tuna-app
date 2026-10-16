@@ -42,6 +42,17 @@ export function Bowl({ size = 22 }: P) {
   );
 }
 
+/** One big bubble and a small one, with a shine. */
+export function BubbleIcon({ size = 22 }: P) {
+  return (
+    <svg {...base(size)} viewBox="0 0 24 24">
+      <circle cx="10" cy="14" r="7" />
+      <circle cx="19" cy="5" r="2.5" />
+      <path d="M7 11.5a3.5 3.5 0 0 1 2.5-2" />
+    </svg>
+  );
+}
+
 export function Close({ size = 20 }: P) {
   return (
     <svg {...base(size)} viewBox="0 0 24 24" stroke-width={2.6}>
