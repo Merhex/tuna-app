@@ -1,7 +1,7 @@
 import { useRef, useState } from 'preact/hooks';
 import type { Lang } from '../cards';
 import { fx } from '../feedback';
-import { useT } from '../i18n';
+import { localeOf, useT } from '../i18n';
 import { isIOS } from '../platform';
 import { useApp } from '../state';
 import { Back, Download, FishHook, Phone, Upload } from './Icons';
@@ -145,10 +145,10 @@ export function Settings({
 
       <section class="group about">
         <h2>{t.about}</h2>
-        <p class="muted small">{t.aboutBody}</p>
+        <p class="muted small">{t.aboutBody(<a class="tel" href="tel:+420800350000">800 350 000</a>)}</p>
         <p class="muted small version">
           {t.version} {__APP_VERSION__} ·{' '}
-          {new Date(__BUILD_TIME__).toLocaleString(data.settings.lang, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+          {new Date(__BUILD_TIME__).toLocaleString(localeOf(data.settings.lang), { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
         </p>
       </section>
     </main>

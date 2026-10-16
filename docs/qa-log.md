@@ -120,3 +120,35 @@ Still open:
 - The sparkle, the date picker and the intro question need a look on a real iPhone.
 - The Czech decoration names and question need a native speaker's read.
 
+
+---
+
+# QA round 3 (branch `qa-round-3`)
+
+Used as a user in a headless browser, with data seeded for a new user, a month in and two years in. Six screen sizes: iPhone SE (1st gen) and SE 3 in Safari, SE 3 installed, iPhone 13 in Safari and installed, and Pro Max in Safari. Covered every screen and path in English and Czech, plus reduced motion, sounds off, backup and restore (including onto a fresh install), and double taps.
+
+## Pass 1: 7.5/10
+
+Everything works and records correctly, with no console errors. Found:
+
+- **Bug: the win screen didn't fit small phones.** Its content was about 700px tall on every phone, so on an iPhone SE "Back to the tank" was off-screen, and on an iPhone 13 in Safari it was clipped.
+- **Feel: the aquarium opened on what she hasn't caught.** It was sorted rarest first, so a month in, the first screen was almost all "???" tiles and her own catches were below the fold.
+- **Detail: the quitline number in Settings couldn't be tapped.**
+- **Detail: English mixed US and British formats** (“Wed, Oct 14, 02:05 PM” and “9/23/2026” in some places, “31 August 2026” in others).
+- **Detail:** the intro's glossary slide cut off its last term on an iPhone 13 in Safari. The snag screen scrolled a little on an iPhone SE. The fishing line ran through the hook while it dropped. One straight apostrophe in the install guide.
+
+**Fixed:** the win screen tightens up on short screens; her catches come first in the aquarium; the quitline is a tap-to-call link; one shared locale for dates, times and numbers (British English, so 24-hour time); the glossary hook shrinks on short screens; the snag screen's spacing is tighter on small phones; the hook drops in step with its line; the apostrophe is typographic.
+
+## Pass 2: 8.5/10
+
+All pass 1 fixes verified at every size. New cases checked: the installed app (no install guide, intro first), "How it works" and the install guide both return to Settings, live language switching, the timer running out, closing mid-craving (saved as "Not yet" with both ratings), reduced motion, and sounds off (no audio started). One more find:
+
+- **Bug: the home screen scrolled on short phones** once she had 3 favourites (the All / Favourites switch shows). It was 24px too tall on an iPhone SE 3 in Safari.
+
+**Fixed:** the big button also scales with the screen's height, with a smaller tuna and tighter spacing below 600px. Re-measured: the home screen, every step of a craving, and the intro fit without scrolling at all six sizes. Only the one-time install guide scrolls, in Safari on the smallest phones.
+
+Still open:
+
+- Sounds, vibrations and the real install flow need a real iPhone. The Czech needs a native speaker's read.
+- On short phones the All / Favourites switch sits over the seabed decorations. It stays readable, and the seabed is backdrop by design (D43).
+- Content, for a decision rather than a fix: a few at-home cards assume she's gaming or watching a series ("Controller down…", "Pause the game…", "Before the next episode autoplays…"). Drawn at other times, they cost her one throw-back.
