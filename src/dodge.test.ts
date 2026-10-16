@@ -84,6 +84,23 @@ describe('dodge the hooks', () => {
     expect(g.score).toMatchObject({ streak: 0, bestStreak: 1 });
   });
 
+  it('sends bubbles up faster, and more often, towards the end of the round', () => {
+    const g = createGame(390, 800, 60, seeded(17));
+    g.nextHook = 999;
+    const rising = (from: number) => {
+      g.time = from;
+      g.bubbles = [];
+      // Away from the bubbles, so none get caught.
+      g.tuna.x = g.tuna.tx = -1000;
+      run(g, 10);
+      return { count: g.bubbles.length, speed: g.bubbles.reduce((a, b) => a + b.speed, 0) / g.bubbles.length };
+    };
+    const early = rising(0);
+    const late = rising(DODGE_SETTINGS.roundSeconds - 12);
+    expect(late.speed).toBeGreaterThan(early.speed * 1.5);
+    expect(late.count).toBeGreaterThanOrEqual(early.count - 2);
+  });
+
   it('keeps the tuna on screen and below the buttons, wherever her finger goes', () => {
     const g = createGame(390, 800, 100, seeded(11));
     moveBy(g, -5000, -5000);

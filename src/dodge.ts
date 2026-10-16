@@ -8,7 +8,7 @@
  */
 
 export const DODGE_SETTINGS = {
-  roundSeconds: 180,
+  roundSeconds: 150,
   /** The tuna's body, as an ellipse around its centre. The tail and fins don't count as hits. */
   tunaRx: 34,
   tunaRy: 17,
@@ -22,14 +22,17 @@ export const DODGE_SETTINGS = {
   /** Difficulty at the start of the round; it climbs to 1 by the end. */
   startLevel: 0.12,
   /** Seconds between hooks and how fast they drop (px/s), from level 0 to level 1. */
-  hookEvery: [1.9, 0.55],
-  dropSpeed: [230, 520],
+  hookEvery: [1.9, 0.45],
+  dropSpeed: [230, 600],
   /** Most hooks in the water at once, from level 0 to level 1. */
-  maxHooks: [2, 7],
+  maxHooks: [2, 8],
   /** Swinging and trolling hooks join in from these levels. */
   swingFrom: 0.3,
   trollFrom: 0.5,
-  bubbleEvery: 0.85,
+  /** How fast bubbles rise (px/s, each ±20%) and the seconds between them, from the start of the round
+   *  to the end. They come more often as they speed up, so the screen doesn't empty out. */
+  bubbleSpeed: [80, 150],
+  bubbleEvery: [0.85, 0.6],
   /** Hook art: the bend sits below and left of the eye the line is tied to. */
   bendOffset: { x: -9, y: 28 },
   bendRadius: 9,
@@ -132,9 +135,12 @@ export function moveBy(g: Game, dx: number, dy: number) {
   t.ty = clamp(t.ty + dy, g.top + S.tunaRy + 12, g.h - S.tunaRy - 16);
 }
 
-/** How hard the game is right now, 0–1: climbs through the round, and drops for a while after a nick. */
+/** How far through the round, 0–1. */
+const progress = (g: Game) => clamp(g.time / S.roundSeconds, 0, 1);
+
+/** How hard the hooks are right now, 0–1: climbs through the round, and drops for a while after a nick. */
 export function level(g: Game) {
-  const base = lerp(S.startLevel, 1, clamp(g.time / S.roundSeconds, 0, 1));
+  const base = lerp(S.startLevel, 1, progress(g));
   return clamp(base - g.ease, 0, 1);
 }
 
@@ -180,7 +186,7 @@ export function newHook(g: Game, kind: HookKind, ax?: number): Hook {
     hook.ax = hook.dir === 1 ? -90 : g.w + 90;
     hook.x = hook.ax - hook.dir * 40;
     hook.y = hook.depth;
-    hook.speed = between(r, 70, 110) + lv * 80;
+    hook.speed = between(r, 70, 110) + lv * 110;
   }
   return hook;
 }
@@ -304,9 +310,12 @@ export function step(g: Game, dt: number) {
   // Bubbles
   g.nextBubble -= dt;
   if (g.nextBubble <= 0 && g.bubbles.length < 9) {
+    // Bubbles speed up with the round itself, not with the hooks' level, so a nick doesn't slow them.
+    const p = progress(g);
     const x0 = between(r, 30, g.w - 30);
-    g.bubbles.push({ x0, x: x0, y: g.h + 20, r: between(r, 10, 14), speed: between(r, 45, 80), seed: r() * 6 });
-    g.nextBubble = S.bubbleEvery * between(r, 0.7, 1.3);
+    const speed = lerp(S.bubbleSpeed[0], S.bubbleSpeed[1], p) * between(r, 0.8, 1.2);
+    g.bubbles.push({ x0, x: x0, y: g.h + 20, r: between(r, 10, 14), speed, seed: r() * 6 });
+    g.nextBubble = lerp(S.bubbleEvery[0], S.bubbleEvery[1], p) * between(r, 0.7, 1.3);
   }
   for (const b of g.bubbles) {
     b.y -= b.speed * dt;
