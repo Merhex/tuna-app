@@ -153,7 +153,7 @@ function tell(list: string[]) {
  * it tells a joke; one in ten is a dark one, delivered with a wide-eyed stare, and about one in
  * three is about Jungkook, in a purple bubble with a purple heart (D45). Every tap is counted (D49).
  */
-function PettableTuna() {
+export function PettableTuna() {
   const t = useT();
   const { update } = useApp();
   const [petting, setPetting] = useState(false);

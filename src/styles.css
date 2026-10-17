@@ -1389,3 +1389,53 @@ button:has(> .haptic-switch) { position: relative; }
 /* "Breathe instead", "Draw a card", under how to play (D54). They wrap onto two lines when they don't fit. */
 .other-ways { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0 14px; pointer-events: auto; }
 .other-ways .link { padding: 8px 4px; min-height: 40px; }
+
+/* ---------- Visit my school (3D prototype) ---------- */
+/* Small and quiet on purpose: only whoever is testing it should find it. */
+.lab-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin: -8px 0 -8px 2px;
+  vertical-align: middle;
+  border-radius: 50%;
+  color: var(--muted);
+  opacity: 0.5;
+}
+.proto-badge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.s3d-canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; touch-action: none; }
+/* The screen sits over the canvas and lets drags through to it, except on its buttons. */
+.s3d { height: 100dvh; min-height: 0; overflow: hidden; z-index: 1; pointer-events: none; }
+.s3d button, .s3d .group { pointer-events: auto; }
+.s3d-home, .s3d-wide { transition: opacity 0.5s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.s3d.wide .s3d-home { opacity: 0; transform: scale(0.9); }
+/* Hidden buttons never catch a tap or a drag (inert does this too, where the phone supports it). */
+.s3d.wide .s3d-home button { pointer-events: none; }
+.s3d-wide {
+  position: absolute;
+  left: max(16px, env(safe-area-inset-left, 0px));
+  right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  margin: 0;
+  gap: 4px;
+  background: rgba(6, 23, 36, 0.55);
+}
+.s3d.home .s3d-wide { opacity: 0; transform: translateY(24px); pointer-events: none; }
+.s3d-count { font-family: var(--display); font-weight: 700; font-size: 1.1rem; display: flex; flex-direction: column; }
+.s3d-count small { font-family: var(--sans); font-weight: 600; font-size: 0.82rem; }
+.s3d-wide .row { min-height: 40px; }
+.s3d-wide .segmented.compact button { padding: 6px 10px; }
+.visit-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: -6px; }
+.s3d-failed { margin-top: 16px; text-align: center; pointer-events: auto; }
