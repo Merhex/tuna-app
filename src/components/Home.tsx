@@ -73,6 +73,13 @@ export function Home({
     return () => document.documentElement.classList.remove('ocean-off');
   }, [covered]);
 
+  // In the wide view the tank comes in front of the page, so a finger anywhere drags the camera
+  // round it; only the top bar and the card stay above it.
+  useEffect(() => {
+    document.documentElement.classList.toggle('tank-front', view === 'wide');
+    return () => document.documentElement.classList.remove('tank-front');
+  }, [view]);
+
   // What the tank shows: her school, her decorations (each one sparkling the first time), and the view.
   const earned = MILESTONES.filter((m) => data.seabed.earned[m.id]).map((m) => m.id);
   useEffect(() => tank?.setTuna(shownTuna(school)), [tank, school]);
