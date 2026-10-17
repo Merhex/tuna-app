@@ -346,6 +346,8 @@ const en = {
   school3dDrag: 'Drag to look around',
   school3dCalm: 'With less motion on, the school holds still. Drag to look around',
   school3dShown: (n: number): string => `${n} swimming here, the rest just out of sight.`,
+  // The treasure chest in the middle of the tank (D56).
+  school3dChest: 'Tap the chest in the middle to open your treasure',
 };
 
 type Strings = typeof en;
@@ -677,6 +679,7 @@ const cs: Strings = {
   school3dDrag: 'Táhni prstem a rozhlédni se',
   school3dCalm: 'S méně animacemi hejno stojí. Táhni prstem a rozhlédni se',
   school3dShown: (n) => `${n} jich plave tady, ostatní jsou kousek dál.`,
+  school3dChest: 'Klepni na truhlu uprostřed a otevři svůj poklad',
 };
 
 export const STRINGS: Record<Lang, Strings> = { en, cs };
