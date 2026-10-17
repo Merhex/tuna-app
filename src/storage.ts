@@ -34,6 +34,8 @@ export interface HookEntry {
   rounds?: number;
   /** Breaths taken in Bubbles, over all its rounds (D54); absent when none. */
   breaths?: number;
+  /** Rounds of Net Packing she played; absent when none. */
+  packs?: number;
   result: HookResult;
   baitNote?: string;
   /** On a slip: what was going on (D57); absent when she picked nothing. */

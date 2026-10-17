@@ -353,6 +353,25 @@ const en = {
   dodgeInstead: 'Dodge the hooks instead',
   bubblesCaught: (n: number): string => (n === 1 ? 'bubble caught' : 'bubbles caught'),
   continueWarn: 'Your collection could get lost if the browser clears its data.',
+  // Net Packing: a falling-block puzzle, packing fish into crates. A brutal hook can start with it,
+  // and "Not yet" can offer it, like the other rounds.
+  packOffer: 'Net Packing · 2½ min',
+  packTitle: 'Net Packing',
+  packHowTo: 'Drag to slide, tap to turn, flick down to drop. A full row ships as a crate. Two and a half minutes, and you can’t lose.',
+  packEnd: 'End the round',
+  packBrutal: (n: number): string => `${n === 8 ? 'An' : 'A'} ${n}? Let’s pack this one away, crate by crate.`,
+  packInstead: 'Net Packing instead',
+  packNext: 'Next',
+  // When the stack reaches the top, the bottom half goes and play carries on.
+  packHauled: 'Net hauled in. Plenty of room!',
+  packSummary: (n: number): string =>
+    n === 0
+      ? 'No full crates this time, but every fish found a spot.'
+      : `${n} ${n === 1 ? 'crate' : 'crates'} packed and shipped. Every fish got a window seat.`,
+  fishPacked: (_n: number): string => 'fish packed',
+  crates: (n: number): string => (n === 1 ? 'crate' : 'crates'),
+  packLog: (n: number): string => (n === 1 ? 'Net Packing' : `Net Packing ×${n}`),
+
 
   // The home screen's 3D tank (D55): "Visit my school" under the button pulls back to the whole tank.
   visitSchool: 'Visit my school',
@@ -699,6 +718,22 @@ const cs: Strings = {
   dodgeInstead: 'Radši zahrát Uhni háčkům',
   bubblesCaught: (n) => csPlural(n, 'chycená bublina', 'chycené bubliny', 'chycených bublin'),
   continueWarn: 'Pokud prohlížeč smaže data, můžeš přijít o sbírku.',
+  packOffer: 'Naskládej úlovek · 2½ min',
+  packTitle: 'Naskládej úlovek',
+  packHowTo: 'Táhni prstem do stran a posouvej, klepnutím otáčej, švihnutím dolů pusť rybu na dno. Plná řada odjede jako bedna. Dvě a půl minuty a prohrát se nedá.',
+  packEnd: 'Ukončit kolo',
+  packBrutal: (n) => `${n}? Tenhle zabalíme, bednu po bedně.`,
+  packInstead: 'Radši zahrát Naskládej úlovek',
+  packNext: 'Další',
+  packHauled: 'Síť je vytažená. Místa je dost!',
+  packSummary: (n) =>
+    n === 0
+      ? 'Tentokrát žádná plná bedna, ale každá ryba našla své místo.'
+      : `${n} ${csPlural(n, 'bedna zabalená a odeslaná', 'bedny zabalené a odeslané', 'beden zabalených a odeslaných')}. Každá ryba má místo u okýnka.`,
+  fishPacked: (n) => csPlural(n, 'naskládaná ryba', 'naskládané ryby', 'naskládaných ryb'),
+  crates: (n) => csPlural(n, 'bedna', 'bedny', 'beden'),
+  packLog: (n) => (n === 1 ? 'Naskládej úlovek' : `Naskládej úlovek ×${n}`),
+
 
   visitSchool: 'Navštiv své hejno',
   swimBack: 'Zpátky',

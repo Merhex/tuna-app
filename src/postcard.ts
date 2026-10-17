@@ -4,7 +4,7 @@ import { Tuna } from './components/Tuna';
 /** What goes on a postcard (D53). Nothing about vaping (D30): only the hook, the card and the tuna. */
 export interface PostcardInfo {
   headline: string;
-  /** What she did: a card's title and rarity, or the game's hooks dodged. */
+  /** What she did: a card's title and rarity, or the round's line ("Net Packing · 3 crates"). */
   feat: string;
   /** Hook strength before and after, when she rated both. */
   pull?: { label: string; before: number; after: number };

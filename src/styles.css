@@ -48,6 +48,15 @@ html, body {
 }
 
 html { background: var(--sea-deep); }
+/* Installed app on iPhone (iOS 26+): with the see-through status bar, iOS can open a page that is
+   shorter than the screen with a viewport that's short by the status bar's height, leaving a strip
+   at the bottom until something makes it re-measure (tapping the status bar, say). A page at least
+   as tall as the screen gets the full viewport, so make the page one status bar taller than the
+   short viewport. The 100lvh cap keeps it from ever being taller than the screen (no scrolling)
+   once the viewport is right, and where the status bar takes no space (no top inset) nothing changes. */
+@media (display-mode: standalone) {
+  html { min-height: min(100lvh, calc(100% + env(safe-area-inset-top, 0px))); }
+}
 /* No background on body: it would paint over the fixed ocean backdrop. */
 body { background: transparent; -webkit-user-select: none; user-select: none; }
 textarea, input { -webkit-user-select: text; user-select: text; }
@@ -1347,6 +1356,59 @@ button:has(> .haptic-switch) { position: relative; }
 .dodge-summary { display: flex; flex-direction: column; gap: 2px; max-width: 340px; }
 .history-game { color: var(--muted); }
 .history-game-icon { width: 30px; display: inline-flex; justify-content: center; }
+
+/* ---------- Net Packing ---------- */
+/* Full screen over the craving flow, like Dodge the hooks: the top bar, then the board in the room
+   left under it. A finger anywhere plays, so the page mustn't scroll or select. */
+.pack-pond {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.pack-hud { position: relative; flex: none; width: 100%; }
+/* The next piece, small, at the end of the top bar. */
+.pack-next { flex: none; width: 46px; height: 30px; border-radius: 8px; background: var(--surface); }
+.pack-well {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin: 10px max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pack-canvas { display: block; touch-action: none; }
+.packing .bg-bubbles { display: none; }
+/* "Net hauled in": shown for a moment when the stack reached the top and the bottom half went. */
+.pack-toast {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  font-family: var(--display);
+  font-weight: 700;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+.pack-toast.show { opacity: 1; }
 
 /* ---------- Bubbles (D54) ---------- */
 /* Full screen over the craving flow, like Dodge the hooks. A finger anywhere is a breath in, so the

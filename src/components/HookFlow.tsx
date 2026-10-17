@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { pickActivity, rememberPick } from '../activities';
+import { alternatives, notYetRounds, pickActivity, rememberPick, type Activity } from '../activities';
 import type { BreatheResult } from '../breathe';
 import { CARDS, cardById, fitsPlace, PLACES, type Card } from '../cards';
 import { drawCard, FAVOURITES_MIN } from '../draw';
@@ -13,19 +13,28 @@ import { streakOf } from '../streak';
 import { CardView, Rating } from './CardView';
 import { BreatheRound } from './Breathe';
 import { DodgeGame, type DodgeScore } from './Dodge';
+import { PackGame, type PackScore } from './Pack';
 import { Close, FishHook, House, Pin } from './Icons';
 import { Tuna } from './Tuna';
 import { Haptic } from './Haptic';
 
 // After a snag: 'fresh' asks about her streak, 'regroup' offers the next step (D57).
-type Step = 'before' | 'drop' | 'card' | 'game' | 'breathe' | 'check' | 'won' | 'notyet' | 'snagged' | 'fresh' | 'regroup';
+type Step = 'before' | 'drop' | 'card' | 'round' | 'check' | 'won' | 'notyet' | 'snagged' | 'fresh' | 'regroup';
 
-/** How the last round of Dodge the hooks or Bubbles went. */
-type LastRound = { kind: 'dodge'; score: DodgeScore } | { kind: 'breathe'; result: BreatheResult };
+/** How the last round went: one member per activity. */
+type LastRound =
+  | { kind: 'dodge'; score: DodgeScore }
+  | { kind: 'breathe'; result: BreatheResult }
+  | { kind: 'pack'; score: PackScore };
+
+/** What a hook's rounds add up to, as stored on it. */
+type RoundCounts = Pick<HookEntry, 'rounds' | 'breaths' | 'packs'>;
+
+type Strings = ReturnType<typeof useT>;
 
 /** How long a new screen ignores taps (see `guard`). */
 const SETTLE_MS = 300;
-/** A hook rated this strong or stronger starts with Dodge the hooks or Bubbles instead of a card (D51, D54). */
+/** A hook rated this strong or stronger starts with a round (one of `ENABLED`) instead of a card (D51, D54). */
 const GAME_FROM = 8;
 
 export function HookFlow({ onExit }: { onExit: () => void }) {
@@ -40,10 +49,12 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   const [drawn, setDrawn] = useState<string[]>([]);
   const [completed, setCompleted] = useState<string[]>([]);
   const [lastCatch, setLastCatch] = useState<{ isNew: boolean; count: number } | null>(null);
-  // Rounds of Dodge the hooks (D50) and breaths in Bubbles (D54) this hook, and how the last round went
-  // if she did one after her last card, for the check and win screens.
-  const [rounds, setRounds] = useState(0);
-  const [breaths, setBreaths] = useState(0);
+  // The round on screen, the rounds she played this hook (oldest first) and what they add up to
+  // (rounds of Dodge the hooks, D50; breaths in Bubbles, D54; rounds of Net Packing), and how the last
+  // round went if she did one after her last card, for the check and win screens.
+  const [activity, setActivity] = useState<Activity>('dodge');
+  const [played, setPlayed] = useState<Activity[]>([]);
+  const [counts, setCounts] = useState<RoundCounts>({});
   const [lastRound, setLastRound] = useState<LastRound | null>(null);
   const [note, setNote] = useState('');
   const [reasons, setReasons] = useState<SlipReason[]>([]);
@@ -92,7 +103,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   const stepAt = useRef(performance.now());
   useEffect(() => {
     stepAt.current = performance.now();
-  }, [step]);
+  }, [step, activity]);
   const guard =
     <A extends unknown[]>(fn: (...args: A) => void) =>
     (...args: A) => {
@@ -101,23 +112,76 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   const later = (fn: () => void, ms: number) => timers.current.push(window.setTimeout(fn, ms));
 
   // Straight from a brutal rating (D51): no card or round yet. Then a round says why it came up, and
-  // offers the other one or a card instead (D54).
-  const fromRating = !drawn.length && !rounds && !breaths;
-  const roundLine = (r: LastRound) =>
-    r.kind === 'dodge'
-      ? `${t.dodgeTitle} · ${r.score.dodged} ${t.hooksDodged(r.score.dodged)}`
-      : `${t.breatheTitle} · ${r.result.breaths} ${t.breathsTaken(r.result.breaths)}`;
+  // offers another one or a card instead (D54).
+  const fromRating = !drawn.length && !played.length;
+  const roundLine = (r: LastRound) => {
+    switch (r.kind) {
+      case 'dodge':
+        return `${t.dodgeTitle} · ${r.score.dodged} ${t.hooksDodged(r.score.dodged)}`;
+      case 'breathe':
+        return `${t.breatheTitle} · ${r.result.breaths} ${t.breathsTaken(r.result.breaths)}`;
+      case 'pack':
+        return `${t.packTitle} · ${r.score.crates} ${t.crates(r.score.crates)}`;
+    }
+  };
   // The tap also lets iPhone play the round's sounds.
-  const toRound = (next: 'game' | 'breathe') => () => {
+  const toRound = (next: Activity) => () => {
     fx.tap();
-    setStep(next);
+    setActivity(next);
+    setStep('round');
   };
 
-  /** A brutal hook starts with one of the two, at random, but never the same three times in a row (D54). */
+  /** A brutal hook starts with a round, at random, but never the same one three times in a row (D54). */
   function startBrutal() {
     const a = pickActivity(data.settings.brutalPicks);
     update((d) => ({ ...d, settings: { ...d.settings, brutalPicks: rememberPick(d.settings.brutalPicks, a) } }));
-    setStep(a === 'dodge' ? 'game' : 'breathe');
+    setActivity(a);
+    setStep('round');
+  }
+
+  function endRound(r: LastRound | null) {
+    // Leaving before her first touch goes back without counting a round: to the rating if she came
+    // straight from it, so she can change it, otherwise to "Not yet".
+    if (!r && fromRating) {
+      // Straight after a snag (D57), back to its last screen.
+      if (regroup) return setStep('regroup');
+      leftBefore.current = false;
+      return setStep('before');
+    }
+    if (!r) return setStep('notyet');
+    setCounts((c) => addRound(c, r));
+    setPlayed((p) => [...p, r.kind]);
+    setLastRound(r);
+    setStep('check');
+  }
+
+  /** The round on screen, with its line and ways out when it was picked straight from the rating. */
+  function round() {
+    const text = roundText(t, activity);
+    // One other round, the one picked least lately, and a card: never a long list at the worst moment (D51).
+    const other = alternatives(activity, data.settings.brutalPicks)[0];
+    const props = {
+      calm: data.settings.reducedMotion,
+      // Straight after a snag there was no rating: Bubbles gets its own line, the others none (D57).
+      lead: !fromRating ? undefined : !regroup ? text.brutal(before ?? GAME_FROM) : activity === 'breathe' ? t.breatheAfterSnag : undefined,
+      others: fromRating
+        ? [
+            ...(other ? [{ label: roundText(t, other).instead, onPick: guard(toRound(other)) }] : []),
+            { label: t.drawCard, onPick: guard(draw) },
+          ]
+        : undefined,
+    };
+    switch (activity) {
+      case 'dodge':
+        return <DodgeGame key="dodge" {...props} onEnd={(s) => endRound(s && { kind: 'dodge', score: s })} />;
+      case 'breathe':
+        // Leaving before a whole breath works like leaving the game before touching it.
+        return <BreatheRound key="breathe" {...props} onEnd={(r) => endRound(r && { kind: 'breathe', result: r })} />;
+      case 'pack':
+        return <PackGame key="pack" {...props} onEnd={(s) => endRound(s && { kind: 'pack', score: s })} />;
+      default:
+        return null;
+    }
   }
 
   function draw() {
@@ -185,8 +249,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           after,
           cards: drawn,
           completed,
-          ...(rounds ? { rounds } : {}),
-          ...(breaths ? { breaths } : {}),
+          ...counts,
           result,
           ...extra,
         },
@@ -197,7 +260,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
 
   function close() {
     // Leaving after finishing at least one card or round counts as "not yet"; otherwise nothing is recorded.
-    if ((completed.length || rounds || breaths) && !recorded.current && step !== 'snagged') finish('notyet');
+    if ((completed.length || played.length) && !recorded.current && step !== 'snagged') finish('notyet');
     onExit();
   }
 
@@ -214,20 +277,21 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
     setDrawn([]);
     setCompleted([]);
     setLastCatch(null);
-    setRounds(0);
-    setBreaths(0);
+    setPlayed([]);
+    setCounts({});
     setLastRound(null);
     setNote('');
     setReasons([]);
     setRegroup(true);
-    setStep('breathe');
+    setActivity('breathe');
+    setStep('round');
   }
 
   return (
     <main class={`screen hook step-${step}`}>
       <header class="topbar">
         {/* The rounds have their own button for ending them. */}
-        {step !== 'won' && step !== 'game' && step !== 'breathe' && (
+        {step !== 'won' && step !== 'round' && (
           <button class="icon-btn" onClick={close} aria-label={t.close}>
             <Close />
             <Haptic />
@@ -317,78 +381,12 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
         </section>
       )}
 
-      {step === 'game' && (
-        <DodgeGame
-          calm={data.settings.reducedMotion}
-          lead={fromRating && !regroup ? t.dodgeBrutal(before ?? GAME_FROM) : undefined}
-          others={
-            fromRating
-              ? [
-                  { label: t.breatheInstead, onPick: guard(toRound('breathe')) },
-                  { label: t.drawCard, onPick: guard(draw) },
-                ]
-              : undefined
-          }
-          onEnd={(score) => {
-            // Leaving before her first touch goes back without counting a round: to the rating if
-            // she came straight from it, so she can change it, otherwise to "Not yet". Straight after a
-            // snag, back to its last screen.
-            if (!score && fromRating) {
-              if (regroup) return setStep('regroup');
-              leftBefore.current = false;
-              return setStep('before');
-            }
-            if (!score) return setStep('notyet');
-            setRounds((n) => n + 1);
-            setLastRound({ kind: 'dodge', score });
-            setStep('check');
-          }}
-        />
-      )}
-
-      {step === 'breathe' && (
-        <BreatheRound
-          calm={data.settings.reducedMotion}
-          lead={fromRating ? (regroup ? t.breatheAfterSnag : t.breatheBrutal(before ?? GAME_FROM)) : undefined}
-          others={
-            fromRating
-              ? [
-                  { label: t.dodgeInstead, onPick: guard(toRound('game')) },
-                  { label: t.drawCard, onPick: guard(draw) },
-                ]
-              : undefined
-          }
-          onEnd={(result) => {
-            // Leaving before a whole breath works like leaving the game before touching it.
-            if (!result && fromRating) {
-              if (regroup) return setStep('regroup');
-              leftBefore.current = false;
-              return setStep('before');
-            }
-            if (!result) return setStep('notyet');
-            setBreaths((n) => n + result.breaths);
-            setLastRound({ kind: 'breathe', result });
-            setStep('check');
-          }}
-        />
-      )}
+      {step === 'round' && round()}
 
       {step === 'check' && (
         <section class="panel center">
           <Tuna mood="happy" size={110} />
-          {lastRound?.kind === 'dodge' && (
-            <p class="dodge-summary">
-              {t.dodgeEulogy(lastRound.score.dodged)}
-              <span class="muted small">{lastRound.score.bubbles} {t.bubblesCaught(lastRound.score.bubbles)}</span>
-            </p>
-          )}
-          {lastRound?.kind === 'breathe' && (
-            <p class="dodge-summary">
-              {t.breatheSummary(lastRound.result.breaths)}
-              {/* Only if she played along with her finger. */}
-              {lastRound.result.touched && <span class="muted small">{t.breathsOnBeat(lastRound.result.onBeat)}</span>}
-            </p>
-          )}
+          {lastRound && <RoundSummary round={lastRound} />}
           <h1>{t.checkTitle}</h1>
           <p class="muted">{t.rateAfter}</p>
           <Rating
@@ -501,10 +499,11 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           <p class="muted">{drawn.length ? t.notYetBody : t.notYetBodyNoCard}</p>
           <div class="stack">
             <button class="primary big" onClick={guard(draw)}>{drawn.length ? t.drawAnother : t.drawCard}<Haptic /></button>
-            {/* For a craving that outlasts a card (D50): both rounds, the one she didn't just do first (D54). */}
-            {(lastRound?.kind === 'dodge' ? (['breathe', 'game'] as const) : (['game', 'breathe'] as const)).map((r) => (
-              <button key={r} class="secondary big" onClick={guard(toRound(r))}>
-                {r === 'game' ? t.dodgeOffer : t.breatheOffer}
+            {/* For a craving that outlasts a card (D50): two rounds, not the one she just did, the one
+                picked least lately first (D54). */}
+            {notYetRounds(lastRound?.kind, [...data.settings.brutalPicks, ...played]).map((a) => (
+              <button key={a} class="secondary big" onClick={guard(toRound(a))}>
+                {roundText(t, a).offer}
                 <Haptic />
               </button>
             ))}
@@ -606,6 +605,61 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
       )}
     </main>
   );
+}
+
+/** Each activity's lines: its "· N min" offer, its "X instead" link, and a brutal hook's lead. */
+function roundText(t: Strings, a: Activity) {
+  switch (a) {
+    case 'dodge':
+      return { offer: t.dodgeOffer, instead: t.dodgeInstead, brutal: t.dodgeBrutal };
+    case 'breathe':
+      return { offer: t.breatheOffer, instead: t.breatheInstead, brutal: t.breatheBrutal };
+    case 'pack':
+      return { offer: t.packOffer, instead: t.packInstead, brutal: t.packBrutal };
+    case 'track':
+      throw new Error('School Tracker is not built yet');
+  }
+}
+
+/** What a round adds to the hook's log. */
+function addRound(c: RoundCounts, r: LastRound): RoundCounts {
+  switch (r.kind) {
+    case 'dodge':
+      return { ...c, rounds: (c.rounds ?? 0) + 1 };
+    case 'breathe':
+      return { ...c, breaths: (c.breaths ?? 0) + r.result.breaths };
+    case 'pack':
+      return { ...c, packs: (c.packs ?? 0) + 1 };
+  }
+}
+
+/** How the round went, above "Did the hook let go?". Shown once, then forgotten: no bests. */
+function RoundSummary({ round: r }: { round: LastRound }) {
+  const t = useT();
+  switch (r.kind) {
+    case 'dodge':
+      return (
+        <p class="dodge-summary">
+          {t.dodgeEulogy(r.score.dodged)}
+          <span class="muted small">{r.score.bubbles} {t.bubblesCaught(r.score.bubbles)}</span>
+        </p>
+      );
+    case 'breathe':
+      return (
+        <p class="dodge-summary">
+          {t.breatheSummary(r.result.breaths)}
+          {/* Only if she played along with her finger. */}
+          {r.result.touched && <span class="muted small">{t.breathsOnBeat(r.result.onBeat)}</span>}
+        </p>
+      );
+    case 'pack':
+      return (
+        <p class="dodge-summary">
+          {t.packSummary(r.score.crates)}
+          <span class="muted small">{r.score.pieces} {t.fishPacked(r.score.pieces)}</span>
+        </p>
+      );
+  }
 }
 
 function Countdown({ seconds }: { seconds: number }) {
