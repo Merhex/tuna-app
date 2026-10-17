@@ -224,6 +224,33 @@ export const fx = {
       tone(ac, { freq: 1319, start: 0.1, dur: 0.35, type: 'triangle', gain: 0.035 });
     });
   },
+  /** Net Packing: a piece settles into the crate. A soft wooden knock. Too frequent to vibrate. */
+  packLock() {
+    cue([], (ac) => {
+      tone(ac, { freq: 190, to: 120, dur: 0.09, type: 'triangle', gain: 0.08 });
+      noise(ac, { dur: 0.06, from: 700, to: 300, gain: 0.03 });
+    });
+  },
+  /** Net Packing: the piece turns. A quiet tick, no vibration. */
+  packRotate() {
+    cue([], (ac) => tone(ac, { freq: 760, to: 980, dur: 0.05, gain: 0.035 }));
+  },
+  /** Net Packing: full rows ship as crates. A rising run, one note more for every row. */
+  packClear(rows: number) {
+    const run = [523, 659, 784, 1047, 1319].slice(0, Math.min(5, rows + 1));
+    cue(notes(run, 70, 14), (ac) => {
+      noise(ac, { dur: 0.3, from: 500, to: 2600, gain: 0.04 });
+      run.forEach((f, i) => tone(ac, { freq: f, start: i * 0.07, dur: 0.28, type: 'triangle', gain: 0.09 }));
+    });
+  },
+  /** Net Packing: the stack reached the top and the net is hauled in. A soft swoosh down, not an alarm. */
+  packHaul() {
+    cue([[0, 30]], (ac) => {
+      noise(ac, { dur: 0.7, from: 2200, to: 300, gain: 0.06 });
+      tone(ac, { freq: 392, to: 262, start: 0.1, dur: 0.55, gain: 0.06 });
+      [0.35, 0.5, 0.62].forEach((s, i) => bubble(ac, s, 380 + i * 70));
+    });
+  },
   /** ...or a joke it really shouldn't have: dun, dun, DUNNN. */
   ominous() {
     cue([[0, 120], [300, 120], [650, 400]], (ac) => {

@@ -53,6 +53,16 @@ export function BubbleIcon({ size = 22 }: P) {
   );
 }
 
+/** A packed crate, seen from a corner, for Net Packing. */
+export function Crate({ size = 22 }: P) {
+  return (
+    <svg {...base(size)} viewBox="0 0 24 24">
+      <path d="M12 3l8.5 4.5v9L12 21l-8.5-4.5v-9z" />
+      <path d="M3.5 7.5L12 12l8.5-4.5M12 12v9M7.8 5.3l8.4 4.5" />
+    </svg>
+  );
+}
+
 /** A little fish facing right, for the school. */
 export function Fish({ size = 22 }: P) {
   return (
