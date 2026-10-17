@@ -15,8 +15,9 @@ import { Ocean } from './components/Ocean';
 import { Intro } from './components/Intro';
 import { Logbook } from './components/Logbook';
 import { Treasure } from './components/Treasure';
+import { LazySchool3D } from './components/LazySchool3D';
 
-export type Screen = 'install' | 'intro' | 'home' | 'hook' | 'aquarium' | 'logbook' | 'treasure' | 'settings';
+export type Screen = 'install' | 'intro' | 'home' | 'hook' | 'aquarium' | 'logbook' | 'treasure' | 'settings' | 'school3d';
 
 export function App() {
   const [data, setData] = useState<AppData | null>(null);
@@ -123,8 +124,10 @@ export function App() {
               setIntroReturn('settings');
               go('intro');
             }}
+            showSchool3d={() => go('school3d')}
           />
         )}
+        {screen === 'school3d' && <LazySchool3D onClose={() => go('settings')} onHook={() => go('hook')} />}
       </LangContext.Provider>
     </AppContext.Provider>
   );

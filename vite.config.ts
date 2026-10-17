@@ -21,6 +21,11 @@ export default defineConfig({
     __APP_VERSION__: JSON.stringify(process.env.BUILD_ID || process.env.GITHUB_SHA?.slice(0, 7) || gitCommit()),
     __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
   },
+  build: {
+    // The Visit my school prototype's chunk carries three.js (about 575 kB, 150 kB gzipped). It's only
+    // loaded when the prototype opens, so the usual 500 kB warning doesn't apply.
+    chunkSizeWarningLimit: 650,
+  },
   plugins: [
     preact(),
     VitePWA({

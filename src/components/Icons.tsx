@@ -53,6 +53,17 @@ export function BubbleIcon({ size = 22 }: P) {
   );
 }
 
+/** A little fish facing right, for the school. */
+export function Fish({ size = 22 }: P) {
+  return (
+    <svg {...base(size)} viewBox="0 0 24 24">
+      <path d="M6 12c2.4-3.6 5.2-5.5 8.3-5.5 3 0 5.6 2.2 7.2 5.5-1.6 3.3-4.2 5.5-7.2 5.5-3.1 0-5.9-1.9-8.3-5.5z" />
+      <path d="M6 12 2.5 8.5v7z" />
+      <circle cx="16.8" cy="10.8" r="0.6" fill="currentColor" />
+    </svg>
+  );
+}
+
 export function Close({ size = 20 }: P) {
   return (
     <svg {...base(size)} viewBox="0 0 24 24" stroke-width={2.6}>
