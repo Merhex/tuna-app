@@ -372,6 +372,21 @@ const en = {
   crates: (n: number): string => (n === 1 ? 'crate' : 'crates'),
   packLog: (n: number): string => (n === 1 ? 'Net Packing' : `Net Packing ×${n}`),
 
+  // School Tracker: follow the gold-marked tunas through the moving school, then pick them out.
+  trackOffer: 'School Tracker · 2½ min',
+  trackTitle: 'School Tracker',
+  trackHowTo: 'Watch the golden tunas. They’ll hide in the school. Find them again when it stops. Two and a half minutes, and you can’t lose.',
+  trackEnd: 'End the round',
+  trackBrutal: (n: number): string => `${n === 8 ? 'An' : 'A'} ${n}? Eyes on the gold. Let’s lose this one in the crowd.`,
+  // After a round: lead with what she did, and only give the count when most were found.
+  trackSummary: (correct: number, targets: number): string =>
+    correct >= targets * 0.75
+      ? `You kept track of ${correct} of ${targets} tunas.`
+      : `You followed ${correct} ${correct === 1 ? 'tuna' : 'tunas'} through the school.`,
+  trackTrials: (n: number): string => `${n} ${n === 1 ? 'school' : 'schools'} watched`,
+  trackLine: (correct: number, targets: number): string => `${correct} of ${targets} tunas`,
+  trackLog: (n: number): string => (n === 1 ? 'School Tracker' : `School Tracker ×${n}`),
+
 
   // The home screen's 3D tank (D55): "Visit my school" under the button pulls back to the whole tank.
   visitSchool: 'Visit my school',
@@ -731,6 +746,19 @@ const cs: Strings = {
   fishPacked: (n) => csPlural(n, 'naskládaná ryba', 'naskládané ryby', 'naskládaných ryb'),
   crates: (n) => csPlural(n, 'bedna', 'bedny', 'beden'),
   packLog: (n) => (n === 1 ? 'Naskládej úlovek' : `Naskládej úlovek ×${n}`),
+
+  trackOffer: 'Hlídej hejno · 2½ min',
+  trackTitle: 'Hlídej hejno',
+  trackHowTo: 'Sleduj zlaté tuňáky. Schovají se v hejnu. Až se hejno zastaví, najdi je. Dvě a půl minuty a prohrát se nedá.',
+  trackEnd: 'Ukončit kolo',
+  trackBrutal: (n) => `${n}? Oči na zlato. Tenhle ztratíme v davu.`,
+  trackSummary: (correct, targets) =>
+    correct >= targets * 0.75
+      ? `Uhlídala jsi ${correct} ${csPlural(correct, 'tuňáka', 'tuňáky', 'tuňáků')}. Celkem jich bylo ${targets}.`
+      : `Hejnem jsi provedla ${correct} ${csPlural(correct, 'tuňáka', 'tuňáky', 'tuňáků')}.`,
+  trackTrials: (n) => `${n} ${csPlural(n, 'sledované hejno', 'sledovaná hejna', 'sledovaných hejn')}`,
+  trackLine: (correct, targets) => `${correct}/${targets} tuňáků`,
+  trackLog: (n) => (n === 1 ? 'Hlídej hejno' : `Hlídej hejno ×${n}`),
 
 
   visitSchool: 'Navštiv své hejno',

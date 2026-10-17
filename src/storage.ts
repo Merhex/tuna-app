@@ -36,6 +36,8 @@ export interface HookEntry {
   breaths?: number;
   /** Rounds of Net Packing she played; absent when none. */
   packs?: number;
+  /** Rounds of School Tracker she played; absent when none. */
+  tracks?: number;
   result: HookResult;
   baitNote?: string;
   /** On a slip: what was going on (D57); absent when she picked nothing. */

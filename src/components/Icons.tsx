@@ -63,6 +63,17 @@ export function Crate({ size = 22 }: P) {
   );
 }
 
+/** Two little fish swimming together, for School Tracker. */
+export function SchoolIcon({ size = 22 }: P) {
+  const fish = 'M6 12c2.4-3.6 5.2-5.5 8.3-5.5 3 0 5.6 2.2 7.2 5.5-1.6 3.3-4.2 5.5-7.2 5.5-3.1 0-5.9-1.9-8.3-5.5zM6 12 2.5 8.5v7z';
+  return (
+    <svg {...base(size)} viewBox="0 0 24 24">
+      <path d={fish} transform="translate(-1 9) scale(0.6)" />
+      <path d={fish} transform="translate(9 2) scale(0.6)" />
+    </svg>
+  );
+}
+
 /** A little fish facing right, for the school. */
 export function Fish({ size = 22 }: P) {
   return (

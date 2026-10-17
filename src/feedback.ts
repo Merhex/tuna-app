@@ -251,6 +251,24 @@ export const fx = {
       [0.35, 0.5, 0.62].forEach((s, i) => bubble(ac, s, 380 + i * 70));
     });
   },
+  /** School Tracker: a fish picked (or unpicked). A soft blip, no vibration. */
+  trackSelect() {
+    cue([], (ac) => tone(ac, { freq: 640, to: 860, dur: 0.07, gain: 0.06 }));
+  },
+  /** School Tracker: every target found. A gentle rising chime. */
+  trackRight() {
+    const chime = [784, 988, 1319];
+    cue(notes(chime, 90, 14), (ac) => {
+      chime.forEach((f, i) => tone(ac, { freq: f, start: i * 0.09, dur: 0.35, type: 'triangle', gain: 0.07 }));
+    });
+  },
+  /** School Tracker: some were missed. Two quiet low notes, not an alarm, no vibration. */
+  trackMiss() {
+    cue([], (ac) => {
+      tone(ac, { freq: 440, dur: 0.22, gain: 0.05 });
+      tone(ac, { freq: 392, start: 0.16, dur: 0.3, gain: 0.045 });
+    });
+  },
   /** ...or a joke it really shouldn't have: dun, dun, DUNNN. */
   ominous() {
     cue([[0, 120], [300, 120], [650, 400]], (ac) => {

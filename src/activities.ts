@@ -1,6 +1,6 @@
 /**
- * The rounds a brutal hook (8 to 10) can start with (D54): Dodge the hooks, Bubbles, Net Packing, and
- * later School Tracker. One is picked at random so none wears thin, but never the same one three
+ * The rounds a brutal hook (8 to 10) can start with (D54): Dodge the hooks, Bubbles, Net Packing and
+ * School Tracker. One is picked at random so none wears thin, but never the same one three
  * times in a row, which would feel broken. A new round is one more entry in `ACTIVITIES` and
  * `ENABLED`, plus its own component (see `components/HookFlow.tsx`).
  */
@@ -9,8 +9,8 @@ export type Activity = 'dodge' | 'breathe' | 'pack' | 'track';
 /** Every activity, in the fixed order used to break ties. */
 export const ACTIVITIES: readonly Activity[] = ['dodge', 'breathe', 'pack', 'track'];
 
-/** The ones that are built and can be picked. School Tracker joins when it's ready. */
-export const ENABLED: readonly Activity[] = ['dodge', 'breathe', 'pack'];
+/** The ones that can be picked. */
+export const ENABLED: readonly Activity[] = ['dodge', 'breathe', 'pack', 'track'];
 
 /** `recent` is her last picks, newest last. */
 export function pickActivity(

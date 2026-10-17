@@ -157,7 +157,7 @@ export function DodgeGame({
 // ---------- Drawing ----------
 
 /** The same shapes as the Tuna and FishHook SVGs, for the canvas. */
-function makePaths() {
+export function makePaths() {
   return {
     tail: new Path2D('M150 60 L192 22 L182 60 L192 98 Z'),
     fins: new Path2D('M78 26 L98 6 L112 30 Z M86 94 L100 112 L110 92 Z'),
