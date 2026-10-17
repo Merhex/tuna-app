@@ -1414,9 +1414,13 @@ button:has(> .haptic-switch) { position: relative; }
 /* The drawn seabed, until the tank is ready (or without 3D). */
 .floor { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
 .tuna-pet.in-3d .tuna { opacity: 0; transition: opacity 0.8s ease; }
+/* While the tank loads on a phone where it worked before: no drawn tuna, and "Visit my school"
+   keeps its place unseen, so nothing moves when the tank fades in. */
+.tuna-pet.waiting .tuna { opacity: 0; }
+.visit-btn.waiting { opacity: 0; visibility: hidden; }
 
 /* Visit my school: the buttons fade and the screen lets drags through to the tank. */
-.visit-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: -6px; }
+.visit-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: -6px; transition: opacity 0.8s ease, visibility 0.8s; }
 /* Short phones: a little less space between things, so the visit button fits without scrolling. */
 @media (max-height: 700px) {
   .home-center { gap: 12px; }
