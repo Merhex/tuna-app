@@ -1,12 +1,37 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { Tank } from '../tank/scene';
 
+const WORKED_KEY = 'off-the-hook:tank-worked';
+
+/**
+ * Whether the tank loaded on this phone last time. If so, the home screen opens with just the water
+ * and the button and lets the tank fade in, instead of showing the drawn seabed first (D55). Kept in
+ * localStorage, not in her data, because it's about the phone: it isn't backed up or restored.
+ */
+export function tankWorkedBefore(): boolean {
+  try {
+    return localStorage.getItem(WORKED_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function rememberTank(worked: boolean) {
+  try {
+    if (worked) localStorage.setItem(WORKED_KEY, '1');
+    else localStorage.removeItem(WORKED_KEY);
+  } catch {
+    /* Nothing to remember it in: the drawn seabed shows first next time, as on a first launch. */
+  }
+}
+
 /**
  * The canvas for the home screen's 3D tank (D55), behind every screen and shown only on the home
  * screen. three.js and the tank load just after the app starts, so the home screen and its button
- * never wait for them; until then (or on a phone without 3D) the home screen keeps the drawn seabed.
+ * never wait for them; until then the home screen shows the drawn seabed, or just the water if the
+ * tank worked here before (see tankWorkedBefore). A phone without 3D keeps the drawn seabed.
  * The tank is made once and kept, so going back home is instant. `onReady` gets it once its first
- * frame is drawn, and null if the phone takes the 3D away.
+ * frame is drawn, and null if it can't be made or the phone takes the 3D away.
  *
  * In the wide view ("Visit my school"), dragging on the canvas looks round the tank.
  */
@@ -24,8 +49,8 @@ export function TankLayer({ active, calm, onReady }: { active: boolean; calm: bo
     let made: Tank | null = null;
     const resize = () => made?.resize(el.clientWidth, el.clientHeight);
     const watcher = new ResizeObserver(resize);
-    // After the first paint, so the home screen and its button come first.
-    const timer = setTimeout(async () => {
+    // Effects run after the first paint, so the home screen and its button still come first.
+    void (async () => {
       try {
         const { Tank } = await import('../tank/scene');
         if (!alive) return;
@@ -45,15 +70,17 @@ export function TankLayer({ active, calm, onReady }: { active: boolean; calm: bo
         await made.warmUp();
         if (!alive) return;
         setShown(true);
+        rememberTank(true);
         onReady(made);
       } catch {
-        // No 3D on this phone (or it failed to load): the drawn home screen stays.
+        // No 3D on this phone (or it failed to load): the drawn home screen stays, and shows
+        // first next time.
+        rememberTank(false);
         onReady(null);
       }
-    }, 150);
+    })();
     return () => {
       alive = false;
-      clearTimeout(timer);
       watcher.disconnect();
       made?.dispose();
     };

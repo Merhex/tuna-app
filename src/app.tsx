@@ -15,10 +15,13 @@ import { Ocean } from './components/Ocean';
 import { Intro } from './components/Intro';
 import { Logbook } from './components/Logbook';
 import { Treasure } from './components/Treasure';
-import { TankLayer } from './components/TankLayer';
+import { TankLayer, tankWorkedBefore } from './components/TankLayer';
 import type { Tank } from './tank/scene';
 
 export type Screen = 'install' | 'intro' | 'home' | 'hook' | 'aquarium' | 'logbook' | 'treasure' | 'settings';
+
+/** The longest the home screen waits for the tank with just the water, before showing the drawn seabed (D55). */
+const TANK_WAIT_MS = 4000;
 
 export function App() {
   const [data, setData] = useState<AppData | null>(null);
@@ -30,6 +33,16 @@ export function App() {
   const [installFromSettings, setInstallFromSettings] = useState(false);
   // The home screen's 3D tank (D55), once it's ready; null until then, or on a phone without 3D.
   const [tank, setTank] = useState<Tank | null>(null);
+  // Until the tank is ready: if it worked on this phone last time, the home screen shows just the
+  // water and the button and waits for it, instead of drawing the 2D seabed first. Never for long:
+  // if it's slow (or fails), the drawn seabed shows until it comes.
+  const [expectTank, setExpectTank] = useState(tankWorkedBefore);
+
+  useEffect(() => {
+    if (!expectTank) return;
+    const id = setTimeout(() => setExpectTank(false), TANK_WAIT_MS);
+    return () => clearTimeout(id);
+  }, [expectTank]);
 
   useEffect(() => {
     loadData().then((loaded) => {
@@ -110,7 +123,13 @@ export function App() {
           />
         )}
         {screen === 'home' && (
-          <Home go={go} washedAshore={washedAshore} dismissWashedAshore={() => setWashedAshore(false)} tank={tank} />
+          <Home
+            go={go}
+            washedAshore={washedAshore}
+            dismissWashedAshore={() => setWashedAshore(false)}
+            tank={tank}
+            expectTank={expectTank}
+          />
         )}
         {screen === 'hook' && <HookFlow onExit={() => go('home')} />}
         {screen === 'aquarium' && <Aquarium onClose={() => go('home')} />}
@@ -133,7 +152,10 @@ export function App() {
         <TankLayer
           active={screen === 'home'}
           calm={data.settings.reducedMotion || matchMedia('(prefers-reduced-motion: reduce)').matches}
-          onReady={setTank}
+          onReady={(made) => {
+            setTank(made);
+            setExpectTank(false);
+          }}
         />
       </LangContext.Provider>
     </AppContext.Provider>

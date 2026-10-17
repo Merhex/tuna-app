@@ -21,19 +21,22 @@ const MAX_SWIMMERS = 36;
 /**
  * The home screen: one big button (D4) in front of her school. With 3D (D55) that's the tank: her
  * tuna swimming, her decorations on the sand and the big tuna in 3D, and "Visit my school" under the
- * button pulls the camera back to the whole tank. Until the tank is ready, and on a phone without
- * 3D, it's the drawn seabed and school, and the drawn tuna.
+ * button pulls the camera back to the whole tank. On a phone without 3D it's the drawn seabed and
+ * school, and the drawn tuna. While the tank loads it's the drawing too, unless the tank worked here
+ * before (`expectTank`): then it's just the water and the button, so it doesn't switch from 2D to 3D.
  */
 export function Home({
   go,
   washedAshore,
   dismissWashedAshore,
   tank,
+  expectTank,
 }: {
   go: (s: Screen) => void;
   washedAshore: boolean;
   dismissWashedAshore: () => void;
   tank: Tank | null;
+  expectTank: boolean;
 }) {
   const t = useT();
   const { data, update } = useApp();
@@ -47,6 +50,13 @@ export function Home({
   const [view, setView] = useState<'home' | 'wide'>('home');
   // Once the tank has faded in over the drawn seabed, the drawing (and the backdrop behind it) stops.
   const [covered, setCovered] = useState(!!tank);
+  // The tank is on its way and worked here before: no drawn seabed, school or tuna in the meantime.
+  const waiting = !tank && expectTank;
+  // Whether the drawn seabed showed before the tank came. If it didn't (she was waiting), it doesn't
+  // appear behind the tank while it fades in either.
+  const drew = useRef(false);
+  if (!tank && !waiting) drew.current = true;
+  const drawing = tank ? !covered && drew.current : !waiting;
   const bar = useRef<HTMLElement>(null);
   const card = useRef<HTMLElement>(null);
   const center = useRef<HTMLDivElement>(null);
@@ -133,7 +143,7 @@ export function Home({
 
   return (
     <main class={`screen home${view === 'wide' ? ' wide' : ''}`}>
-      {!covered && (
+      {drawing && (
         <>
           <div class="floor" aria-hidden="true">
             <Seabed sparkling={sparkling} />
@@ -199,7 +209,7 @@ export function Home({
       )}
 
       <div class="home-center" ref={center} inert={view !== 'home'}>
-        <PettableTuna tank={tank} spot={spot} />
+        <PettableTuna tank={tank} waiting={waiting} spot={spot} />
         <p class="tagline">{tagline}</p>
         <button
           class="hook-button"
@@ -213,8 +223,9 @@ export function Home({
           <Haptic />
         </button>
         <p class="school-count">{t.school(school)}</p>
-        {tank && (
-          <button class="secondary small visit-btn" onClick={() => visit('wide')}>
+        {/* Hidden but keeping its place while the tank loads, so nothing moves when it comes. */}
+        {(tank || waiting) && (
+          <button class={`secondary small visit-btn${tank ? '' : ' waiting'}`} onClick={() => visit('wide')}>
             <Fish size={20} /> {t.visitSchool}
             <Haptic />
           </button>
@@ -283,9 +294,10 @@ function tell(list: string[]) {
  * three is about Jungkook, in a purple bubble with a purple heart (D45). Every tap is counted (D49).
  *
  * With the 3D tank (D55) the tuna is drawn in 3D right where the drawing would be: the drawing fades
- * out but its button stays, so tapping, the hearts and the jokes all work the same.
+ * out but its button stays, so tapping, the hearts and the jokes all work the same. While the tank
+ * loads on a phone where it worked before (`waiting`), the drawing is hidden from the start.
  */
-function PettableTuna({ tank, spot }: { tank: Tank | null; spot: RefObject<HTMLButtonElement> }) {
+function PettableTuna({ tank, waiting, spot }: { tank: Tank | null; waiting: boolean; spot: RefObject<HTMLButtonElement> }) {
   const t = useT();
   const { update } = useApp();
   const [petting, setPetting] = useState(false);
@@ -345,7 +357,7 @@ function PettableTuna({ tank, spot }: { tank: Tank | null; spot: RefObject<HTMLB
           {joke.text}
         </p>
       )}
-      <button ref={spot} class={`tuna-pet${tank ? ' in-3d' : ' bob'}`} onPointerDown={() => tank?.squish()} onClick={pet} aria-label={t.petTuna}>
+      <button ref={spot} class={`tuna-pet${tank ? ' in-3d' : waiting ? ' waiting' : ' bob'}`} onPointerDown={() => tank?.squish()} onClick={pet} aria-label={t.petTuna}>
         <Tuna mood={mood} size={130} />
         {hearts.map((h) => (
           <span key={h.id} class={`pet-heart${h.purple ? ' purple' : ''}`} style={{ '--dx': `${h.dx}px`, '--rot': `${h.rot}deg` }}>
