@@ -27,6 +27,28 @@ describe('storage', () => {
     expect(restored.seabed).toEqual(data.seabed);
   });
 
+  it('keeps rounds of Net Packing through a backup, and loads older hooks without them untouched', () => {
+    const old = {
+      id: '1',
+      startedAt: '2026-10-01T10:00:00.000Z',
+      endedAt: '2026-10-01T10:05:00.000Z',
+      before: 9,
+      after: 5,
+      cards: [],
+      completed: [],
+      rounds: 1,
+      breaths: 12,
+      result: 'passed' as const,
+    };
+    const data = parseBackup(backup({ hooks: [old] }));
+    expect(data.hooks).toEqual([old]);
+    const { rounds: _r, breaths: _b, ...plain } = old;
+    data.hooks.push({ ...plain, id: '2', packs: 2 });
+    const restored = parseBackup(makeBackup(data));
+    expect(restored.hooks[0]).toEqual(old);
+    expect(restored.hooks[1].packs).toBe(2);
+  });
+
   it('starts counting pets at zero for old backups, and keeps the count through a restore (D49)', () => {
     const data = parseBackup(backup({}));
     expect(data.pets).toBe(0);
