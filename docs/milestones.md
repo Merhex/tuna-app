@@ -4,7 +4,7 @@ The Sunken Treasure shows a timeline of milestones, counted in whole days from t
 
 ## Rules for the text
 
-- **Only what's typical, hedged.** “Usually”, “for most people”, “on average”. Never a promise, never a diagnosis. The app is not medical advice (see About in Settings).
+- **Only what's typical, hedged.** “Usually”, “for most people”, “on average”. Never a promise, never a diagnosis. The app is not medical advice.
 - **Every factual claim has a source below.** If you add or change a claim, add the source here first.
 - **“Since you quit”, never “clean”.** The count never resets after a slip (D11), so it must not claim she hasn't vaped since.
 - **No vape imagery** (D30). Talk about nicotine, cravings and her brain, never about the device, the taste or the last puff.

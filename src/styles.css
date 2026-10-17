@@ -684,9 +684,6 @@ textarea {
 .toggle input:checked::before { transform: translateX(20px); }
 .toggle input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .status { color: var(--accent); font-weight: 600; }
-.about h2 { font-size: 1.05rem; }
-/* The quitline number: one tap to call. */
-.about .tel { color: var(--accent); font-weight: 700; white-space: nowrap; text-underline-offset: 3px; }
 
 /* ---------- Install guide ---------- */
 .install-box {
@@ -866,6 +863,20 @@ textarea {
 @media (max-height: 600px) {
   .step-snagged .panel { gap: 10px; }
 }
+/* What was the bait (D57): quick taps, any number of them. */
+.reason-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.reason-chip {
+  padding: 8px 14px;
+  min-height: 38px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.reason-chip[aria-pressed='true'] { background: var(--accent); border-color: var(--accent); color: var(--ink-dark); }
+.streak-row { margin: 4px 0 8px; }
 
 .stat-wide { grid-column: 1 / -1; }
 .secondary.full { display: inline-flex; align-items: center; justify-content: center; gap: 10px; }

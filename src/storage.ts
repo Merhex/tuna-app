@@ -16,6 +16,10 @@ export interface CollectionEntry {
 
 export type HookResult = 'passed' | 'notyet' | 'slipped';
 
+/** What was going on when she got snagged, picked from a few quick taps (D57). */
+export const SLIP_REASONS = ['stress', 'bored', 'social', 'drinking', 'tired', 'nowhere'] as const;
+export type SlipReason = (typeof SLIP_REASONS)[number];
+
 export interface HookEntry {
   id: string;
   startedAt: string;
@@ -34,6 +38,10 @@ export interface HookEntry {
   packs?: number;
   result: HookResult;
   baitNote?: string;
+  /** On a slip: what was going on (D57); absent when she picked nothing. */
+  reasons?: SlipReason[];
+  /** On a slip: she chose to start a fresh streak from that day (D57). */
+  freshStart?: boolean;
 }
 
 export interface Settings {

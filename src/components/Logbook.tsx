@@ -162,6 +162,11 @@ function HistoryRow({ hook }: { hook: HookEntry }) {
         ) : (
           <span class="muted small">{t.noCards}</span>
         )}
+        {(!!hook.reasons?.length || hook.freshStart) && (
+          <p class="muted small">
+            {[...(hook.reasons ?? []).map((r) => t.reasons[r]), ...(hook.freshStart ? [t.freshStartLog] : [])].join(' · ')}
+          </p>
+        )}
         {hook.baitNote && <p class="bait-note">“{hook.baitNote}”</p>}
       </div>
       {hook.before !== undefined && (

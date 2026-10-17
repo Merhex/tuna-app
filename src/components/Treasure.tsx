@@ -6,6 +6,7 @@ import { localeOf, useLang, useT } from '../i18n';
 import { daysSince, isQuitDate, MILESTONES, milestoneProgress, reachedOn } from '../milestones';
 import { DECORATION_NAMES } from '../seabed';
 import { useApp } from '../state';
+import { streakOf } from '../streak';
 import type { Tank } from '../tank/scene';
 import {
   CURRENCIES,
@@ -165,6 +166,7 @@ function Milestones() {
 
   const days = daysSince(startDate, now);
   const { current, next } = milestoneProgress(days);
+  const streak = streakOf(data.hooks, startDate, now);
 
   useEffect(() => {
     if (data.settings.milestoneSeen !== current.day) {
@@ -181,6 +183,21 @@ function Milestones() {
       <p class="days-count">
         <strong>{days}</strong> <span>{t.daysSinceQuit(days)}</span>
       </p>
+      {/* Her streak (D57), once she has been snagged; until then it's the same number as above. */}
+      {streak.hasSlips && (
+        <div class="stat-row streak-row">
+          {[
+            { n: streak.current, label: t.streakNow },
+            { n: streak.best, label: t.streakBest },
+            { n: streak.swamFree, label: t.daysOffHook },
+          ].map(({ n, label }) => (
+            <div class="stat" key={label}>
+              <strong>{n}<small> {t.daysUnit(n)}</small></strong>
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
+      )}
       {/* The one quit date (D44). Decorations are only earned on the home screen, so scrolling
           through dates here never earns anything by accident. */}
       <DateField

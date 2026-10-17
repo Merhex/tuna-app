@@ -8,7 +8,8 @@ import { localeOf, pick, useT } from '../i18n';
 import { makePostcard, sharePostcard } from '../postcard';
 import { useApp } from '../state';
 import { cravingInProgress } from '../updates';
-import { schoolSize, type AppData, type HookEntry, type HookResult } from '../storage';
+import { schoolSize, SLIP_REASONS, type AppData, type HookEntry, type HookResult, type SlipReason } from '../storage';
+import { streakOf } from '../streak';
 import { CardView, Rating } from './CardView';
 import { BreatheRound } from './Breathe';
 import { DodgeGame, type DodgeScore } from './Dodge';
@@ -17,7 +18,8 @@ import { Close, FishHook, House, Pin } from './Icons';
 import { Tuna } from './Tuna';
 import { Haptic } from './Haptic';
 
-type Step = 'before' | 'drop' | 'card' | 'round' | 'check' | 'won' | 'notyet' | 'snagged';
+// After a snag: 'fresh' asks about her streak, 'regroup' offers the next step (D57).
+type Step = 'before' | 'drop' | 'card' | 'round' | 'check' | 'won' | 'notyet' | 'snagged' | 'fresh' | 'regroup';
 
 /** How the last round went: one member per activity. */
 type LastRound =
@@ -55,6 +57,9 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   const [counts, setCounts] = useState<RoundCounts>({});
   const [lastRound, setLastRound] = useState<LastRound | null>(null);
   const [note, setNote] = useState('');
+  const [reasons, setReasons] = useState<SlipReason[]>([]);
+  // Breathing straight after a snag (D57): a new hook, with its own line above the round.
+  const [regroup, setRegroup] = useState(false);
   // The postcard (D53), drawn as soon as the win screen shows, so a tap opens the share sheet
   // straight away: iPhone only allows sharing right after a tap, not after waiting for a drawing.
   const [postcard, setPostcard] = useState<File | 'failed' | null>(null);
@@ -63,6 +68,10 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   const timers = useRef<number[]>([]);
   // Guards against a double tap on the first screen drawing two cards.
   const leftBefore = useRef(false);
+  // Whether this hook is in the log yet, so leaving never records it twice.
+  const recorded = useRef(false);
+  const slipId = useRef('');
+  const streak = data.quitDate ? streakOf(data.hooks, data.quitDate) : null;
 
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
   useEffect(() => {
@@ -134,6 +143,8 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
     // Leaving before her first touch goes back without counting a round: to the rating if she came
     // straight from it, so she can change it, otherwise to "Not yet".
     if (!r && fromRating) {
+      // Straight after a snag (D57), back to its last screen.
+      if (regroup) return setStep('regroup');
       leftBefore.current = false;
       return setStep('before');
     }
@@ -151,7 +162,8 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
     const other = alternatives(activity, data.settings.brutalPicks)[0];
     const props = {
       calm: data.settings.reducedMotion,
-      lead: fromRating ? text.brutal(before ?? GAME_FROM) : undefined,
+      // Straight after a snag there was no rating: Bubbles gets its own line, the others none (D57).
+      lead: !fromRating ? undefined : !regroup ? text.brutal(before ?? GAME_FROM) : activity === 'breathe' ? t.breatheAfterSnag : undefined,
       others: fromRating
         ? [
             ...(other ? [{ label: roundText(t, other).instead, onPick: guard(toRound(other)) }] : []),
@@ -222,13 +234,15 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
     setStep('check');
   }
 
-  function finish(result: HookResult, baitNote?: string) {
+  function finish(result: HookResult, extra: Pick<HookEntry, 'baitNote' | 'reasons'> = {}): string {
+    const id = `${Date.now()}`;
+    recorded.current = true;
     update((d: AppData) => ({
       ...d,
       hooks: [
         ...d.hooks,
         {
-          id: `${Date.now()}`,
+          id,
           startedAt: startedAt.current,
           endedAt: new Date().toISOString(),
           before,
@@ -237,16 +251,40 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           completed,
           ...counts,
           result,
-          ...(baitNote ? { baitNote } : {}),
+          ...extra,
         },
       ],
     }));
+    return id;
   }
 
   function close() {
     // Leaving after finishing at least one card or round counts as "not yet"; otherwise nothing is recorded.
-    if ((completed.length || played.length) && step !== 'won' && step !== 'snagged') finish('notyet');
+    if ((completed.length || played.length) && !recorded.current && step !== 'snagged') finish('notyet');
     onExit();
+  }
+
+  /** Breathing right after a snag starts a new hook, so a win afterwards counts like any other (D57). */
+  function breatheAgain() {
+    fx.tap();
+    startedAt.current = new Date().toISOString();
+    recorded.current = false;
+    leftBefore.current = true;
+    setBefore(undefined);
+    setAfter(undefined);
+    setCard(null);
+    setThrownBack(false);
+    setDrawn([]);
+    setCompleted([]);
+    setLastCatch(null);
+    setPlayed([]);
+    setCounts({});
+    setLastRound(null);
+    setNote('');
+    setReasons([]);
+    setRegroup(true);
+    setActivity('breathe');
+    setStep('round');
   }
 
   return (
@@ -479,20 +517,90 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           <Tuna mood="soft" size={110} />
           <h1>{t.snaggedTitle}</h1>
           <p>{t.snaggedBody}</p>
+          <div class="field">
+            <span>{t.reasonsPrompt}</span>
+            <div class="reason-chips" role="group" aria-label={t.reasonsPrompt}>
+              {SLIP_REASONS.map((r) => (
+                <button
+                  key={r}
+                  class="reason-chip"
+                  aria-pressed={reasons.includes(r)}
+                  onClick={guard(() => {
+                    fx.tap();
+                    setReasons((rs) => (rs.includes(r) ? rs.filter((x) => x !== r) : [...rs, r]));
+                  })}
+                >
+                  {t.reasons[r]}
+                  <Haptic />
+                </button>
+              ))}
+            </div>
+          </div>
           <label class="field">
             <span>{t.baitPrompt}</span>
-            <textarea rows={3} value={note} onInput={(e) => setNote((e.target as HTMLTextAreaElement).value)} />
+            <textarea rows={2} value={note} onInput={(e) => setNote((e.target as HTMLTextAreaElement).value)} />
           </label>
           <button
             class="primary big"
-            onClick={() => {
-              finish('slipped', note.trim() || undefined);
-              onExit();
-            }}
+            onClick={guard(() => {
+              const picked = SLIP_REASONS.filter((r) => reasons.includes(r));
+              slipId.current = finish('slipped', {
+                ...(note.trim() ? { baitNote: note.trim() } : {}),
+                ...(picked.length ? { reasons: picked } : {}),
+              });
+              fx.tap();
+              // A streak of 0 (quit or started fresh today) has nothing to keep or reset.
+              setStep(streak && streak.current > 0 ? 'fresh' : 'regroup');
+            })}
           >
             {t.saveAndSwim}
             <Haptic />
           </button>
+        </section>
+      )}
+
+      {/* Her call, every time (D57). Leaving here just logs the snag. */}
+      {step === 'fresh' && streak && (
+        <section class="panel center">
+          <Tuna mood="soft" size={110} />
+          <h1>{t.freshTitle}</h1>
+          <p>{t.freshBody(streak.current)}</p>
+          <div class="stack">
+            <button
+              class="primary big"
+              onClick={guard(() => {
+                fx.tap();
+                update((d) => ({ ...d, hooks: d.hooks.map((h) => (h.id === slipId.current ? { ...h, freshStart: true } : h)) }));
+                setStep('regroup');
+              })}
+            >
+              {t.freshStart}
+              <Haptic />
+            </button>
+            <button
+              class="secondary big"
+              onClick={guard(() => {
+                fx.tap();
+                setStep('regroup');
+              })}
+            >
+              {t.freshKeep}
+              <Haptic />
+            </button>
+          </div>
+          <p class="muted small">{t.freshNote}</p>
+        </section>
+      )}
+
+      {step === 'regroup' && (
+        <section class="panel center">
+          <Tuna mood="cheer" size={110} />
+          <h1>{t.regroupTitle}</h1>
+          <p class="muted">{streak && streak.best > 0 ? t.regroupBest(streak.best) : t.regroupNoBest}</p>
+          <div class="stack">
+            <button class="primary big" onClick={guard(breatheAgain)}>{t.breatheOffer}<Haptic /></button>
+            <button class="secondary big" onClick={guard(onExit)}>{t.backToTank}<Haptic /></button>
+          </div>
         </section>
       )}
     </main>

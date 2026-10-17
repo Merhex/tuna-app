@@ -143,9 +143,7 @@ export function Settings({
         )}
       </section>
 
-      <section class="group about">
-        <h2>{t.about}</h2>
-        <p class="muted small">{t.aboutBody(<a class="tel" href="tel:+420800350000">800 350 000</a>)}</p>
+      <section class="group">
         <p class="muted small version">
           {t.version} {__APP_VERSION__} ·{' '}
           {new Date(__BUILD_TIME__).toLocaleString(localeOf(data.settings.lang), { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}

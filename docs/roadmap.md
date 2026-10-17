@@ -37,14 +37,13 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 | 4 | **Messages in a bottle.** Her own reasons, written on good days, shown during hard ones. | Medium | Small | Phase 2. |
 | 5 | **Tuna facts as rewards** on the win screen. | Low | Small | Phase 2. |
 | 6 | **Navigation charts.** If-then plans (“If I'm at a party, then I'll…”). | Medium | Medium | Phase 3. Sits awkwardly with D29 (no trigger features); decide that first. |
-| 7 | **Bait insights.** When hooks hit and when slips happen, from times and bait notes. | Medium | Medium | Phase 3. Conflicts with D29 as it stands: needs a decision before building. |
+| 7 | **Bait insights.** When hooks hit and when slips happen, from times and bait notes. | Medium | Medium | Phase 3. D57 now tags snags with quick reasons, which this could build on. |
 
 ## Ruled out
 
 | Idea | Why not |
 | --- | --- |
 | **A savings goal in the treasure** (“save for Lisbon”). Scratched for good. | D38: a goal is closed. Once it's reached there's a finish line, and a finish line can become the excuse to start vaping again. The treasure stays open-ended: it only grows, with no end point. |
-| **Streaks or “days clean”** | D11: a reset after a slip often turns into “I've failed anyway”. Milestones count days since quitting and never reset. |
 | **Reminders at risky times** | No backend (D22), and iPhone web apps can't schedule their own notifications. Would need the same push server as the flare. |
 
 ## Open before release
