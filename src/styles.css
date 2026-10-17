@@ -48,6 +48,15 @@ html, body {
 }
 
 html { background: var(--sea-deep); }
+/* Installed app on iPhone (iOS 26+): with the see-through status bar, iOS can open a page that is
+   shorter than the screen with a viewport that's short by the status bar's height, leaving a strip
+   at the bottom until something makes it re-measure (tapping the status bar, say). A page at least
+   as tall as the screen gets the full viewport, so make the page one status bar taller than the
+   short viewport. The 100lvh cap keeps it from ever being taller than the screen (no scrolling)
+   once the viewport is right, and where the status bar takes no space (no top inset) nothing changes. */
+@media (display-mode: standalone) {
+  html { min-height: min(100lvh, calc(100% + env(safe-area-inset-top, 0px))); }
+}
 /* No background on body: it would paint over the fixed ocean backdrop. */
 body { background: transparent; -webkit-user-select: none; user-select: none; }
 textarea, input { -webkit-user-select: text; user-select: text; }
