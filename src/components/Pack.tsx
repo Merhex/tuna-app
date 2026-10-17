@@ -22,7 +22,7 @@ import {
 } from '../pack';
 import { Back, Crate } from './Icons';
 import { Haptic } from './Haptic';
-import { OtherWays, type Alternative } from './OtherWays';
+import { AnotherGame } from './AnotherGame';
 
 export type { PackScore };
 
@@ -54,18 +54,18 @@ const PREVIEW = { w: 46, h: 30, cell: 9 };
 /**
  * One round of Net Packing, full screen, in the craving flow: on "Not yet", or right away for a brutal
  * hook (D54). It waits for her first touch, so she can read how to play; that touch only starts it.
- * `onEnd` gets the score, or null if she left before placing a piece. `lead` and `others` add a line
- * above the how-to and ways out: to another round or a card.
+ * `onEnd` gets the score, or null if she left before placing a piece. `lead` and `another` add a line
+ * above the how-to and a button for another game.
  */
 export function PackGame({
   calm,
   lead,
-  others,
+  another,
   onEnd,
 }: {
   calm: boolean;
   lead?: string;
-  others?: Alternative[];
+  another?: () => void;
   onEnd: (s: PackScore | null) => void;
 }) {
   const t = useT();
@@ -297,7 +297,7 @@ export function PackGame({
           {lead && <p class="dodge-lead">{lead}</p>}
           <h2>{t.packTitle}</h2>
           <p>{t.packHowTo}</p>
-          <OtherWays others={others} />
+          <AnotherGame onPick={another} />
         </div>
       )}
     </div>

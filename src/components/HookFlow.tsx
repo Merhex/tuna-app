@@ -54,6 +54,9 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   // round went if she did one after her last card, for the check and win screens.
   const [activity, setActivity] = useState<Activity>('dodge');
   const [played, setPlayed] = useState<Activity[]>([]);
+  // Every round put in front of her this hook, oldest first, so "Give me another game" cycles through
+  // all of them rather than flipping between two.
+  const [shown, setShown] = useState<Activity[]>([]);
   const [counts, setCounts] = useState<RoundCounts>({});
   const [lastRound, setLastRound] = useState<LastRound | null>(null);
   const [note, setNote] = useState('');
@@ -127,16 +130,19 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   // The tap also lets iPhone play the round's sounds.
   const toRound = (next: Activity) => () => {
     fx.tap();
-    setActivity(next);
-    setStep('round');
+    showRound(next);
   };
+  function showRound(a: Activity) {
+    setActivity(a);
+    setShown((s) => [...s, a]);
+    setStep('round');
+  }
 
   /** A brutal hook starts with a round, at random, but never the same one three times in a row (D54). */
   function startBrutal() {
     const a = pickActivity(data.settings.brutalPicks);
     update((d) => ({ ...d, settings: { ...d.settings, brutalPicks: rememberPick(d.settings.brutalPicks, a) } }));
-    setActivity(a);
-    setStep('round');
+    showRound(a);
   }
 
   function endRound(r: LastRound | null) {
@@ -155,21 +161,15 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
     setStep('check');
   }
 
-  /** The round on screen, with its line and ways out when it was picked straight from the rating. */
+  /** The round on screen, with its line and "Give me another game" when it was picked from the rating. */
   function round() {
-    const text = roundText(t, activity);
-    // One other round, the one picked least lately, and a card: never a long list at the worst moment (D51).
-    const other = alternatives(activity, data.settings.brutalPicks)[0];
+    // The next game is the one she's seen least lately, so tapping again goes round all of them.
+    const other = alternatives(activity, [...data.settings.brutalPicks, ...shown])[0];
     const props = {
       calm: data.settings.reducedMotion,
       // Straight after a snag there was no rating: Bubbles gets its own line, the others none (D57).
-      lead: !fromRating ? undefined : !regroup ? text.brutal(before ?? GAME_FROM) : activity === 'breathe' ? t.breatheAfterSnag : undefined,
-      others: fromRating
-        ? [
-            ...(other ? [{ label: roundText(t, other).instead, onPick: guard(toRound(other)) }] : []),
-            { label: t.drawCard, onPick: guard(draw) },
-          ]
-        : undefined,
+      lead: !fromRating ? undefined : !regroup ? roundText(t, activity).brutal(before ?? GAME_FROM) : activity === 'breathe' ? t.breatheAfterSnag : undefined,
+      another: fromRating && other ? guard(toRound(other)) : undefined,
     };
     switch (activity) {
       case 'dodge':
@@ -283,8 +283,8 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
     setNote('');
     setReasons([]);
     setRegroup(true);
-    setActivity('breathe');
-    setStep('round');
+    setShown([]);
+    showRound('breathe');
   }
 
   return (
@@ -607,15 +607,15 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   );
 }
 
-/** Each activity's lines: its "· N min" offer, its "X instead" link, and a brutal hook's lead. */
+/** Each activity's lines: its "· N min" offer on "Not yet", and a brutal hook's lead. */
 function roundText(t: Strings, a: Activity) {
   switch (a) {
     case 'dodge':
-      return { offer: t.dodgeOffer, instead: t.dodgeInstead, brutal: t.dodgeBrutal };
+      return { offer: t.dodgeOffer, brutal: t.dodgeBrutal };
     case 'breathe':
-      return { offer: t.breatheOffer, instead: t.breatheInstead, brutal: t.breatheBrutal };
+      return { offer: t.breatheOffer, brutal: t.breatheBrutal };
     case 'pack':
-      return { offer: t.packOffer, instead: t.packInstead, brutal: t.packBrutal };
+      return { offer: t.packOffer, brutal: t.packBrutal };
     case 'track':
       throw new Error('School Tracker is not built yet');
   }

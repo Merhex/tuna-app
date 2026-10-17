@@ -348,9 +348,9 @@ const en = {
   breathsTaken: (n: number): string => (n === 1 ? 'big breath' : 'big breaths'),
   breathsOnBeat: (n: number): string => `${n} on the beat`,
   breatheLog: (n: number): string => `Bubbles · ${n} ${n === 1 ? 'breath' : 'breaths'}`,
-  // Under how to play, when the round was picked for her: "Breathe instead · Draw a card".
-  breatheInstead: 'Breathe instead',
-  dodgeInstead: 'Dodge the hooks instead',
+  // Under how to play, when the round was picked for her straight from the rating. Tapping it again
+  // keeps cycling through the rounds.
+  anotherGame: 'Give me another game',
   bubblesCaught: (n: number): string => (n === 1 ? 'bubble caught' : 'bubbles caught'),
   continueWarn: 'Your collection could get lost if the browser clears its data.',
   // Net Packing: a falling-block puzzle, packing fish into crates. A brutal hook can start with it,
@@ -360,7 +360,6 @@ const en = {
   packHowTo: 'Drag to slide, tap to turn, flick down to drop. A full row ships as a crate. Two and a half minutes, and you can’t lose.',
   packEnd: 'End the round',
   packBrutal: (n: number): string => `${n === 8 ? 'An' : 'A'} ${n}? Let’s pack this one away, crate by crate.`,
-  packInstead: 'Net Packing instead',
   packNext: 'Next',
   // When the stack reaches the top, the bottom half goes and play carries on.
   packHauled: 'Net hauled in. Plenty of room!',
@@ -714,8 +713,7 @@ const cs: Strings = {
   breathsTaken: (n) => csPlural(n, 'velký nádech', 'velké nádechy', 'velkých nádechů'),
   breathsOnBeat: (n) => `${n} do rytmu`,
   breatheLog: (n) => `Bubliny · ${n} ${csPlural(n, 'nádech', 'nádechy', 'nádechů')}`,
-  breatheInstead: 'Radši dýchat',
-  dodgeInstead: 'Radši zahrát Uhni háčkům',
+  anotherGame: 'Dej mi jinou hru',
   bubblesCaught: (n) => csPlural(n, 'chycená bublina', 'chycené bubliny', 'chycených bublin'),
   continueWarn: 'Pokud prohlížeč smaže data, můžeš přijít o sbírku.',
   packOffer: 'Naskládej úlovek · 2½ min',
@@ -723,7 +721,6 @@ const cs: Strings = {
   packHowTo: 'Táhni prstem do stran a posouvej, klepnutím otáčej, švihnutím dolů pusť rybu na dno. Plná řada odjede jako bedna. Dvě a půl minuty a prohrát se nedá.',
   packEnd: 'Ukončit kolo',
   packBrutal: (n) => `${n}? Tenhle zabalíme, bednu po bedně.`,
-  packInstead: 'Radši zahrát Naskládej úlovek',
   packNext: 'Další',
   packHauled: 'Síť je vytažená. Místa je dost!',
   packSummary: (n) =>

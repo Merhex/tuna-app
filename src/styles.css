@@ -1349,9 +1349,8 @@ button:has(> .haptic-switch) { position: relative; }
   flex-direction: column;
   gap: 6px;
 }
-/* A brutal hook's line above the how-to, and the way out to a card, which does take taps (D51). */
+/* A brutal hook's line above the how-to (D51). */
 .dodge-lead { color: var(--coral); font-family: var(--display); font-weight: 700; font-size: 1.05rem; }
-.dodge-hint .link { pointer-events: auto; align-self: center; }
 /* After a round: the hooks' eulogy above "Did the hook let go?". */
 .dodge-summary { display: flex; flex-direction: column; gap: 2px; max-width: 340px; }
 .history-game { color: var(--muted); }
@@ -1459,9 +1458,9 @@ button:has(> .haptic-switch) { position: relative; }
 .breathe-center.waiting :is(.breathe-word, .breathe-count, .breathe-hint) { visibility: hidden; }
 .breathe-intro button { pointer-events: auto; }
 .breathe-intro .primary { align-self: center; min-height: 46px; margin-top: 4px; }
-/* "Breathe instead", "Draw a card", under how to play (D54). They wrap onto two lines when they don't fit. */
-.other-ways { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0 14px; pointer-events: auto; }
-.other-ways .link { padding: 8px 4px; min-height: 40px; }
+/* "Give me another game", under how to play when the round was picked from the rating (D54). The card
+   lets taps through to the round, but this button takes its own. */
+.another-game { pointer-events: auto; align-self: center; min-height: 44px; margin-top: 6px; }
 
 /* ---------- The 3D tank (D55) ---------- */
 /* Behind every screen, shown only on the home screen. It fades in the first time; after that it's

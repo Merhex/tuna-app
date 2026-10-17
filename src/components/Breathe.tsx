@@ -16,7 +16,7 @@ import { fx } from '../feedback';
 import { pick, useT } from '../i18n';
 import { Back } from './Icons';
 import { Haptic } from './Haptic';
-import { OtherWays, type Alternative } from './OtherWays';
+import { AnotherGame } from './AnotherGame';
 import { Tuna } from './Tuna';
 
 /** The stage is drawn in a 340 × 340 box: the track around the edge, the bubble and tuna in the middle. */
@@ -33,7 +33,7 @@ const PUFF = 0.07;
 
 /**
  * One round of Bubbles (D54), full screen, in the craving flow: on "Not yet", or right away for a
- * brutal hook. A card with how it works (and `lead` and `others`, when it came straight from the
+ * brutal hook. A card with how it works (and `lead` and `another`, when it came straight from the
  * rating) waits for her to tap Start. Then a short "Ready?", and breath after breath until the round
  * is over or she leaves. A finger anywhere on the screen counts as breathing in.
  *
@@ -42,12 +42,12 @@ const PUFF = 0.07;
 export function BreatheRound({
   calm,
   lead,
-  others,
+  another,
   onEnd,
 }: {
   calm: boolean;
   lead?: string;
-  others?: Alternative[];
+  another?: () => void;
   onEnd: (r: BreatheResult | null) => void;
 }) {
   const t = useT();
@@ -210,7 +210,7 @@ export function BreatheRound({
             {t.breatheStart}
             <Haptic />
           </button>
-          <OtherWays others={others} />
+          <AnotherGame onPick={another} />
         </div>
       )}
     </div>

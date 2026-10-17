@@ -4,7 +4,7 @@ import { fx } from '../feedback';
 import { useT } from '../i18n';
 import { Back, FishHook } from './Icons';
 import { Haptic } from './Haptic';
-import { OtherWays, type Alternative } from './OtherWays';
+import { AnotherGame } from './AnotherGame';
 
 export type DodgeScore = Game['score'];
 
@@ -18,18 +18,18 @@ const TUNA_SCALE = 0.48;
 /**
  * One round of Dodge the hooks, full screen, in the craving flow: on "Not yet" (D50), or right away for a
  * brutal hook (D51, D54). It waits for her first touch, so she can read how to play. `onEnd` gets the score,
- * or null if she left before starting. `lead` and `others` add a line above the how-to and ways out: to
- * Bubbles or a card.
+ * or null if she left before starting. `lead` and `another` add a line above the how-to and a button for
+ * another game.
  */
 export function DodgeGame({
   calm,
   lead,
-  others,
+  another,
   onEnd,
 }: {
   calm: boolean;
   lead?: string;
-  others?: Alternative[];
+  another?: () => void;
   onEnd: (s: DodgeScore | null) => void;
 }) {
   const t = useT();
@@ -153,7 +153,7 @@ export function DodgeGame({
           {lead && <p class="dodge-lead">{lead}</p>}
           <h2>{t.dodgeTitle}</h2>
           <p>{t.dodgeHowTo}</p>
-          <OtherWays others={others} />
+          <AnotherGame onPick={another} />
         </div>
       )}
     </div>
