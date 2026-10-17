@@ -26,7 +26,7 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 | **Bubbles:** two minutes of slow breathing with the tuna (in 4, out 6). A brutal hook starts with it or Dodge the hooks at random, with the other or a card one tap away; “Not yet” offers both | D54 | |
 | **3D home screen:** her school (one tuna per hook beaten), her decorations and the tuna she pets, in 3D; “Visit my school” pulls back to the whole tank | D55 | |
 | **The treasure chest in the tank:** a sunken chest in the middle of her school; opening the treasure (or tapping the chest in “Visit my school”) swims the camera down to it and the lid opens over the page | D56 | |
-| **Current Run:** a 5-minute round that gets her moving: the tuna swims up a river as hard as she marches, dances or swings her arms, sensed by the phone's motion sensor (or guided without one). Only at home, and off in Settings if she'd rather | D58 | |
+| **Current Run** (held back): a 5-minute round that gets her moving, sensed by the phone's motion sensor. Out of the rotation while it's reworked (too little feedback, too hard); playable from the secret corner in Settings (tap the version line seven times) | D58 | |
 
 ## Next, ranked
 

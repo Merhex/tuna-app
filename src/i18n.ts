@@ -411,6 +411,7 @@ const en = {
   runSummaryNote: 'Moving can help a craving pass.',
   runLine: 'upstream and back',
   runLog: (n: number): string => (n === 1 ? 'Current Run' : `Current Run ×${n}`),
+  // The Settings toggle for movement rounds; hidden while Current Run is out of the rotation (D58).
   movementRounds: 'Movement rounds',
   movementRoundsNote: 'Rounds that get you moving, only at home. Turn off if you’d rather not.',
 

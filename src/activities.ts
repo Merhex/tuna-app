@@ -11,8 +11,11 @@ export type Activity = 'dodge' | 'breathe' | 'pack' | 'track' | 'run';
 /** Every activity, in the fixed order used to break ties. */
 export const ACTIVITIES: readonly Activity[] = ['dodge', 'breathe', 'pack', 'track', 'run'];
 
-/** The ones that can be picked, if they're `eligible` right now. */
-export const ENABLED: readonly Activity[] = ['dodge', 'breathe', 'pack', 'track', 'run'];
+/**
+ * The ones that can be picked, if they're `eligible` right now. Current Run is held back while it's
+ * reworked: it's only playable from the secret corner in Settings for now (D58).
+ */
+export const ENABLED: readonly Activity[] = ['dodge', 'breathe', 'pack', 'track'];
 
 /**
  * The enabled activities she can be given right now. Current Run gets her moving, so only at home and

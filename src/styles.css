@@ -1418,6 +1418,9 @@ button:has(> .haptic-switch) { position: relative; }
 .track-picks i.on { background: var(--gold); border-color: var(--gold); opacity: 1; }
 
 /* ---------- Current Run (D58) ---------- */
+/* Settings' secret corner, where the round can be tried while it's out of the rotation. */
+.settings .version { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.secret-corner h2 { margin: 0; font-family: var(--display); font-size: 1.2rem; }
 /* Full screen like Dodge the hooks (it reuses .dodge-pond and .dodge-hud). */
 .running .bg-bubbles { display: none; }
 /* The phase and its countdown, big enough to read at arm's length while moving. */

@@ -129,6 +129,11 @@ describe('the other ways out of a round', () => {
 describe('rounds that are only there sometimes (D58)', () => {
   const home = { place: 'home' as const, movementRounds: true };
 
+  it('keeps Current Run out of the rotation while it is reworked', () => {
+    expect(ENABLED).not.toContain('run');
+    expect(eligible(home)).not.toContain('run');
+  });
+
   it('offers Current Run only at home, with movement rounds on', () => {
     expect(eligible(home, FIVE)).toEqual(FIVE);
     expect(eligible({ ...home, place: 'out' }, FIVE)).toEqual(FOUR);

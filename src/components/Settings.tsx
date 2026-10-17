@@ -5,6 +5,7 @@ import { localeOf, useT } from '../i18n';
 import { isIOS } from '../platform';
 import { useApp } from '../state';
 import { Back, Download, FishHook, Phone, Upload } from './Icons';
+import { RunGame } from './Run';
 import { Haptic } from './Haptic';
 import { isStandalone } from '../platform';
 import { makeBackup, parseBackup, type Settings as S } from '../storage';
@@ -22,6 +23,11 @@ export function Settings({
   const t = useT();
   const { data, update } = useApp();
   const [message, setMessage] = useState('');
+  // The secret corner: rounds still being worked on, for the app's maker to try (D58). Opened by tapping
+  // the version line SECRET_TAPS times, and closed again when Settings closes, so she won't stumble on it.
+  const [secret, setSecret] = useState(false);
+  const [lab, setLab] = useState(false);
+  const versionTaps = useRef<number[]>([]);
   const fileInput = useRef<HTMLInputElement>(null);
 
   const set = <K extends keyof S>(key: K, value: S[K]) =>
@@ -67,6 +73,8 @@ export function Settings({
     }
   }
 
+  if (lab) return <RunGame calm={data.settings.reducedMotion} onEnd={() => setLab(false)} />;
+
   return (
     <main class="screen settings">
       <header class="topbar">
@@ -94,12 +102,6 @@ export function Settings({
           }}
         />
         <Toggle label={t.reducedMotion} checked={data.settings.reducedMotion} onChange={(v) => set('reducedMotion', v)} />
-        <Toggle
-          label={t.movementRounds}
-          note={t.movementRoundsNote}
-          checked={data.settings.movementRounds}
-          onChange={(v) => set('movementRounds', v)}
-        />
         <div class="row">
           <span>{t.language}</span>
           <div class="segmented compact">
@@ -149,8 +151,37 @@ export function Settings({
         )}
       </section>
 
+      {secret && (
+        <section class="group secret-corner">
+          {/* Not translated: it's for the app's maker, not for her. */}
+          <h2>Secret corner</h2>
+          <p class="muted small">Rounds still being worked on. They're out of the rotation, and nothing played here is recorded.</p>
+          <button
+            class="secondary full"
+            onClick={() => {
+              fx.tap();
+              setLab(true);
+            }}
+          >
+            Try Current Run
+            <Haptic />
+          </button>
+        </section>
+      )}
+
       <section class="group">
-        <p class="muted small version">
+        <p
+          class="muted small version"
+          onClick={() => {
+            // Taps close together: the last SECRET_TAPS within SECRET_WINDOW_MS.
+            const now = Date.now();
+            versionTaps.current = [...versionTaps.current, now].filter((at) => now - at < SECRET_WINDOW_MS);
+            if (versionTaps.current.length >= SECRET_TAPS && !secret) {
+              fx.done();
+              setSecret(true);
+            }
+          }}
+        >
           {t.version} {__APP_VERSION__} ·{' '}
           {new Date(__BUILD_TIME__).toLocaleString(localeOf(data.settings.lang), { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
         </p>
@@ -180,5 +211,9 @@ function Toggle({
     </label>
   );
 }
+
+/** Taps on the version line that open the secret corner, and the time they must fall within. */
+const SECRET_TAPS = 7;
+const SECRET_WINDOW_MS = 3000;
 
 const CURRENCY_SYMBOL: Record<Currency, string> = { CZK: 'Kč', EUR: '€', USD: '$' };

@@ -423,7 +423,9 @@ The middle of the tank, inside the ring her school swims round, was empty. A sma
 
 ## D58 · Current Run: a round that gets her moving
 
-**Decided, built.** Extends D54. Tickets: [current-run.md](tickets/current-run.md).
+**Decided, built, held back.** Extends D54. Tickets: [current-run.md](tickets/current-run.md).
+
+**Out of the rotation for now.** On a real phone it gave too little visual feedback and was too hard, so it's being reworked. It is never picked for a brutal hook or offered on “Not yet”, and the “Movement rounds” toggle is hidden. The app's maker can still try it from a **secret corner in Settings**: tap the version line seven times (within three seconds). It stays open until Settings closes, and nothing played there is recorded. To bring it back: add `run` to `ENABLED` in `src/activities.ts` and show the toggle again in `src/components/Settings.tsx`. Everything below describes the round as built.
 
 A fifth round for a brutal hook, and the first that asks her to move her body. The tuna swims up a river against the current, as fast as she moves: marching on the spot, dancing, stairs or arm swings, with the phone in a hand or pocket. The phone's motion sensor reads how hard she's moving.
 
