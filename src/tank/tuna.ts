@@ -15,7 +15,7 @@ import { makeLanes, SCHOOL3D_SETTINGS, swimPose, type Lane } from '../school3d';
 import { Kit, paint } from './kit';
 
 // The mascot's colours (see --tuna-body, --tuna-belly and --tuna-fin in styles.css).
-const BODY = '#4f8fbf';
+export const BODY = '#4f8fbf';
 const BELLY = '#d4e3ec';
 const FIN = '#f2c14e';
 const SIDE_FIN = '#3f78a3';
@@ -23,60 +23,65 @@ const EYE = '#ffffff';
 const PUPIL = '#0b1f2e';
 
 /**
- * One tuna, nose towards +x, 2 units long from tail tip to nose, built from simple shapes in the
- * mascot's colours: a round body with a pale belly, a forked tail, yellow fins and finlets, and big
- * eyes on both sides.
+ * The tuna's shape, nose towards +x: half its body length, and the body's height and width (before
+ * it narrows towards the tail). The tail tip is at x = -1.42, so a tuna is 2.34 long.
  */
-export function tunaGeometry(): BufferGeometry {
-  const parts: BufferGeometry[] = [];
+export const TUNA = { half: 0.92, height: 0.52, width: 0.44, tailTip: -1.42, tailRoot: -0.82 };
 
-  // Body: a stretched ball, slimmer towards the tail.
-  // Kept light: up to 200 of these are drawn every frame.
-  const body = new SphereGeometry(1, 18, 11);
+/** How much the body narrows at `x` towards the tail (1 at the middle and in front). */
+export const taperAt = (x: number) => 1 - 0.72 * Math.max(0, -x / TUNA.half) ** 1.6;
+
+/** The body: a stretched ball, slimmer towards the tail, with a pale belly like the drawing. */
+export function tunaBody(segments: number, rings: number): BufferGeometry {
+  const body = new SphereGeometry(1, segments, rings);
   const p = body.getAttribute('position');
   for (let i = 0; i < p.count; i++) {
-    const x = p.getX(i);
-    const taper = 1 - 0.72 * Math.max(0, -x) ** 1.6;
-    p.setXYZ(i, x * 0.92, p.getY(i) * 0.52 * taper, p.getZ(i) * 0.44 * taper);
+    const x = p.getX(i) * TUNA.half;
+    const taper = taperAt(x);
+    p.setXYZ(i, x, p.getY(i) * TUNA.height * taper, p.getZ(i) * TUNA.width * taper);
   }
   body.computeVertexNormals();
-  // The belly is pale, below a line that rises a little towards the tail, like the drawing.
-  parts.push(paint(body, (x, y) => (y < -0.16 + 0.06 * x * -1 ? BELLY : BODY)));
+  // The belly is below a line that rises a little towards the tail.
+  return paint(body, (x, y) => (y < -0.16 - 0.06 * x ? BELLY : BODY));
+}
 
-  const flat = (shape: Shape, depth: number, color: string) => {
-    const g = new ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 1, curveSegments: 4 });
-    g.translate(0, 0, -depth / 2);
-    return paint(g, color);
-  };
-  const triangle = (pts: [number, number][]) => {
-    const s = new Shape();
-    s.moveTo(...pts[0]);
-    pts.slice(1).forEach((q) => s.lineTo(...q));
-    s.closePath();
-    return s;
-  };
+const flat = (shape: Shape, depth: number, color: string) => {
+  const g = new ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 1, curveSegments: 4 });
+  g.translate(0, 0, -depth / 2);
+  return paint(g, color);
+};
 
-  // Forked tail, the body's colour.
+const triangle = (pts: [number, number][]) => {
+  const s = new Shape();
+  s.moveTo(...pts[0]);
+  pts.slice(1).forEach((q) => s.lineTo(...q));
+  s.closePath();
+  return s;
+};
+
+/** The forked tail, the body's colour, from its root at x = -0.82 to its tips at x = -1.42. */
+export function tunaTail(): BufferGeometry {
   const tail = new Shape();
-  tail.moveTo(-0.82, 0);
-  tail.quadraticCurveTo(-1.05, 0.25, -1.42, 0.6);
+  tail.moveTo(TUNA.tailRoot, 0);
+  tail.quadraticCurveTo(-1.05, 0.25, TUNA.tailTip, 0.6);
   tail.quadraticCurveTo(-1.3, 0.2, -1.2, 0);
-  tail.quadraticCurveTo(-1.3, -0.2, -1.42, -0.6);
-  tail.quadraticCurveTo(-1.05, -0.25, -0.82, 0);
-  parts.push(flat(tail, 0.05, BODY));
+  tail.quadraticCurveTo(-1.3, -0.2, TUNA.tailTip, -0.6);
+  tail.quadraticCurveTo(-1.05, -0.25, TUNA.tailRoot, 0);
+  return flat(tail, 0.05, BODY);
+}
 
-  // Dorsal fin and anal fin, yellow.
-  parts.push(flat(triangle([[0.12, 0.42], [-0.18, 0.86], [-0.36, 0.38]]), 0.05, FIN));
-  parts.push(flat(triangle([[0.02, -0.38], [-0.22, -0.74], [-0.34, -0.33]]), 0.05, FIN));
-  // Finlets towards the tail, two on top and two underneath.
+/** The yellow dorsal and anal fins, the finlets towards the tail and the little blue side fins. */
+export function tunaFins(): BufferGeometry[] {
+  const parts = [
+    flat(triangle([[0.12, 0.42], [-0.18, 0.86], [-0.36, 0.38]]), 0.05, FIN),
+    flat(triangle([[0.02, -0.38], [-0.22, -0.74], [-0.34, -0.33]]), 0.05, FIN),
+  ];
   for (const [x, s] of [[-0.5, 1], [-0.66, 0.85]] as const) {
     const h = 0.11 * s;
-    const top = 0.52 * (1 - 0.72 * (-x) ** 1.6) * Math.sqrt(1 - (x / 0.92) ** 2) - 0.03;
+    const top = TUNA.height * taperAt(x) * Math.sqrt(1 - (x / TUNA.half) ** 2) - 0.03;
     parts.push(flat(triangle([[x + 0.05, top], [x - 0.04, top + h], [x - 0.08, top]]), 0.035, FIN));
     parts.push(flat(triangle([[x + 0.05, -top], [x - 0.04, -top - h], [x - 0.08, -top]]), 0.035, FIN));
   }
-
-  // Little side fins, a darker blue, swept back.
   for (const side of [1, -1]) {
     const fin = new SphereGeometry(1, 6, 3);
     fin.scale(0.26, 0.035, 0.1);
@@ -85,8 +90,23 @@ export function tunaGeometry(): BufferGeometry {
     fin.translate(0.28, -0.14, side * 0.4);
     parts.push(paint(fin, SIDE_FIN));
   }
+  return parts;
+}
 
-  // Big eyes, white with a dark pupil looking forward.
+/** Merges painted parts into one geometry (all of them flattened to plain triangles). */
+export function merge(parts: BufferGeometry[]): BufferGeometry {
+  const merged = mergeGeometries(parts.map((g) => (g.index ? g.toNonIndexed() : g)));
+  parts.forEach((g) => g.dispose());
+  if (!merged) throw new Error('tuna geometry');
+  return merged;
+}
+
+/**
+ * One tuna of the school, all in one geometry: the body, tail and fins, and big eyes on both sides
+ * with a dark pupil looking forward. Kept light: up to 200 of these are drawn every frame.
+ */
+export function tunaGeometry(): BufferGeometry {
+  const parts = [tunaBody(18, 11), tunaTail(), ...tunaFins()];
   for (const side of [1, -1]) {
     const eye = new SphereGeometry(0.15, 9, 6);
     eye.translate(0.56, 0.1, side * 0.29);
@@ -97,11 +117,7 @@ export function tunaGeometry(): BufferGeometry {
     pupil.translate(0.56 + 0.15 * 0.41, 0.1 + 0.15 * 0.05, side * (0.29 + 0.15 * 0.91));
     parts.push(paint(pupil, PUPIL));
   }
-
-  const merged = mergeGeometries(parts.map((g) => (g.index ? g.toNonIndexed() : g)));
-  parts.forEach((g) => g.dispose());
-  if (!merged) throw new Error('tuna geometry');
-  return merged;
+  return merge(parts);
 }
 
 /**

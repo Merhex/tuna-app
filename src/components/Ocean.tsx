@@ -1,6 +1,4 @@
-import { Seabed } from './Seabed';
-
-/** Fixed underwater backdrop: light rays, slow rising bubbles, and the seabed on the home screen. */
+/** Fixed underwater backdrop: light rays and slow rising bubbles. The home screen adds the seabed (D43, D55). */
 const BUBBLES = Array.from({ length: 12 }, (_, i) => ({
   left: (i * 53) % 100,
   size: 4 + ((i * 7) % 10),
@@ -8,7 +6,7 @@ const BUBBLES = Array.from({ length: 12 }, (_, i) => ({
   delay: -((i * 3.7) % 14),
 }));
 
-export function Ocean({ seabed }: { seabed: boolean }) {
+export function Ocean() {
   return (
     <div class="ocean" aria-hidden="true">
       <div class="rays" />
@@ -26,7 +24,6 @@ export function Ocean({ seabed }: { seabed: boolean }) {
           />
         ))}
       </div>
-      {seabed && <Seabed />}
     </div>
   );
 }

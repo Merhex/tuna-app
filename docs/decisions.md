@@ -2,7 +2,7 @@
 
 Every product and technical decision, numbered. Code comments refer to these numbers.
 
-**Last number used: D51.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
+**Last number used: D55.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
 
 Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an answer), **Superseded**.
 
@@ -38,6 +38,7 @@ Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an
 - **D39 · Draw only cards she can do where she is.** Decided, built. See below.
 - **D50 · Dodge the hooks, offered on “Not yet”.** Decided, built. See below.
 - **D51 · A brutal hook (8 to 10) starts with Dodge the hooks.** Decided, built. See below.
+- **D55 · The home screen is a 3D tank.** Decided, built. See below.
 
 ## Cards and rarity
 
@@ -163,7 +164,7 @@ Every milestone (D41) adds a decoration to the seabed at the bottom of the home 
 | 182 | Ocean Crosser | A small shipwreck, in the background |
 | 365 | Legend of the Deep | A sunken castle, in the background |
 
-- **In the background, nothing to tap.** They sit on the seabed that's already there (the `Ocean` component), behind the school. The middle of the screen stays one big button (D4).
+- **In the background, nothing to tap.** They sit on the seabed behind the school (in 3D since D55). The middle of the screen stays one big button (D4).
 - **A sparkle the first time.** A new decoration sparkles once, the first time she sees it on the home screen. No popup, so it never gets in the way of a craving. With reduced motion on, it just appears.
 - **Never taken away.** A decoration stays once it's earned, even if the quit date is moved later (D11). So earned decorations are stored, not worked out from the date each time. Moving the date earlier can earn several at once; each one sparkles.
 - **Earned on the home screen only.** Decorations are added when the home screen shows (and once a minute while it's open), never while a date picker is open. Otherwise scrolling past an old date in the picker, or typing a year digit by digit, could earn a whole year's worth for good.
@@ -357,3 +358,23 @@ Bubbles is two minutes of slow breathing with the tuna. The tuna sits in a big b
 *Why:* slow breathing with a long out-breath calms the body, and riding a craving out instead of fighting it (urge surfing) is a standard way through one. The game works the other way, by crowding out craving imagery (D50). Which helps her more at a 10 isn't known, so picking at random and recording `rounds` and `breaths` with the before and after ratings lets the Logbook data answer it later (roadmap: “Cards that work for her”). Two activities also wear thin more slowly than one.
 
 *Code:* the timing and beat in `src/breathe.ts` (`BREATHE_SETTINGS`), the pick in `src/activities.ts`, the round in `src/components/Breathe.tsx`, the swap links in `src/components/OtherWays.tsx`, the flow in `src/components/HookFlow.tsx`, the sounds in `src/feedback.ts`, `breaths` and `brutalPicks` in `src/storage.ts`, the history line in `src/components/Logbook.tsx`; tests in `src/breathe.test.ts` and `src/activities.test.ts`.
+
+## D55 · The home screen is a 3D tank
+
+**Decided, built.** Extends D4 and D43. Tried first as a prototype (“Visit my school”, behind a small button in Settings).
+
+The home screen's backdrop is a 3D seabed: her school swimming behind the button, her milestone decorations on the sand, and the tuna she pets in front, all in 3D (three.js). “Visit my school”, under the school count, fades the buttons away and pulls the camera back to show the whole tank.
+
+- **One tuna per hook beaten,** up to 200 drawn. Past 200 the count still shows her real number, and the wide view adds “200 swimming here, the rest just out of sight.” They swim round the tank in little groups of about eight, all the same way, so the school never crashes into itself. A new tuna joins without the others moving.
+- **Her decorations, always on** (D43): the ones she has earned, with no switch to hide them. A new one still sparkles once: it pops up, a glow comes and goes and five stars twinkle. The coral still grows and changes colour after a year. All of them sit outside the band the school swims in, so no tuna swims through one.
+- **The tuna she pets is 3D too,** in the drawing's colours, with its three home-screen faces: happy, eyes closed and blushing while she pets it, and the wide-eyed stare with a zigzag mouth for a dark joke (D45). It bobs like the drawing did, wags its tail and squishes a little when tapped. The drawing's button stays where it was, invisible, so tapping, the hearts, the jokes and the pet count (D49) work as before. In the wide view it's the big tuna at the front. Other screens (the intro, the win screen, postcards) keep the drawn tuna.
+- **The button never waits for it.** three.js (about 150 kB gzipped, saved for offline with the rest) loads just after the home screen shows. Until it's ready, the drawn seabed and school show; then the tank fades in over them, with the 3D tuna exactly where the drawing was. A phone without 3D keeps the drawn home screen, without “Visit my school”. So does a phone that takes the 3D away (low memory, a long time in the background), until it gives it back.
+- **Made once, kept.** Leaving the home screen pauses it, and coming back is instant. It only draws while the home screen shows and the app is open.
+- **The wide view** has “Swim back” at the top and a card with the count and “Drag to look around”. Dragging turns the camera round the tank and tilts it; left alone, it drifts slowly round. It always fits the whole tank, the big tuna included, between the top bar and the card, on any phone.
+- **If the phone struggles** (under 40 frames a second for two seconds), it draws fewer pixels.
+- **“Less motion”:** nothing swims or sparkles, the tuna doesn't bob, and the camera jumps to the wide view instead of gliding.
+- The Czech needs a native speaker's read (D32).
+
+*Why:* the count under the button was the only sign of the school. Seeing roughly as many tuna as hooks beaten turns the number into something to look at. Battery and older phones were the worries, so the tank only draws on the home screen and lowers its resolution when it has to.
+
+*Code:* the rules (swimming, the camera, where the decorations and the big tuna go) in `src/school3d.ts` (`SCHOOL3D_SETTINGS`); the scene in `src/tank/` (`scene.ts`; the school in `tuna.ts`, the big tuna in `mascot.ts`, the decorations in `decorations.ts`, sparkles in `sparkle.ts`, water, sand, kelp and light in `world.ts`); the canvas in `src/components/TankLayer.tsx`; the screen in `src/components/Home.tsx`; earning decorations in `useSeabed` (`src/components/Seabed.tsx`). Tests in `src/school3d.test.ts`.

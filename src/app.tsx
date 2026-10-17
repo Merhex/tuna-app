@@ -15,9 +15,10 @@ import { Ocean } from './components/Ocean';
 import { Intro } from './components/Intro';
 import { Logbook } from './components/Logbook';
 import { Treasure } from './components/Treasure';
-import { LazySchool3D } from './components/LazySchool3D';
+import { TankLayer } from './components/TankLayer';
+import type { Tank } from './tank/scene';
 
-export type Screen = 'install' | 'intro' | 'home' | 'hook' | 'aquarium' | 'logbook' | 'treasure' | 'settings' | 'school3d';
+export type Screen = 'install' | 'intro' | 'home' | 'hook' | 'aquarium' | 'logbook' | 'treasure' | 'settings';
 
 export function App() {
   const [data, setData] = useState<AppData | null>(null);
@@ -27,6 +28,8 @@ export function App() {
   const [introReturn, setIntroReturn] = useState<Screen>('home');
   // The home-screen guide can also be reopened from Settings; then it returns there.
   const [installFromSettings, setInstallFromSettings] = useState(false);
+  // The home screen's 3D tank (D55), once it's ready; null until then, or on a phone without 3D.
+  const [tank, setTank] = useState<Tank | null>(null);
 
   useEffect(() => {
     loadData().then((loaded) => {
@@ -75,7 +78,7 @@ export function App() {
   return (
     <AppContext.Provider value={{ data, update }}>
       <LangContext.Provider value={data.settings.lang}>
-        <Ocean seabed={screen === 'home'} />
+        <Ocean />
         {screen === 'install' && (
           <InstallGuide
             fromSettings={installFromSettings}
@@ -107,7 +110,7 @@ export function App() {
           />
         )}
         {screen === 'home' && (
-          <Home go={go} washedAshore={washedAshore} dismissWashedAshore={() => setWashedAshore(false)} />
+          <Home go={go} washedAshore={washedAshore} dismissWashedAshore={() => setWashedAshore(false)} tank={tank} />
         )}
         {screen === 'hook' && <HookFlow onExit={() => go('home')} />}
         {screen === 'aquarium' && <Aquarium onClose={() => go('home')} />}
@@ -124,10 +127,14 @@ export function App() {
               setIntroReturn('settings');
               go('intro');
             }}
-            showSchool3d={() => go('school3d')}
           />
         )}
-        {screen === 'school3d' && <LazySchool3D onClose={() => go('settings')} onHook={() => go('hook')} />}
+        {/* After the screens, so it sits above the drawn seabed but behind everything on the screen. */}
+        <TankLayer
+          active={screen === 'home'}
+          calm={data.settings.reducedMotion || matchMedia('(prefers-reduced-motion: reduce)').matches}
+          onReady={setTank}
+        />
       </LangContext.Provider>
     </AppContext.Provider>
   );

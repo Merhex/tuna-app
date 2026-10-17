@@ -1,12 +1,13 @@
 /**
- * Visit my school (prototype): the home screen's backdrop as a 3D seabed, with one swimming tuna for
- * every hook she has beaten and the milestone decorations (D43) on the sand. From the home view, the
- * camera can pull back to show the whole place.
+ * The home screen's 3D tank (D55): one swimming tuna for every hook she has beaten, her milestone
+ * decorations (D43) on the sand, and the tuna she pets in front. "Visit my school" pulls the camera
+ * back to show the whole place.
  *
- * Only the rules live here: how many tuna, where they swim, where the camera sits and where each
- * decoration goes. Drawing is in src/tank/ (three.js, loaded only when the prototype opens) and the
- * screen is components/School3D.tsx. Distances are in scene units: a tuna is about 0.7 long, and the
- * sand is the plane y = 0 with the middle of the tank at x = z = 0.
+ * Only the rules live here: how many tuna, where they swim, where the camera sits, where each
+ * decoration goes and where the big tuna is. Drawing is in src/tank/ (three.js, loaded after the
+ * home screen shows), the canvas in components/TankLayer.tsx and the screen in components/Home.tsx.
+ * Distances are in scene units: a tuna of the school is about 0.7 long, and the sand is the plane
+ * y = 0 with the middle of the tank at x = z = 0.
  */
 
 export const SCHOOL3D_SETTINGS = {
@@ -28,9 +29,6 @@ export const SCHOOL3D_SETTINGS = {
   /** Radians the camera turns per screen width dragged. */
   dragTurn: 2.4,
 };
-
-/** The counts the prototype can preview, besides her own. */
-export const PREVIEW_COUNTS = [30, 100, 200] as const;
 
 /** How many tuna to draw for a school of this size. */
 export const shownTuna = (school: number) => Math.max(0, Math.min(Math.floor(school), SCHOOL3D_SETTINGS.maxTuna));
@@ -193,6 +191,41 @@ export const WIDE_FIT: [number, number, number][] = [
   [2.3, 2.7, -5],
   [-2.9, 1.6, -4.7],
 ];
+
+/**
+ * The big tuna she pets: how far in front of the home view's camera it swims (close enough that the
+ * school always passes behind it), how much of the drawing's box the fish fills and where its middle
+ * is (the drawing's tail reaches further than its nose), and how far it turns its face towards her.
+ */
+export const MASCOT = { depth: 3.2, fill: 0.86, middle: 0.53, turn: 0.4, length: 2.34 };
+
+/**
+ * Where to put the big tuna so that, from the home view, it sits exactly on the drawing's box (in
+ * screen pixels from the top left). Also how long it is, and how big a screen pixel is at that depth.
+ */
+export function mascotSpot(
+  box: { x: number; y: number; width: number; height: number },
+  screen: { width: number; height: number },
+  fov: number,
+) {
+  const c = cameraAt(HOME_VIEW);
+  const norm = (v: [number, number, number]) => {
+    const l = Math.hypot(...v);
+    return v.map((n) => n / l) as [number, number, number];
+  };
+  const f = norm([-c.x, HOME_VIEW.targetY - c.y, -c.z]);
+  // Right is forward × up; up is right × forward.
+  const r = norm([-f[2], 0, f[0]]);
+  const u: [number, number, number] = [r[1] * f[2] - r[2] * f[1], r[2] * f[0] - r[0] * f[2], r[0] * f[1] - r[1] * f[0]];
+  const tanV = Math.tan((fov * Math.PI) / 360);
+  const tanH = tanV * (screen.width / screen.height);
+  const nx = ((box.x + box.width * MASCOT.middle) / screen.width) * 2 - 1;
+  const ny = 1 - ((box.y + box.height / 2) / screen.height) * 2;
+  const d = MASCOT.depth;
+  const at = (i: number) => c[(['x', 'y', 'z'] as const)[i]] + d * (f[i] + r[i] * nx * tanH + u[i] * ny * tanV);
+  const perPixel = (2 * d * tanV) / screen.height;
+  return { x: at(0), y: at(1), z: at(2), length: box.width * MASCOT.fill * perPixel, perPixel };
+}
 
 /** Slow at both ends, quick in the middle. */
 export const ease = (p: number) => {

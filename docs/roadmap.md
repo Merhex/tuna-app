@@ -24,6 +24,7 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 | **Daydream cards:** 10 cards that walk her through picturing something she'd love (Kyoto tea, Jeju tangerines, front row at Jungkook in Seoul), all doable anywhere | D52 | Deck v3 |
 | **Postcards:** share a picture of a win from the win screen | D53 | |
 | **Bubbles:** two minutes of slow breathing with the tuna (in 4, out 6). A brutal hook starts with it or Dodge the hooks at random, with the other or a card one tap away; “Not yet” offers both | D54 | |
+| **3D home screen:** her school (one tuna per hook beaten), her decorations and the tuna she pets, in 3D; “Visit my school” pulls back to the whole tank | D55 | |
 
 ## Next, ranked
 
@@ -36,7 +37,6 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 | 5 | **Tuna facts as rewards** on the win screen. | Low | Small | Phase 2. |
 | 6 | **Navigation charts.** If-then plans (“If I'm at a party, then I'll…”). | Medium | Medium | Phase 3. Sits awkwardly with D29 (no trigger features); decide that first. |
 | 7 | **Bait insights.** When hooks hit and when slips happen, from times and bait notes. | Medium | Medium | Phase 3. Conflicts with D29 as it stands: needs a decision before building. |
-| 8 | **Visit my school (3D).** The home screen's backdrop as a 3D seabed, with “Visit my school” under the button: the buttons fade and the camera pulls back to the whole tank, one tuna for every hook beaten and her milestone decorations. | Low to medium | Large | **Prototype live for testing:** opened from the small fish next to the version in Settings, not from the home screen. It opens on a copy of the home screen (the petting tuna and the button work) over the 3D seabed; “Visit my school” glides back to the whole tank, and dragging looks around it. Up to 200 tuna swim; past that the count still shows the real number. To judge it on a phone, the wide view can preview 30, 100 or 200 tuna and every decoration, and shows the frame rate. three.js loads only when it opens (about 150 kB gzipped, saved for offline), so the home screen is unchanged. Nothing is saved except pets of the tuna. Tuning is in `SCHOOL3D_SETTINGS` (`src/school3d.ts`); the scene is in `src/tank/`. Before shipping: decide whether the real home screen moves to 3D (battery, older phones), and a native speaker's read of the Czech. |
 
 ## Ruled out
 
@@ -48,5 +48,5 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 
 ## Open before release
 
-- A native speaker's read of the Czech in the new cards, the milestones, the decoration names, the quit-date question and the Jungkook jokes, the Jungkook, Japan, Korea and China treasure items, the pet counter, Dodge the hooks, the daydream cards, the postcards and Bubbles (D32, D45, D46, D49, D50, D51, D52, D53, D54).
-- A test on a real iPhone: sounds, vibrations, the install flow and the postcard share sheet can't be checked in a desktop browser (see [qa-log.md](qa-log.md)).
+- A native speaker's read of the Czech in the new cards, the milestones, the decoration names, the quit-date question and the Jungkook jokes, the Jungkook, Japan, Korea and China treasure items, the pet counter, Dodge the hooks, the daydream cards, the postcards, Bubbles and “Visit my school” (D32, D45, D46, D49, D50, D51, D52, D53, D54, D55).
+- A test on a real iPhone: sounds, vibrations, the install flow and the postcard share sheet can't be checked in a desktop browser (see [qa-log.md](qa-log.md)). Also the 3D home screen (D55): how smooth it is, battery, and coming back after a long time in the background.
