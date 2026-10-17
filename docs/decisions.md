@@ -2,7 +2,7 @@
 
 Every product and technical decision, numbered. Code comments refer to these numbers.
 
-**Last number used: D56.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
+**Last number used: D57.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
 
 Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an answer), **Superseded**.
 
@@ -31,10 +31,11 @@ Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an
 - **D5 · Tapping it draws a random side-quest card.** Decided.
 - **D9 · Throw it back: one free redraw per hook.** Decided. *Why:* if the card is often impossible to do, she’ll stop opening the app. (D39 now removes most impossible cards before they’re drawn.)
 - **D10 · Hook strength before and after.** Decided. One optional tap, 1 to 10, at the start and the end. *Why:* her own proof that cravings fade.
-- **D11 · Count hooks beaten, not days clean.** Decided. A slip never removes fish or resets a counter. *Why:* a reset after one slip often turns into “I’ve failed anyway” (the abstinence violation effect).
+- **D11 · Count hooks beaten, not days clean.** Decided. A slip never removes fish or resets a counter. *Why:* a reset after one slip often turns into “I’ve failed anyway” (the abstinence violation effect). *Narrowed by D57:* a separate streak can start fresh after a slip, if she chooses. Everything else still never resets.
 - **D19 · A card is collected when she completes it,** not when it’s drawn. Decided.
 - **D31 · The slip option is small and quiet.** Decided. “Yes” and “Not yet” are the big buttons; “I got snagged” is a muted text link that appears nowhere else.
-- **D29 · No trigger-specific features.** Decided. The app doesn’t try to map triggers. A handful of cards fit common moments (gaming, watching series).
+- **D29 · No trigger-specific features.** Decided. The app doesn’t try to map triggers. A handful of cards fit common moments (gaming, watching series). *Narrowed by D57:* a snag can be tagged with a few quick reasons.
+- **D57 · After a snag: her streak, her call.** Decided, built. See below.
 - **D39 · Draw only cards she can do where she is.** Decided, built. See below.
 - **D50 · Dodge the hooks, offered on “Not yet”.** Decided, built. See below.
 - **D51 · A brutal hook (8 to 10) starts with Dodge the hooks.** Decided, built. See below.
@@ -398,3 +399,24 @@ The middle of the tank, inside the ring her school swims round, was empty. A sma
 *Why:* the treasure and the tank were two separate places. Putting the chest in the middle of her school makes the money part of the same world as her tuna and decorations, and swimming down to it makes opening the treasure feel like going somewhere.
 
 *Code:* the rules (the chest's size, where it sits, the chest view and fitting it to the screen) in `src/school3d.ts` (`CHEST`, `CHEST_SLOT`, `CHEST_VIEW`, `chestView`, `chestGlideSeconds` in `SCHOOL3D_SETTINGS`); the model in `src/tank/chest.ts`; the camera, lid and tap in `src/tank/scene.ts`; the tap on the canvas in `src/components/TankLayer.tsx`; the slot and the page coming in in `src/components/Treasure.tsx` (`TreasureChest`); `treasureFill` in `src/components/Chest.tsx`. The home screen's view is kept in `src/app.tsx`, so Back can return to the wide view. Tests in `src/school3d.test.ts`.
+
+## D57 · After a snag: her streak, her call
+
+**Decided, built.** Narrows D11 and D29.
+
+“I got snagged” (still the quiet link, D31) now takes three short screens:
+
+1. **What was the bait?** The snag screen thanks her for being honest and says her school, aquarium and treasure all stay. Below that are six optional quick taps (Stressed, Bored, With people, Drinking, Tired, Out of nowhere), any number of them, and the free note as before. *Save and keep swimming* records the snag.
+2. **Fresh streak, or keep going?** Shows her current streak and lets her choose: *Start fresh from today* (the big button) or *Keep my streak* (just log it). It says her quit date, milestones and seabed stay as they are. Leaving here only logs the snag. Skipped when the streak is already 0 (she quit today, or already started fresh today).
+3. **Slips happen. Tuna keep swimming.** Her best streak so far (“You’ve done it before. Ready for the next one?”), then *Breathe with the tuna · 2 min* or *Back to the tank*. Breathing starts a new hook, with its own line above the round, so a win afterwards adds a tuna like any other.
+
+- **Only the streak can reset.** The quit date, days since quitting, milestones, decorations, treasure, school, aquarium and pets never change (D11).
+- **The treasure shows three numbers once she has been snagged:** current streak, best streak, and days off the hook (days since quitting minus days with a snag). Until the first snag they would all equal the day count, so they're hidden.
+- **Worked out from the hooks,** not stored: `freshStart` and `reasons` on the slip's hook entry. Backups need nothing new, and older saves load with no streak history (the streak runs from the quit date). Snags from before the quit date don't count.
+- **The Logbook** shows the reasons and “Fresh streak from here” on the snag's row.
+- **No outside help pointers.** The app is made by a friend for a friend, so it doesn't suggest doctors or quitlines. The About text in Settings (the quitline number and the doctor line) is gone too: only the version line is left.
+- The Czech needs a native speaker's read (D32).
+
+*Why:* resetting everything after a slip invites “I’ve failed anyway” (D11), but a count that never moves can feel dishonest, and some people want a clean day 1. Letting her choose each time, while keeping her best streak and everything she has earned, keeps both. Tagging the bait turns a slip into something to learn from.
+
+*Code:* `streakOf` in `src/streak.ts`; the three screens and `breatheAgain` in `src/components/HookFlow.tsx`; `SLIP_REASONS`, `reasons` and `freshStart` in `src/storage.ts`; the numbers in the `Milestones` component in `src/components/Treasure.tsx`; the row in `src/components/Logbook.tsx`; tests in `src/streak.test.ts`.

@@ -1,6 +1,7 @@
-import { createContext, type ComponentChild } from 'preact';
+import { createContext } from 'preact';
 import { useContext } from 'preact/hooks';
 import type { Category, Lang, Rarity } from './cards';
+import type { SlipReason } from './storage';
 
 /** Czech has three plural forms: 1, 2–4, and 0/5+. */
 const csPlural = (n: number, one: string, few: string, many: string) =>
@@ -245,9 +246,29 @@ const en = {
   notYetBody: 'Draw another card and keep it busy.',
   drawAnother: 'Draw another card',
   snaggedTitle: 'Even the best tuna get snagged.',
-  snaggedBody: 'You wriggled free, and that counts. Your school stays. Your aquarium stays. Keep swimming.',
-  baitPrompt: 'What was the bait? (optional, only you see this)',
+  snaggedBody: 'Thanks for being honest. That takes guts. Your school, your aquarium and your treasure all stay.',
+  // Quick taps for what was going on (D57), above the free note.
+  reasonsPrompt: 'What was the bait?',
+  reasons: { stress: 'Stressed', bored: 'Bored', social: 'With people', drinking: 'Drinking', tired: 'Tired', nowhere: 'Out of nowhere' } as Record<SlipReason, string>,
+  baitPrompt: 'Anything else? (optional, only you see this)',
   saveAndSwim: 'Save and keep swimming',
+  // After a snag she chooses: a fresh streak, or just log it (D57).
+  freshTitle: 'Fresh streak, or keep going?',
+  freshBody: (n: number): string =>
+    `Your streak is at ${n === 1 ? '1 day' : `${n} days`}. Your call: start a fresh one from today, or just log the snag and keep it.`,
+  freshStart: 'Start fresh from today',
+  freshKeep: 'Keep my streak',
+  freshNote: 'Either way, your quit date, milestones and seabed stay exactly as they are.',
+  regroupTitle: 'Slips happen. Tuna keep swimming.',
+  regroupBest: (n: number): string =>
+    `Your best streak so far: ${n === 1 ? '1 day' : `${n} days`}. You’ve done it before. Ready for the next one?`,
+  regroupNoBest: 'Every tuna that ever crossed an ocean got snagged a few times on the way. Ready for the next stretch?',
+  breatheAfterSnag: 'Let that one sink. Let’s slow everything right down.',
+  freshStartLog: 'Fresh streak from here',
+  streakNow: 'Current streak',
+  streakBest: 'Best streak',
+  daysOffHook: 'Days off the hook',
+  daysUnit: (n: number): string => (n === 1 ? 'day' : 'days'),
   close: 'Close',
 
   caughtProgress: (n: number, total: number) => `${n} of ${total} caught`,
@@ -270,13 +291,6 @@ const en = {
   restored: 'Aquarium restored.',
   restoreFailed: "That file isn’t an Off the Hook backup.",
   showInstall: 'Show the home-screen guide',
-  about: 'About',
-  // The quitline number is passed in as a tappable link.
-  aboutBody: (quitline: ComponentChild): ComponentChild[] => [
-    'Off the Hook is a distraction tool, not medical advice. If you want more support with quitting, the Czech national quitline is free: ',
-    quitline,
-    '. Nicotine replacement is worth talking about with a pharmacist or doctor.',
-  ],
 
   installTitle: "Let’s get you a tank on your home screen",
   installWhy:
@@ -582,9 +596,27 @@ const cs: Strings = {
   notYetBody: 'Vytáhni další kartu a zaměstnej ho.',
   drawAnother: 'Vytáhnout další kartu',
   snaggedTitle: 'I ten nejlepší tuňák se občas zasekne.',
-  snaggedBody: 'Vykroutila ses a to se počítá. Hejno zůstává. Akvárium zůstává. Plav dál.',
-  baitPrompt: 'Co bylo návnadou? (nepovinné, vidíš to jen ty)',
+  snaggedBody: 'Díky, že to říkáš na rovinu. To chce odvahu. Hejno, akvárium i poklad zůstávají.',
+  reasonsPrompt: 'Co bylo návnadou?',
+  reasons: { stress: 'Stres', bored: 'Nuda', social: 'S lidmi', drinking: 'Alkohol', tired: 'Únava', nowhere: 'Z ničeho nic' },
+  baitPrompt: 'Ještě něco? (nepovinné, vidíš to jen ty)',
   saveAndSwim: 'Uložit a plavat dál',
+  freshTitle: 'Nová série, nebo plaveš dál?',
+  freshBody: (n) =>
+    `Tvoje série má ${n} ${csPlural(n, 'den', 'dny', 'dní')}. Je to na tobě: začni ode dneška novou, nebo zaseknutí jen zapiš a sérii si nech.`,
+  freshStart: 'Začít ode dneška znovu',
+  freshKeep: 'Nechat si sérii',
+  freshNote: 'Ať tak či tak, den, kdy jsi přestala, milníky i mořské dno zůstávají, jak jsou.',
+  regroupTitle: 'Zaseknutí se stávají. Tuňák plave dál.',
+  regroupBest: (n) =>
+    `Tvoje nejdelší série zatím: ${n} ${csPlural(n, 'den', 'dny', 'dní')}. Už jsi to jednou dala. Jdeme na další?`,
+  regroupNoBest: 'Každý tuňák, který kdy přeplaval oceán, se cestou párkrát zasekl. Jdeme na další úsek?',
+  breatheAfterSnag: 'Tenhle nech klesnout ke dnu. Pojď, všechno zpomalíme.',
+  freshStartLog: 'Odsud nová série',
+  streakNow: 'Aktuální série',
+  streakBest: 'Nejdelší série',
+  daysOffHook: 'Dny bez háčku',
+  daysUnit: (n) => csPlural(n, 'den', 'dny', 'dní'),
   close: 'Zavřít',
 
   caughtProgress: (n, total) => `Chyceno ${n} z ${total}`,
@@ -607,12 +639,6 @@ const cs: Strings = {
   restored: 'Akvárium obnoveno.',
   restoreFailed: 'Tenhle soubor není záloha Off the Hook.',
   showInstall: 'Zobrazit návod na plochu',
-  about: 'O aplikaci',
-  aboutBody: (quitline) => [
-    'Off the Hook je nástroj na rozptýlení, ne lékařská rada. Pokud chceš s odvykáním víc podpory, Národní linka pro odvykání je zdarma: ',
-    quitline,
-    '. O náhradní nikotinové terapii se vyplatí poradit v lékárně nebo s lékařem.',
-  ],
 
   installTitle: 'Pořiďme ti nádrž na plochu',
   installWhy:
