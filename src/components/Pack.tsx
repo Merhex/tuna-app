@@ -22,7 +22,7 @@ import {
 } from '../pack';
 import { Back, Crate } from './Icons';
 import { Haptic } from './Haptic';
-import { AnotherGame } from './AnotherGame';
+import { RoundIntro } from './RoundIntro';
 
 export type { PackScore };
 
@@ -53,7 +53,7 @@ const PREVIEW = { w: 46, h: 30, cell: 9 };
 
 /**
  * One round of Net Packing, full screen, in the craving flow: on "Not yet", or right away for a brutal
- * hook (D54). It waits for her first touch, so she can read how to play; that touch only starts it.
+ * hook (D54). It waits for her to tap Start, so she can read how to play first.
  * `onEnd` gets the score, or null if she left before placing a piece. `lead` and `another` add a line
  * above the how-to and a button for another game.
  */
@@ -80,8 +80,12 @@ export function PackGame({
   const game = useRef<Game | null>(null);
   const cell = useRef(30);
   const finger = useRef<Finger | null>(null);
-  const shownAt = useRef(performance.now());
   const ended = useRef(false);
+
+  const start = () => {
+    startedRef.current = true;
+    setStarted(true);
+  };
 
   const end = () => {
     if (ended.current || !game.current) return;
@@ -148,7 +152,7 @@ export function PackGame({
     let toastUntil = 0;
     const frame = (now: number) => {
       const g = game.current!;
-      // Nothing moves until her first touch.
+      // Nothing moves until she taps Start.
       if (startedRef.current) step(g, (now - last) / 1000);
       last = now;
       for (const e of g.events) {
@@ -201,7 +205,7 @@ export function PackGame({
     if (!f || f.id !== e.pointerId) return;
     finger.current = null;
     const g = game.current;
-    if (!g || f.starter) return;
+    if (!g) return;
     if (f.soft) softDrop(g, false);
     if (e.type === 'pointercancel') return;
     const now = performance.now();
@@ -222,11 +226,8 @@ export function PackGame({
     <div
       class="pack-pond"
       onPointerDown={(e) => {
-        // The back button and the links under how to play are buttons, with their own taps.
-        if (finger.current || (e.target as Element).closest('button')) return;
-        const starter = !startedRef.current;
-        // A double tap on the previous screen shouldn't start the round before she's read how to play.
-        if (starter && performance.now() - shownAt.current < 300) return;
+        // Nothing happens until she taps Start. The buttons (back, Start) have their own taps.
+        if (finger.current || !startedRef.current || (e.target as Element).closest('button')) return;
         const now = performance.now();
         finger.current = {
           id: e.pointerId,
@@ -237,20 +238,14 @@ export function PackGame({
           softY: 0,
           moved: false,
           soft: false,
-          starter,
           trail: [{ y: e.clientY, t: now }],
         };
         (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-        // Her first touch only starts the round: it doesn't also turn the piece.
-        if (starter) {
-          startedRef.current = true;
-          setStarted(true);
-        }
       }}
       onPointerMove={(e) => {
         const f = finger.current;
         const g = game.current;
-        if (!f || f.id !== e.pointerId || f.starter || !g) return;
+        if (!f || f.id !== e.pointerId || !g) return;
         const now = performance.now();
         f.trail.push({ y: e.clientY, t: now });
         while (f.trail.length > 2 && now - f.trail[0].t > 200) f.trail.shift();
@@ -293,12 +288,7 @@ export function PackGame({
         <p class="pack-toast" ref={toast} aria-live="polite">{t.packHauled}</p>
       </div>
       {!started && (
-        <div class="dodge-hint">
-          {lead && <p class="dodge-lead">{lead}</p>}
-          <h2>{t.packTitle}</h2>
-          <p>{t.packHowTo}</p>
-          <AnotherGame onPick={another} />
-        </div>
+        <RoundIntro lead={lead} title={t.packTitle} howTo={t.packHowTo} onStart={start} another={another} />
       )}
     </div>
   );
@@ -315,8 +305,6 @@ interface Finger {
   softY: number;
   moved: boolean;
   soft: boolean;
-  /** The touch that started the round, which does nothing else. */
-  starter: boolean;
   trail: { y: number; t: number }[];
 }
 

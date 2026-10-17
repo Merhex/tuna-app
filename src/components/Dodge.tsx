@@ -4,7 +4,7 @@ import { fx } from '../feedback';
 import { useT } from '../i18n';
 import { Back, FishHook } from './Icons';
 import { Haptic } from './Haptic';
-import { AnotherGame } from './AnotherGame';
+import { RoundIntro } from './RoundIntro';
 
 export type DodgeScore = Game['score'];
 
@@ -17,7 +17,7 @@ const TUNA_SCALE = 0.48;
 
 /**
  * One round of Dodge the hooks, full screen, in the craving flow: on "Not yet" (D50), or right away for a
- * brutal hook (D51, D54). It waits for her first touch, so she can read how to play. `onEnd` gets the score,
+ * brutal hook (D51, D54). It waits for her to tap Start, so she can read how to play. `onEnd` gets the score,
  * or null if she left before starting. `lead` and `another` add a line above the how-to and a button for
  * another game.
  */
@@ -42,8 +42,12 @@ export function DodgeGame({
   const hookCount = useRef<HTMLSpanElement>(null);
   const game = useRef<Game | null>(null);
   const finger = useRef<{ id: number; x: number; y: number } | null>(null);
-  const shownAt = useRef(performance.now());
   const ended = useRef(false);
+
+  const start = () => {
+    startedRef.current = true;
+    setStarted(true);
+  };
 
   const end = () => {
     if (ended.current || !game.current) return;
@@ -84,7 +88,7 @@ export function DodgeGame({
     let shown = { bubbles: -1, dodged: -1 };
     const frame = (now: number) => {
       const g = game.current!;
-      // Nothing moves until her first touch.
+      // Nothing moves until she taps Start.
       if (startedRef.current) step(g, (now - last) / 1000);
       last = now;
       for (const e of g.events) {
@@ -122,15 +126,10 @@ export function DodgeGame({
         ref={canvas}
         class="dodge-canvas"
         onPointerDown={(e) => {
-          if (finger.current) return;
-          // A double tap on the previous screen shouldn't start the round before she's read how to play.
-          if (!startedRef.current && performance.now() - shownAt.current < 300) return;
+          // Nothing happens until she taps Start.
+          if (finger.current || !startedRef.current) return;
           finger.current = { id: e.pointerId, x: e.clientX, y: e.clientY };
           canvas.current?.setPointerCapture(e.pointerId);
-          if (!startedRef.current) {
-            startedRef.current = true;
-            setStarted(true);
-          }
         }}
         onPointerMove={(e) => {
           const f = finger.current;
@@ -149,12 +148,7 @@ export function DodgeGame({
         <span class="dodge-count"><FishHook size={18} stroke={6} /><span ref={hookCount}>0</span></span>
       </header>
       {!started && (
-        <div class="dodge-hint">
-          {lead && <p class="dodge-lead">{lead}</p>}
-          <h2>{t.dodgeTitle}</h2>
-          <p>{t.dodgeHowTo}</p>
-          <AnotherGame onPick={another} />
-        </div>
+        <RoundIntro lead={lead} title={t.dodgeTitle} howTo={t.dodgeHowTo} onStart={start} another={another} />
       )}
     </div>
   );

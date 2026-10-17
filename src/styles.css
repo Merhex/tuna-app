@@ -1330,7 +1330,7 @@ button:has(> .haptic-switch) { position: relative; }
 .dodge-bubble { width: 15px; height: 15px; border-radius: 50%; border: 2px solid var(--ink); background: rgba(94, 196, 240, 0.3); }
 /* The backdrop's rising bubbles look too much like the ones to catch. */
 .dodging .bg-bubbles { display: none; }
-/* How to play, until her first touch starts the round. Touches pass through to the game. */
+/* How to play, until she taps Start (RoundIntro). Only its buttons take taps. */
 .dodge-hint {
   position: absolute;
   top: 24%;
@@ -1456,8 +1456,8 @@ button:has(> .haptic-switch) { position: relative; }
 /* Until she taps Start: the stage waits, dimmed, under how it works. */
 .breathe-center.waiting { opacity: 0.35; }
 .breathe-center.waiting :is(.breathe-word, .breathe-count, .breathe-hint) { visibility: hidden; }
-.breathe-intro button { pointer-events: auto; }
-.breathe-intro .primary { align-self: center; min-height: 46px; margin-top: 4px; }
+.round-intro button { pointer-events: auto; }
+.round-intro .primary { align-self: center; min-height: 46px; margin-top: 4px; }
 /* "Give me another game", under how to play when the round was picked from the rating (D54). The card
    lets taps through to the round, but this button takes its own. */
 .another-game { pointer-events: auto; align-self: center; min-height: 44px; margin-top: 6px; }

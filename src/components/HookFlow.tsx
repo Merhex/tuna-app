@@ -146,7 +146,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   }
 
   function endRound(r: LastRound | null) {
-    // Leaving before her first touch goes back without counting a round: to the rating if she came
+    // Leaving before she starts goes back without counting a round: to the rating if she came
     // straight from it, so she can change it, otherwise to "Not yet".
     if (!r && fromRating) {
       // Straight after a snag (D57), back to its last screen.

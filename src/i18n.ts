@@ -337,7 +337,6 @@ const en = {
   breatheHowTo:
     'Two minutes of slow breathing with the tuna: in as the bubble grows, out as it shrinks. Just watch, or keep a finger down while you breathe in and lift it to breathe out.',
   breatheBrutal: (n: number): string => `${n === 8 ? 'An' : 'A'} ${n}? Let’s slow this one right down.`,
-  breatheStart: 'Start',
   breatheEnd: 'That’s enough',
   breatheReady: 'Ready?',
   breatheIn: 'Breathe in',
@@ -351,6 +350,8 @@ const en = {
   // Under how to play, when the round was picked for her straight from the rating. Tapping it again
   // keeps cycling through the rounds.
   anotherGame: 'Give me another game',
+  // The button on every round's how-to card that begins it.
+  roundStart: 'Start',
   bubblesCaught: (n: number): string => (n === 1 ? 'bubble caught' : 'bubbles caught'),
   continueWarn: 'Your collection could get lost if the browser clears its data.',
   // Net Packing: a falling-block puzzle, packing fish into crates. A brutal hook can start with it,
@@ -702,7 +703,6 @@ const cs: Strings = {
   breatheHowTo:
     'Dvě minuty pomalého dýchání s tuňákem: nádech, když bublina roste, výdech, když se zmenšuje. Můžeš se jen dívat, nebo při nádechu drž prst na displeji a při výdechu ho zvedni.',
   breatheBrutal: (n) => `${n}? Tenhle pěkně zpomalíme.`,
-  breatheStart: 'Začít',
   breatheEnd: 'Stačilo',
   breatheReady: 'Připravená?',
   breatheIn: 'Nádech',
@@ -714,6 +714,7 @@ const cs: Strings = {
   breathsOnBeat: (n) => `${n} do rytmu`,
   breatheLog: (n) => `Bubliny · ${n} ${csPlural(n, 'nádech', 'nádechy', 'nádechů')}`,
   anotherGame: 'Dej mi jinou hru',
+  roundStart: 'Začít',
   bubblesCaught: (n) => csPlural(n, 'chycená bublina', 'chycené bubliny', 'chycených bublin'),
   continueWarn: 'Pokud prohlížeč smaže data, můžeš přijít o sbírku.',
   packOffer: 'Naskládej úlovek · 2½ min',

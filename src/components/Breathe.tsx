@@ -16,7 +16,7 @@ import { fx } from '../feedback';
 import { pick, useT } from '../i18n';
 import { Back } from './Icons';
 import { Haptic } from './Haptic';
-import { AnotherGame } from './AnotherGame';
+import { RoundIntro } from './RoundIntro';
 import { Tuna } from './Tuna';
 
 /** The stage is drawn in a 340 × 340 box: the track around the edge, the bubble and tuna in the middle. */
@@ -67,8 +67,12 @@ export function BreatheRound({
   const tuna = useRef<HTMLDivElement>(null);
   const session = useRef<Session>(createSession());
   const finger = useRef<number | null>(null);
-  const shownAt = useRef(performance.now());
   const ended = useRef(false);
+
+  const start = () => {
+    startedRef.current = true;
+    setStarted(true);
+  };
 
   const end = () => {
     if (ended.current) return;
@@ -192,26 +196,7 @@ export function BreatheRound({
         <p class="breathe-hint muted small" ref={hint}>{t.breatheTouchHint}</p>
       </div>
       {!started && (
-        <div class="dodge-hint breathe-intro">
-          {lead && <p class="dodge-lead">{lead}</p>}
-          <h2>{t.breatheTitle}</h2>
-          <p>{t.breatheHowTo}</p>
-          <button
-            class="primary"
-            onClick={() => {
-              // A double tap on the previous screen shouldn't start the round before she's read this.
-              if (performance.now() - shownAt.current < 300) return;
-              // The tap also lets iPhone play the round's sounds.
-              fx.tap();
-              startedRef.current = true;
-              setStarted(true);
-            }}
-          >
-            {t.breatheStart}
-            <Haptic />
-          </button>
-          <AnotherGame onPick={another} />
-        </div>
+        <RoundIntro lead={lead} title={t.breatheTitle} howTo={t.breatheHowTo} onStart={start} another={another} />
       )}
     </div>
   );
