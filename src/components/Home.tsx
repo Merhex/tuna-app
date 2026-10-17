@@ -11,6 +11,7 @@ import { jokeDurationMs, jokeKind, makeBag, nextStreak, PET_SETTINGS, type JokeK
 import { shownTuna } from '../school3d';
 import { coralLook } from '../seabed';
 import type { Tank } from '../tank/scene';
+import { treasureFill } from './Chest';
 import { Back, Bowl, ChestIcon, Fish, FishHook, Gear, Heart, LogbookIcon } from './Icons';
 import { MiniTuna, Tuna, type Mood } from './Tuna';
 import { Haptic } from './Haptic';
@@ -21,7 +22,8 @@ const MAX_SWIMMERS = 36;
 /**
  * The home screen: one big button (D4) in front of her school. With 3D (D55) that's the tank: her
  * tuna swimming, her decorations on the sand and the big tuna in 3D, and "Visit my school" under the
- * button pulls the camera back to the whole tank. On a phone without 3D it's the drawn seabed and
+ * button pulls the camera back to the whole tank, where tapping the treasure chest in the middle opens
+ * the treasure (D56; see TankLayer). On a phone without 3D it's the drawn seabed and
  * school, and the drawn tuna. While the tank loads it's the drawing too, unless the tank worked here
  * before (`expectTank`): then it's just the water and the button, so it doesn't switch from 2D to 3D.
  */
@@ -31,12 +33,20 @@ export function Home({
   dismissWashedAshore,
   tank,
   expectTank,
+  view,
+  setView,
+  surfacing,
 }: {
   go: (s: Screen) => void;
   washedAshore: boolean;
   dismissWashedAshore: () => void;
   tank: Tank | null;
   expectTank: boolean;
+  /** Close up, or pulled back to the whole tank ("Visit my school"); kept by the app (see App). */
+  view: 'home' | 'wide';
+  setView: (v: 'home' | 'wide') => void;
+  /** Back from the treasure (D56): the buttons fade in as the camera swims up from the chest. */
+  surfacing: boolean;
 }) {
   const t = useT();
   const { data, update } = useApp();
@@ -47,7 +57,6 @@ export function Home({
   const newMilestone = !!data.quitDate && latestMilestoneDay(data.quitDate) > data.settings.milestoneSeen;
   const sparkling = useSeabed();
   const calm = data.settings.reducedMotion || matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const [view, setView] = useState<'home' | 'wide'>('home');
   // Once the tank has faded in over the drawn seabed, the drawing (and the backdrop behind it) stops.
   const [covered, setCovered] = useState(!!tank);
   // The tank is on its way and worked here before: no drawn seabed, school or tuna in the meantime.
@@ -96,6 +105,9 @@ export function Home({
   useEffect(() => tank?.setDecorations(earned, coralLook(data.seabed.coralMonths)), [tank, earned.join(), data.seabed.coralMonths]);
   useEffect(() => tank?.sparkle(sparkling), [tank, sparkling.join()]);
   useEffect(() => tank?.go(view), [tank, view]);
+  // The chest in the middle (D56): the more she has saved, the more coins have spilled onto the sand.
+  const fill = treasureFill(data);
+  useEffect(() => tank?.setChestFill(fill), [tank, Math.round(fill * 100)]);
 
   // Where things are on screen: the big tuna goes exactly where the drawing is, and the wide view
   // fits between the top bar and the card at the bottom. Measured again whenever the layout moves.
@@ -142,7 +154,7 @@ export function Home({
   };
 
   return (
-    <main class={`screen home${view === 'wide' ? ' wide' : ''}`}>
+    <main class={`screen home${view === 'wide' ? ' wide' : ''}${surfacing ? ' surfacing' : ''}`}>
       {drawing && (
         <>
           <div class="floor" aria-hidden="true">
@@ -257,6 +269,7 @@ export function Home({
             {school > shownTuna(school) && <small class="muted">{t.school3dShown(shownTuna(school))}</small>}
           </p>
           <p class="muted small">{calm ? t.school3dCalm : t.school3dDrag}</p>
+          <p class="muted small">{t.school3dChest}</p>
         </section>
       )}
     </main>

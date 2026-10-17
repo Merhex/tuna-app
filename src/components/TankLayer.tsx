@@ -27,18 +27,30 @@ function rememberTank(worked: boolean) {
 
 /**
  * The canvas for the home screen's 3D tank (D55), behind every screen and shown only on the home
- * screen. three.js and the tank load just after the app starts, so the home screen and its button
+ * screen and the treasure screen (D56). three.js and the tank load just after the app starts, so the home screen and its button
  * never wait for them; until then the home screen shows the drawn seabed, or just the water if the
  * tank worked here before (see tankWorkedBefore). A phone without 3D keeps the drawn seabed.
  * The tank is made once and kept, so going back home is instant. `onReady` gets it once its first
  * frame is drawn, and null if it can't be made or the phone takes the 3D away.
  *
- * In the wide view ("Visit my school"), dragging on the canvas looks round the tank.
+ * In the wide view ("Visit my school"), dragging on the canvas looks round the tank, and tapping the
+ * chest in the middle opens the treasure (`onChest`).
  */
-export function TankLayer({ active, calm, onReady }: { active: boolean; calm: boolean; onReady: (tank: Tank | null) => void }) {
+export function TankLayer({
+  active,
+  calm,
+  onReady,
+  onChest,
+}: {
+  active: boolean;
+  calm: boolean;
+  onReady: (tank: Tank | null) => void;
+  onChest: () => void;
+}) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const tank = useRef<Tank | null>(null);
-  const grab = useRef<{ id: number; x: number; y: number } | null>(null);
+  // Where the finger is, and where and when it went down, to tell a tap from a drag.
+  const grab = useRef<{ id: number; x: number; y: number; startX: number; startY: number; at: number } | null>(null);
   const [shown, setShown] = useState(false);
   // It fades in the first time only; after that it's there as soon as the home screen is.
   const [settled, setSettled] = useState(false);
@@ -104,13 +116,21 @@ export function TankLayer({ active, calm, onReady }: { active: boolean; calm: bo
     tank.current?.release();
   };
 
+  /** A quick tap that barely moved, on the chest, opens the treasure. */
+  const tapped = (e: PointerEvent) => {
+    const g = grab.current;
+    if (!g || g.id !== e.pointerId) return;
+    const still = Math.hypot(e.clientX - g.startX, e.clientY - g.startY) < 10;
+    if (still && performance.now() - g.at < 500 && tank.current?.chestAt(e.clientX, e.clientY)) onChest();
+  };
+
   return (
     <canvas
       ref={canvas}
       class={`tank${active && shown ? ' on' : ''}${settled ? ' settled' : ''}`}
       aria-hidden="true"
       onPointerDown={(e) => {
-        grab.current = { id: e.pointerId, x: e.clientX, y: e.clientY };
+        grab.current = { id: e.pointerId, x: e.clientX, y: e.clientY, startX: e.clientX, startY: e.clientY, at: performance.now() };
         (e.currentTarget as Element).setPointerCapture(e.pointerId);
       }}
       onPointerMove={(e) => {
@@ -120,7 +140,10 @@ export function TankLayer({ active, calm, onReady }: { active: boolean; calm: bo
         g.x = e.clientX;
         g.y = e.clientY;
       }}
-      onPointerUp={endGrab}
+      onPointerUp={(e) => {
+        tapped(e);
+        endGrab();
+      }}
       onPointerCancel={endGrab}
     />
   );

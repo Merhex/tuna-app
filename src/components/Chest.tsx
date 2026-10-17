@@ -1,3 +1,6 @@
+import type { AppData } from '../storage';
+import { CZK_PER, savedAt } from '../treasure';
+
 /**
  * A treasure chest on the seabed. `fill` (0–1) sets how high the gold is piled; closed when not counting.
  */
@@ -89,3 +92,7 @@ export function Chest({ fill, open, size = 240 }: { fill: number; open: boolean;
 
 /** How full the chest looks for an amount (in Kč): grows quickly at first, then slowly, full around 50 000 Kč. */
 export const chestFill = (amountCzk: number) => Math.min(1, Math.log10(1 + amountCzk) / Math.log10(50_000));
+
+/** How full her chest looks now: 0 until she counts the money. */
+export const treasureFill = (data: AppData, now = Date.now()) =>
+  data.treasure && data.quitDate ? chestFill(savedAt(data.treasure, data.quitDate, now) * CZK_PER[data.settings.currency]) : 0;

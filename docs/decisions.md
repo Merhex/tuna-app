@@ -2,7 +2,7 @@
 
 Every product and technical decision, numbered. Code comments refer to these numbers.
 
-**Last number used: D55.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
+**Last number used: D56.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
 
 Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an answer), **Superseded**.
 
@@ -73,6 +73,7 @@ Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an
 - **D41 · Milestones in the Sunken Treasure.** Decided, built. See below.
 - **D43 · Seabed decorations at milestones.** Decided, built. See below.
 - **D49 · Count every pet of the tuna, shown in the Logbook.** Decided, built. See below.
+- **D56 · The Sunken Treasure chest sits in the middle of the tank.** Decided, built. See below.
 
 ## Technical
 
@@ -369,7 +370,7 @@ The home screen's backdrop is a 3D seabed: her school swimming behind the button
 - **Her decorations, always on** (D43): the ones she has earned, with no switch to hide them. A new one still sparkles once: it pops up, a glow comes and goes and five stars twinkle. The coral still grows and changes colour after a year. All of them sit outside the band the school swims in, so no tuna swims through one.
 - **The tuna she pets is 3D too,** in the drawing's colours, with its three home-screen faces: happy, eyes closed and blushing while she pets it, and the wide-eyed stare with a zigzag mouth for a dark joke (D45). It bobs like the drawing did, wags its tail and squishes a little when tapped. The drawing's button stays where it was, invisible, so tapping, the hearts, the jokes and the pet count (D49) work as before. In the wide view it's the big tuna at the front. Other screens (the intro, the win screen, postcards) keep the drawn tuna.
 - **The button never waits for it.** three.js (about 150 kB gzipped, saved for offline with the rest) loads as soon as the home screen shows. Once the tank has worked on a phone, the app remembers it (on the phone, not in her data or backups), and from then on the home screen opens with just the water and the button, and the tank fades in over the water: no switch from 2D to 3D on every launch. The first time, and if the tank takes longer than 4 seconds, the drawn seabed and school show until it's ready; then the tank fades in over them, with the 3D tuna exactly where the drawing was. A phone without 3D keeps the drawn home screen, without “Visit my school”, and forgets it ever had 3D. So does a phone that takes the 3D away (low memory, a long time in the background), until it gives it back.
-- **Made once, kept.** Leaving the home screen pauses it, and coming back is instant. It only draws while the home screen shows and the app is open.
+- **Made once, kept.** Leaving the home screen pauses it, and coming back is instant. It only draws while the home screen shows (or the treasure screen, since D56) and the app is open.
 - **The wide view** has “Swim back” at the top and a card with the count and “Drag to look around”. Dragging turns the camera round the tank and tilts it; left alone, it drifts slowly round. It always fits the whole tank, the big tuna included, between the top bar and the card, on any phone.
 - **If the phone struggles** (under 40 frames a second for two seconds), it draws fewer pixels.
 - **“Less motion”:** nothing swims or sparkles, the tuna doesn't bob, and the camera jumps to the wide view instead of gliding.
@@ -378,3 +379,22 @@ The home screen's backdrop is a 3D seabed: her school swimming behind the button
 *Why:* the count under the button was the only sign of the school. Seeing roughly as many tuna as hooks beaten turns the number into something to look at. Battery and older phones were the worries, so the tank only draws on the home screen and lowers its resolution when it has to.
 
 *Code:* the rules (swimming, the camera, where the decorations and the big tuna go) in `src/school3d.ts` (`SCHOOL3D_SETTINGS`); the scene in `src/tank/` (`scene.ts`; the school in `tuna.ts`, the big tuna in `mascot.ts`, the decorations in `decorations.ts`, sparkles in `sparkle.ts`, water, sand, kelp and light in `world.ts`); the canvas in `src/components/TankLayer.tsx`; the screen in `src/components/Home.tsx`; earning decorations in `useSeabed` (`src/components/Seabed.tsx`). Tests in `src/school3d.test.ts`.
+
+## D56 · The Sunken Treasure chest sits in the middle of the tank
+
+**Decided, built.** Extends D38, D41 and D55.
+
+The middle of the tank, inside the ring her school swims round, was empty. A small sunken treasure chest sits there now, in the drawing's wood, gold bands and lock, half sunk in the sand. The treasure screen opens onto it in 3D instead of the drawn chest.
+
+- **Tapping Treasure on the home screen swims the camera down to the chest** (1.6 seconds), under the big tuna and through the school. The lid swings open as the camera arrives, and the page (the money, what it would buy, the milestones) comes in under it, unchanged. The chest sits where the drawing was, at its size, and scrolls away with the page. Back swims the camera up to where she came from.
+- **In “Visit my school” the chest glows softly, and tapping it opens the treasure the same way.** The wide view's card says so. Back goes back to the wide view. The tap area is generous, because from up there the chest is small.
+- **It shows the treasure like the drawing did.** Open while she's counting, with a heap of gold that rises above the rim as the money grows (the drawing's `chestFill`), coins and two gems on top, a glow and three twinkles. Coins spill onto the sand round it, one more for every sixth of the way to full, and stay there when the lid is shut, so the wide view shows them too. Shut, with no gold, before she sets the money up (the milestones still show). Shut while she edits the amount; saving opens it again.
+- **The camera looks from low down,** just over the sand and a little from the side. That keeps it under the school: with 200 tuna, none ever swims in front of the chest (a test checks half an hour of swimming). It means the school is mostly out of the picture on the treasure screen, apart from glimpses at the top.
+- **The text stays easy to read.** Under the chest the water darkens behind the page, so the grey lines don't sit on lit sand.
+- **It never switches mid-visit.** The 3D chest is used only if the tank was ready when the treasure opened; otherwise it's the drawing, as before. A phone without 3D, or one that takes the 3D away, keeps the drawing.
+- **“Less motion”:** the camera jumps straight to the chest, the lid is open at once and the page doesn't fade in.
+- The Czech needs a native speaker's read (D32).
+
+*Why:* the treasure and the tank were two separate places. Putting the chest in the middle of her school makes the money part of the same world as her tuna and decorations, and swimming down to it makes opening the treasure feel like going somewhere.
+
+*Code:* the rules (the chest's size, where it sits, the chest view and fitting it to the screen) in `src/school3d.ts` (`CHEST`, `CHEST_SLOT`, `CHEST_VIEW`, `chestView`, `chestGlideSeconds` in `SCHOOL3D_SETTINGS`); the model in `src/tank/chest.ts`; the camera, lid and tap in `src/tank/scene.ts`; the tap on the canvas in `src/components/TankLayer.tsx`; the slot and the page coming in in `src/components/Treasure.tsx` (`TreasureChest`); `treasureFill` in `src/components/Chest.tsx`. The home screen's view is kept in `src/app.tsx`, so Back can return to the wide view. Tests in `src/school3d.test.ts`.

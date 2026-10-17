@@ -22,7 +22,7 @@ import {
   SphereGeometry,
   type Scene,
 } from 'three';
-import { seeded } from '../school3d';
+import { sandAt, seeded } from '../school3d';
 import { Kit, paint } from './kit';
 
 /** True for an angle (round the tank, 0 along +x) within `spread` radians of straight towards the camera's home spot (+z). */
@@ -82,10 +82,9 @@ export class World {
     for (let i = 0; i < sp.count; i++) {
       const x = sp.getX(i);
       const z = sp.getZ(i);
-      const dunes = 0.12 * Math.sin(x * 0.55 + 1.3) * Math.cos(z * 0.45) + 0.06 * Math.sin(x * 1.7 + z * 1.1);
       // Rises gently far away, so the edge of the world is never seen.
       const rim = Math.max(0, Math.hypot(x, z) - 9) * 0.08;
-      sp.setY(i, dunes + rim * rim);
+      sp.setY(i, sandAt(x, z) + rim * rim);
     }
     sandGeo.computeVertexNormals();
     const sandMat = kit.toon('#3d6f86');

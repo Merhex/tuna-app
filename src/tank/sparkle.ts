@@ -101,7 +101,7 @@ export class Sparkles {
   }
 }
 
-function texture(draw: (ctx: CanvasRenderingContext2D) => void) {
+export function texture(draw: (ctx: CanvasRenderingContext2D) => void) {
   const canvas = document.createElement('canvas');
   canvas.width = canvas.height = 64;
   draw(canvas.getContext('2d')!);
@@ -109,7 +109,7 @@ function texture(draw: (ctx: CanvasRenderingContext2D) => void) {
 }
 
 /** A four-pointed star, like the drawn sparkles. */
-function drawStar(ctx: CanvasRenderingContext2D) {
+export function drawStar(ctx: CanvasRenderingContext2D) {
   ctx.fillStyle = '#fff7d6';
   ctx.beginPath();
   const pts = [[0, -30], [6, -6], [30, 0], [6, 6], [0, 30], [-6, 6], [-30, 0], [-6, -6]];
@@ -119,7 +119,7 @@ function drawStar(ctx: CanvasRenderingContext2D) {
 }
 
 /** A soft warm glow. */
-function drawGlow(ctx: CanvasRenderingContext2D) {
+export function drawGlow(ctx: CanvasRenderingContext2D) {
   const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
   g.addColorStop(0, 'rgba(255, 240, 190, 0.85)');
   g.addColorStop(0.5, 'rgba(255, 220, 150, 0.3)');

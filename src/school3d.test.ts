@@ -1,9 +1,14 @@
-import { PerspectiveCamera, Vector3 } from 'three';
+import { Mesh, PerspectiveCamera, Vector3 } from 'three';
 import { describe, expect, it } from 'vitest';
 import { MILESTONES } from './milestones';
 import {
   between,
   cameraAt,
+  CHEST,
+  CHEST_SLOT,
+  chestMiddle,
+  chestSpan,
+  chestView,
   ease,
   fovFor,
   HOME_VIEW,
@@ -17,7 +22,9 @@ import {
   swimPose,
   WIDE_VIEW,
 } from './school3d';
+import { Chest } from './tank/chest';
 import { isBuilt3D } from './tank/decorations';
+import { Kit } from './tank/kit';
 import { tunaGeometry } from './tank/tuna';
 
 describe('how many tuna swim', () => {
@@ -165,5 +172,85 @@ describe('the big tuna', () => {
   it('stays in front of the school, so no tuna swims through it', () => {
     const spot = mascotSpot({ x: 118, y: 160, width: 130, height: 78 }, screen, fov);
     expect(Math.hypot(spot.x, spot.z) - spot.length / 2).toBeGreaterThan(SWIM_BAND.outer);
+  });
+});
+
+describe('the treasure chest', () => {
+  const screen = { width: 390, height: 844 };
+  const fov = fovFor(screen.width / screen.height);
+  const slot = { y: 64, width: 240, height: 180 };
+  const cameraFor = (v: ReturnType<typeof chestView>) => {
+    const cam = new PerspectiveCamera(fov, screen.width / screen.height, 0.1, 200);
+    const c = cameraAt(v);
+    cam.position.set(c.x, c.y, c.z);
+    cam.lookAt(0, v.targetY, 0);
+    cam.setViewOffset(screen.width, screen.height, 0, v.shift, screen.width, screen.height);
+    cam.updateMatrixWorld();
+    return cam;
+  };
+  const toScreen = (p: Vector3, cam: PerspectiveCamera) => {
+    const q = p.clone().project(cam);
+    return { x: ((q.x + 1) / 2) * screen.width, y: ((1 - q.y) / 2) * screen.height };
+  };
+
+  it('sits in the middle, where no tuna swims, even open and full', () => {
+    const chest = new Chest(new Kit());
+    chest.setFill(1);
+    chest.jump(true);
+    chest.object.updateMatrixWorld(true);
+    const p = new Vector3();
+    let inTheWay = 0;
+    chest.object.traverse((o) => {
+      if (!(o instanceof Mesh)) return;
+      const pos = o.geometry.getAttribute('position');
+      for (let i = 0; i < pos.count; i++) {
+        p.fromBufferAttribute(pos, i).applyMatrix4(o.matrixWorld);
+        if (Math.hypot(p.x, p.z) >= SWIM_BAND.inner && p.y >= SWIM_BAND.low) inTheWay++;
+      }
+    });
+    expect(inTheWay).toBe(0);
+  });
+
+  it('sits in its slot on the treasure screen, as big as the drawing', () => {
+    const v = chestView(slot, screen, fov);
+    const cam = cameraFor(v);
+    const middle = toScreen(new Vector3(0, chestMiddle(), 0), cam);
+    expect(middle.x).toBeCloseTo(screen.width / 2, 3);
+    expect(middle.y).toBeCloseTo(slot.y + slot.height * CHEST_SLOT.middle, 3);
+    // Its width as the camera sees it spans the same part of the slot as the drawn chest.
+    const right = new Vector3().setFromMatrixColumn(cam.matrixWorld, 0).multiplyScalar(chestSpan() / 2);
+    const edge = toScreen(new Vector3(0, chestMiddle(), 0).add(right), cam);
+    expect(2 * (edge.x - middle.x)).toBeCloseTo(slot.width * CHEST_SLOT.fill, 0);
+  });
+
+  it('scrolls with the page, until it is off the top', () => {
+    const top = chestView(slot, screen, fov);
+    expect(chestView({ ...slot, y: slot.y - 100 }, screen, fov).shift - top.shift).toBeCloseTo(100);
+    expect(chestView({ ...slot, y: -5000 }, screen, fov)).toEqual(chestView({ ...slot, y: -2000 }, screen, fov));
+  });
+
+  it('looks from under the school, so no tuna swims in front of it', () => {
+    const v = chestView(slot, screen, fov);
+    const cam = cameraFor(v);
+    // The open chest on screen: as wide as it fills the slot, from the sand to the top of the lid.
+    const middle = chestMiddle();
+    const top = toScreen(new Vector3(0, middle + CHEST.middle, 0), cam).y;
+    const bottom = toScreen(new Vector3(0, middle - CHEST.middle, 0), cam).y;
+    const half = (slot.width * CHEST_SLOT.fill) / 2;
+    const lanes = makeLanes(SCHOOL3D_SETTINGS.maxTuna);
+    const p = new Vector3();
+    let blocked = 0;
+    for (let t = 0; t < 900; t += 1.5) {
+      for (const lane of lanes) {
+        const pose = swimPose(lane, t);
+        p.set(pose.x, pose.y, pose.z);
+        // Only tuna between the camera and the chest.
+        const ahead = -p.clone().applyMatrix4(cam.matrixWorldInverse).z;
+        if (ahead < cam.near || p.distanceTo(cam.position) > v.distance) continue;
+        const s = toScreen(p, cam);
+        if (Math.abs(s.x - screen.width / 2) < half && s.y > top && s.y < bottom) blocked++;
+      }
+    }
+    expect(blocked).toBe(0);
   });
 });

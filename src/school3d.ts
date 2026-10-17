@@ -1,10 +1,11 @@
 /**
  * The home screen's 3D tank (D55): one swimming tuna for every hook she has beaten, her milestone
- * decorations (D43) on the sand, and the tuna she pets in front. "Visit my school" pulls the camera
- * back to show the whole place.
+ * decorations (D43) on the sand, the tuna she pets in front, and the treasure chest in the middle
+ * (D56). "Visit my school" pulls the camera back to show the whole place; the treasure screen swims
+ * it down to the chest.
  *
  * Only the rules live here: how many tuna, where they swim, where the camera sits, where each
- * decoration goes and where the big tuna is. Drawing is in src/tank/ (three.js, loaded after the
+ * decoration goes, where the big tuna is and how the chest fits the treasure screen. Drawing is in src/tank/ (three.js, loaded after the
  * home screen shows), the canvas in components/TankLayer.tsx and the screen in components/Home.tsx.
  * Distances are in scene units: a tuna of the school is about 0.7 long, and the sand is the plane
  * y = 0 with the middle of the tank at x = z = 0.
@@ -17,6 +18,8 @@ export const SCHOOL3D_SETTINGS = {
   groupSize: 8,
   /** Seconds the camera takes to pull back, or to swim back in. */
   glideSeconds: 1.8,
+  /** Seconds the camera takes to swim down to the treasure chest (D56), or back up from it. */
+  chestGlideSeconds: 1.6,
   /** How wide the view is across the screen, in degrees. A tall phone gets a taller view to match. */
   sideways: 46,
   /** The view is never shorter or taller than this, in degrees. */
@@ -261,6 +264,58 @@ export function fovFor(aspect: number) {
   const half = (sideways / 2) * (Math.PI / 180);
   const v = (2 * Math.atan(Math.tan(half) / Math.max(aspect, 0.1)) * 180) / Math.PI;
   return Math.min(fovMax, Math.max(fovMin, v));
+}
+
+/** How high the sand is at (x, z), near the middle: low dunes (the world raises it further out, past the rocks). */
+export const sandAt = (x: number, z: number) =>
+  0.12 * Math.sin(x * 0.55 + 1.3) * Math.cos(z * 0.45) + 0.06 * Math.sin(x * 1.7 + z * 1.1);
+
+/**
+ * The sunken treasure chest (D56), in the middle of the tank, inside the ring the school swims round.
+ * Its body's size (across, front to back, and up to the lid), how far the lid tips back when it opens
+ * (radians) and how long that takes (seconds), how far it's sunk into the sand, and the height of its
+ * middle when open, where the chest view looks.
+ */
+export const CHEST = {
+  width: 0.8,
+  depth: 0.48,
+  height: 0.38,
+  open: 1.75,
+  openSeconds: 0.9,
+  closeSeconds: 0.45,
+  sunk: 0.05,
+  middle: 0.44,
+};
+
+/**
+ * How the chest sits in its slot on the treasure screen, like the drawing (components/Chest.tsx): how
+ * much of the slot's width it spans, and where its middle is, from the top, as a fraction of the slot's height.
+ */
+export const CHEST_SLOT = { fill: 0.62, middle: 0.55 };
+
+/**
+ * The treasure screen's view of the chest: low, just over the sand and under the school (so no tuna
+ * swims through the picture), a little from the side, so it looks solid. How far back it is and its
+ * shift depend on the chest's slot on the screen (see chestView).
+ */
+export const CHEST_VIEW: View = { targetY: 0, distance: 2.8, elevation: 0.12, yaw: 0.3, shift: 0 };
+
+/** The chest's width as the chest view sees it, turned a little. */
+export const chestSpan = () => CHEST.width * Math.cos(CHEST_VIEW.yaw) + CHEST.depth * Math.sin(CHEST_VIEW.yaw);
+
+/** Where the chest's middle is, open: what the chest view looks at. */
+export const chestMiddle = () => sandAt(0, 0) - CHEST.sunk + CHEST.middle;
+
+/**
+ * The chest view that puts the chest in its slot on the treasure screen (its box in screen pixels):
+ * close enough that the chest spans the slot like the drawing does, and shifted so the chest sits
+ * where the drawing would. It follows the slot as the page scrolls, until the slot is off the top.
+ */
+export function chestView(box: { y: number; width: number; height: number }, screen: { width: number; height: number }, fov: number): View {
+  const tanV = Math.tan((fov * Math.PI) / 360);
+  const distance = (chestSpan() * screen.height) / (2 * tanV * CHEST_SLOT.fill * Math.max(1, box.width));
+  const middle = Math.max(box.y + box.height * CHEST_SLOT.middle, -box.height);
+  return { ...CHEST_VIEW, targetY: chestMiddle(), distance, shift: screen.height / 2 - middle };
 }
 
 /**

@@ -1448,3 +1448,30 @@ button:has(> .haptic-switch) { position: relative; }
 .home:not(.wide) .school-card { opacity: 0; transform: scale(0.94); pointer-events: none; }
 .school-card-count { font-family: var(--display); font-weight: 700; font-size: 1.1rem; display: flex; flex-direction: column; }
 .school-card-count small { font-family: var(--sans); font-weight: 600; font-size: 0.82rem; }
+
+/* ---------- The treasure chest in the tank (D56) ---------- */
+/* Where the 3D chest goes: the tank fits the chest into this space, which keeps the drawing's place. */
+.chest-slot { flex: none; max-width: 100%; }
+.treasure-form .chest-slot { align-self: center; }
+/* Under the chest the water darkens behind the page, so the text stays easy to read over the lit sand.
+   The screen is its own layer (z-index), so the shade sits above the tank but behind the text. */
+.treasure.in-3d { z-index: 0; }
+.treasure.in-3d::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  top: 190px;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(6, 23, 36, 0) 0, rgba(6, 23, 36, 0.5) 130px, rgba(6, 23, 36, 0.62) 100%);
+  pointer-events: none;
+}
+/* The page comes in once the camera has swum down to the chest and the lid is opening. */
+.treasure.arriving > .topbar { animation: treasure-in 0.35s ease both; }
+.treasure.arriving > :not(.topbar) { animation: treasure-in 0.6s ease 0.85s both; }
+.treasure.arriving::before { animation: treasure-shade 0.6s ease 0.85s both; }
+@keyframes treasure-shade { from { opacity: 0; } }
+/* Back from the treasure, the home screen fades in as the camera swims up (still tappable meanwhile). */
+.home.surfacing > :is(.topbar, .home-center, .school-card) { animation: treasure-shade 0.6s ease backwards; }
+@keyframes treasure-in { from { opacity: 0; transform: translateY(14px); } }

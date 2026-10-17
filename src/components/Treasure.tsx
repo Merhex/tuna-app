@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import type { Lang } from '../cards';
 import { countOf, describeComparison, pickComparisons } from '../comparisons';
 import { fx } from '../feedback';
@@ -6,6 +6,7 @@ import { localeOf, useLang, useT } from '../i18n';
 import { daysSince, isQuitDate, MILESTONES, milestoneProgress, reachedOn } from '../milestones';
 import { DECORATION_NAMES } from '../seabed';
 import { useApp } from '../state';
+import type { Tank } from '../tank/scene';
 import {
   CURRENCIES,
   CZK_PER,
@@ -21,7 +22,7 @@ import {
   withWeeklyAmount,
   type Currency,
 } from '../treasure';
-import { Chest, chestFill } from './Chest';
+import { Chest, chestFill, treasureFill } from './Chest';
 import { DateField, formatDay } from './DateField';
 import { Haptic } from './Haptic';
 import { Back } from './Icons';
@@ -29,15 +30,46 @@ import { DecorationIcon } from './Seabed';
 
 const SYMBOL: Record<Currency, string> = { CZK: 'Kč', EUR: '€', USD: '$' };
 
-export function Treasure({ onClose }: { onClose: () => void }) {
+/**
+ * The Sunken Treasure (D38): the money she's not spending, what it would buy, and the milestones.
+ * With the 3D tank (D56) the camera swims down to the chest in the middle of the tank, its lid opens,
+ * and the page comes in under it; the chest sits where the drawing would, and scrolls away with the
+ * page. Without 3D (or if the phone takes it away) it's the drawing, as before.
+ */
+export function Treasure({ onClose, tank }: { onClose: () => void; tank: Tank | null }) {
   const t = useT();
   const { data } = useApp();
   const [editing, setEditing] = useState(false);
   const treasure = data.treasure;
   const quitDate = data.quitDate;
+  // In 3D only if the tank was ready when the screen opened, so the chest never switches from the drawing mid-visit.
+  const [opened3d] = useState(!!tank);
+  const tank3d = opened3d ? tank : null;
+  const calm = data.settings.reducedMotion || matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // While the camera swims down, the page waits, then comes in under the chest.
+  const [arriving, setArriving] = useState(!!tank3d && !calm);
+  const fill = treasureFill(data);
+
+  useEffect(() => {
+    if (!arriving) return;
+    const id = setTimeout(() => setArriving(false), 1600);
+    return () => clearTimeout(id);
+  }, []);
+
+  // The lid opens when she's counting the money, and shuts while she edits it (like the drawing).
+  // Set before going to the chest, so the lid waits for the camera.
+  useEffect(() => tank3d?.setChestOpen(!!treasure && !!quitDate && !editing), [tank3d, !!treasure, !!quitDate, editing]);
+  useEffect(() => tank3d?.setChestFill(fill), [tank3d, Math.round(fill * 100)]);
+  useEffect(() => tank3d?.go('chest'), [tank3d]);
+
+  // The tank covers the backdrop behind it, which can stop drawing.
+  useEffect(() => {
+    document.documentElement.classList.toggle('ocean-off', !!tank3d);
+    return () => document.documentElement.classList.remove('ocean-off');
+  }, [tank3d]);
 
   return (
-    <main class="screen treasure">
+    <main class={`screen treasure${tank3d ? ' in-3d' : ''}${arriving ? ' arriving' : ''}`}>
       <header class="topbar">
         <button class="icon-btn" onClick={editing ? () => setEditing(false) : onClose} aria-label={t.close}>
           <Back />
@@ -55,15 +87,15 @@ export function Treasure({ onClose }: { onClose: () => void }) {
       </header>
 
       {editing ? (
-        <TreasureForm onDone={() => setEditing(false)} />
+        <TreasureForm onDone={() => setEditing(false)} tank={tank3d} />
       ) : (
         <>
           {treasure && quitDate ? (
-            <Counter />
+            <Counter tank={tank3d} />
           ) : (
             // The money part is optional; the milestones show without it (D44).
             <section class={`panel center${quitDate ? ' money-pitch' : ''}`}>
-              <Chest fill={0} open={false} size={quitDate ? 170 : 240} />
+              <TreasureChest tank={tank3d} fill={0} open={false} size={quitDate ? 170 : 240} />
               <p class="muted treasure-pitch">{t.treasureEmpty}</p>
               <button class="primary big" onClick={() => { fx.tap(); setEditing(true); }}>
                 {t.startCounting}
@@ -76,6 +108,43 @@ export function Treasure({ onClose }: { onClose: () => void }) {
       )}
     </main>
   );
+}
+
+/**
+ * The chest at the top: in 3D (D56), an empty space the tank fits the chest into, following it as the
+ * page scrolls; without 3D, the drawing. The 3D lid and gold are set by Treasure, not here.
+ */
+function TreasureChest({ tank, fill, open, size = 240 }: { tank: Tank | null; fill: number; open: boolean; size?: number }) {
+  const slot = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (!tank) return;
+    const measure = () => slot.current && tank.placeChest(screenBox(slot.current));
+    measure();
+    const watcher = new ResizeObserver(measure);
+    if (slot.current) watcher.observe(slot.current);
+    window.addEventListener('resize', measure);
+    window.addEventListener('scroll', measure, { passive: true });
+    return () => {
+      watcher.disconnect();
+      window.removeEventListener('resize', measure);
+      window.removeEventListener('scroll', measure);
+    };
+  }, [tank]);
+
+  if (!tank) return <Chest fill={fill} open={open} size={size} />;
+  return <div ref={slot} class="chest-slot" style={{ width: `${size}px`, height: `${size * 0.75}px` }} aria-hidden="true" />;
+}
+
+/** Where an element is on screen, in pixels, from the layout (so the page's arrival animation doesn't move it). */
+function screenBox(el: HTMLElement) {
+  let x = -window.scrollX;
+  let y = -window.scrollY;
+  for (let n: HTMLElement | null = el; n; n = n.offsetParent as HTMLElement | null) {
+    x += n.offsetLeft;
+    y += n.offsetTop;
+  }
+  return { x, y, width: el.offsetWidth, height: el.offsetHeight };
 }
 
 /** What to expect, counted from the quit date (D41). Kept out of Counter, which re-renders 10 times a second. */
@@ -174,7 +243,7 @@ function SeabedReward({ id, has }: { id: string; has: boolean }) {
   );
 }
 
-function Counter() {
+function Counter({ tank }: { tank: Tank | null }) {
   const t = useT();
   const lang = useLang();
   const { data } = useApp();
@@ -202,7 +271,7 @@ function Counter() {
   return (
     <section class="panel treasure-main">
       <div class="chest-wrap">
-        <Chest fill={chestFill(amount * CZK_PER[currency])} open />
+        <TreasureChest tank={tank} fill={chestFill(amount * CZK_PER[currency])} open />
       </div>
       <div class="money" aria-live="off">
         <span class="money-main">{money.before}</span>
@@ -238,7 +307,7 @@ function Counter() {
   );
 }
 
-function TreasureForm({ onDone }: { onDone: () => void }) {
+function TreasureForm({ onDone, tank }: { onDone: () => void; tank: Tank | null }) {
   const t = useT();
   const lang = useLang();
   const { data, update } = useApp();
@@ -284,7 +353,8 @@ function TreasureForm({ onDone }: { onDone: () => void }) {
 
   return (
     <section class="panel treasure-form">
-      {!existing && <Chest fill={0} open={false} size={170} />}
+      {/* In 3D the chest stays, shut while she edits (D56). */}
+      {(!existing || tank) && <TreasureChest tank={tank} fill={0} open={false} size={170} />}
       <label class="field">
         <span>{t.weeklyQuestion}</span>
         <div class="amount-row">

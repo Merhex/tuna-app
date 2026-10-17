@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'preact/hooks';
 import { DECK_VERSION } from './cards';
-import { configureFeedback } from './feedback';
+import { configureFeedback, fx } from './feedback';
 import { LangContext } from './i18n';
 import { isStandalone } from './platform';
 import { AppContext } from './state';
@@ -26,6 +26,8 @@ const TANK_WAIT_MS = 4000;
 export function App() {
   const [data, setData] = useState<AppData | null>(null);
   const [screen, setScreen] = useState<Screen>('home');
+  // The screen before this one: back from the treasure, the home screen fades in as the camera swims up (D56).
+  const [cameFrom, setCameFrom] = useState<Screen>('home');
   const [washedAshore, setWashedAshore] = useState(false);
   // Where to go after the intro: home on first launch, back to Settings when reopened from there.
   const [introReturn, setIntroReturn] = useState<Screen>('home');
@@ -37,6 +39,9 @@ export function App() {
   // water and the button and waits for it, instead of drawing the 2D seabed first. Never for long:
   // if it's slow (or fails), the drawn seabed shows until it comes.
   const [expectTank, setExpectTank] = useState(tankWorkedBefore);
+  // The home screen's view of the tank: close up, or pulled back ("Visit my school"). Kept here so the
+  // treasure, opened from the chest in the wide view, goes back to the wide view (D56).
+  const [homeView, setHomeView] = useState<'home' | 'wide'>('home');
 
   useEffect(() => {
     if (!expectTank) return;
@@ -84,6 +89,7 @@ export function App() {
     });
 
   const go = (s: Screen) => {
+    setCameFrom(screen);
     setScreen(s);
     window.scrollTo(0, 0);
   };
@@ -129,12 +135,15 @@ export function App() {
             dismissWashedAshore={() => setWashedAshore(false)}
             tank={tank}
             expectTank={expectTank}
+            view={homeView}
+            setView={setHomeView}
+            surfacing={cameFrom === 'treasure' && !!tank}
           />
         )}
         {screen === 'hook' && <HookFlow onExit={() => go('home')} />}
         {screen === 'aquarium' && <Aquarium onClose={() => go('home')} />}
         {screen === 'logbook' && <Logbook onClose={() => go('home')} />}
-        {screen === 'treasure' && <Treasure onClose={() => go('home')} />}
+        {screen === 'treasure' && <Treasure onClose={() => go('home')} tank={tank} />}
         {screen === 'settings' && (
           <Settings
             onClose={() => go('home')}
@@ -150,11 +159,15 @@ export function App() {
         )}
         {/* After the screens, so it sits above the drawn seabed but behind everything on the screen. */}
         <TankLayer
-          active={screen === 'home'}
+          active={screen === 'home' || screen === 'treasure'}
           calm={data.settings.reducedMotion || matchMedia('(prefers-reduced-motion: reduce)').matches}
           onReady={(made) => {
             setTank(made);
             setExpectTank(false);
+          }}
+          onChest={() => {
+            fx.coins();
+            go('treasure');
           }}
         />
       </LangContext.Provider>
