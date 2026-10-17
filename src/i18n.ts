@@ -337,7 +337,6 @@ const en = {
   breatheHowTo:
     'Two minutes of slow breathing with the tuna: in as the bubble grows, out as it shrinks. Just watch, or keep a finger down while you breathe in and lift it to breathe out.',
   breatheBrutal: (n: number): string => `${n === 8 ? 'An' : 'A'} ${n}? Let’s slow this one right down.`,
-  breatheStart: 'Start',
   breatheEnd: 'That’s enough',
   breatheReady: 'Ready?',
   breatheIn: 'Breathe in',
@@ -348,9 +347,11 @@ const en = {
   breathsTaken: (n: number): string => (n === 1 ? 'big breath' : 'big breaths'),
   breathsOnBeat: (n: number): string => `${n} on the beat`,
   breatheLog: (n: number): string => `Bubbles · ${n} ${n === 1 ? 'breath' : 'breaths'}`,
-  // Under how to play, when the round was picked for her: "Breathe instead · Draw a card".
-  breatheInstead: 'Breathe instead',
-  dodgeInstead: 'Dodge the hooks instead',
+  // Under how to play, when the round was picked for her straight from the rating. Tapping it again
+  // keeps cycling through the rounds.
+  anotherGame: 'Give me another game',
+  // The button on every round's how-to card that begins it.
+  roundStart: 'Start',
   bubblesCaught: (n: number): string => (n === 1 ? 'bubble caught' : 'bubbles caught'),
   continueWarn: 'Your collection could get lost if the browser clears its data.',
   // Net Packing: a falling-block puzzle, packing fish into crates. A brutal hook can start with it,
@@ -360,7 +361,6 @@ const en = {
   packHowTo: 'Drag to slide, tap to turn, flick down to drop. A full row ships as a crate. Two and a half minutes, and you can’t lose.',
   packEnd: 'End the round',
   packBrutal: (n: number): string => `${n === 8 ? 'An' : 'A'} ${n}? Let’s pack this one away, crate by crate.`,
-  packInstead: 'Net Packing instead',
   packNext: 'Next',
   // When the stack reaches the top, the bottom half goes and play carries on.
   packHauled: 'Net hauled in. Plenty of room!',
@@ -371,6 +371,21 @@ const en = {
   fishPacked: (_n: number): string => 'fish packed',
   crates: (n: number): string => (n === 1 ? 'crate' : 'crates'),
   packLog: (n: number): string => (n === 1 ? 'Net Packing' : `Net Packing ×${n}`),
+
+  // School Tracker: follow the gold-marked tunas through the moving school, then pick them out.
+  trackOffer: 'School Tracker · 2½ min',
+  trackTitle: 'School Tracker',
+  trackHowTo: 'Watch the golden tunas. They’ll hide in the school. Find them again when it stops. Two and a half minutes, and you can’t lose.',
+  trackEnd: 'End the round',
+  trackBrutal: (n: number): string => `${n === 8 ? 'An' : 'A'} ${n}? Eyes on the gold. Let’s lose this one in the crowd.`,
+  // After a round: lead with what she did, and only give the count when most were found.
+  trackSummary: (correct: number, targets: number): string =>
+    correct >= targets * 0.75
+      ? `You kept track of ${correct} of ${targets} tunas.`
+      : `You followed ${correct} ${correct === 1 ? 'tuna' : 'tunas'} through the school.`,
+  trackTrials: (n: number): string => `${n} ${n === 1 ? 'school' : 'schools'} watched`,
+  trackLine: (correct: number, targets: number): string => `${correct} of ${targets} tunas`,
+  trackLog: (n: number): string => (n === 1 ? 'School Tracker' : `School Tracker ×${n}`),
 
 
   // The home screen's 3D tank (D55): "Visit my school" under the button pulls back to the whole tank.
@@ -703,7 +718,6 @@ const cs: Strings = {
   breatheHowTo:
     'Dvě minuty pomalého dýchání s tuňákem: nádech, když bublina roste, výdech, když se zmenšuje. Můžeš se jen dívat, nebo při nádechu drž prst na displeji a při výdechu ho zvedni.',
   breatheBrutal: (n) => `${n}? Tenhle pěkně zpomalíme.`,
-  breatheStart: 'Začít',
   breatheEnd: 'Stačilo',
   breatheReady: 'Připravená?',
   breatheIn: 'Nádech',
@@ -714,8 +728,8 @@ const cs: Strings = {
   breathsTaken: (n) => csPlural(n, 'velký nádech', 'velké nádechy', 'velkých nádechů'),
   breathsOnBeat: (n) => `${n} do rytmu`,
   breatheLog: (n) => `Bubliny · ${n} ${csPlural(n, 'nádech', 'nádechy', 'nádechů')}`,
-  breatheInstead: 'Radši dýchat',
-  dodgeInstead: 'Radši zahrát Uhni háčkům',
+  anotherGame: 'Dej mi jinou hru',
+  roundStart: 'Začít',
   bubblesCaught: (n) => csPlural(n, 'chycená bublina', 'chycené bubliny', 'chycených bublin'),
   continueWarn: 'Pokud prohlížeč smaže data, můžeš přijít o sbírku.',
   packOffer: 'Naskládej úlovek · 2½ min',
@@ -723,7 +737,6 @@ const cs: Strings = {
   packHowTo: 'Táhni prstem do stran a posouvej, klepnutím otáčej, švihnutím dolů pusť rybu na dno. Plná řada odjede jako bedna. Dvě a půl minuty a prohrát se nedá.',
   packEnd: 'Ukončit kolo',
   packBrutal: (n) => `${n}? Tenhle zabalíme, bednu po bedně.`,
-  packInstead: 'Radši zahrát Naskládej úlovek',
   packNext: 'Další',
   packHauled: 'Síť je vytažená. Místa je dost!',
   packSummary: (n) =>
@@ -733,6 +746,19 @@ const cs: Strings = {
   fishPacked: (n) => csPlural(n, 'naskládaná ryba', 'naskládané ryby', 'naskládaných ryb'),
   crates: (n) => csPlural(n, 'bedna', 'bedny', 'beden'),
   packLog: (n) => (n === 1 ? 'Naskládej úlovek' : `Naskládej úlovek ×${n}`),
+
+  trackOffer: 'Hlídej hejno · 2½ min',
+  trackTitle: 'Hlídej hejno',
+  trackHowTo: 'Sleduj zlaté tuňáky. Schovají se v hejnu. Až se hejno zastaví, najdi je. Dvě a půl minuty a prohrát se nedá.',
+  trackEnd: 'Ukončit kolo',
+  trackBrutal: (n) => `${n}? Oči na zlato. Tenhle ztratíme v davu.`,
+  trackSummary: (correct, targets) =>
+    correct >= targets * 0.75
+      ? `Uhlídala jsi ${correct} ${csPlural(correct, 'tuňáka', 'tuňáky', 'tuňáků')}. Celkem jich bylo ${targets}.`
+      : `Hejnem jsi provedla ${correct} ${csPlural(correct, 'tuňáka', 'tuňáky', 'tuňáků')}.`,
+  trackTrials: (n) => `${n} ${csPlural(n, 'sledované hejno', 'sledovaná hejna', 'sledovaných hejn')}`,
+  trackLine: (correct, targets) => `${correct}/${targets} tuňáků`,
+  trackLog: (n) => (n === 1 ? 'Hlídej hejno' : `Hlídej hejno ×${n}`),
 
 
   visitSchool: 'Navštiv své hejno',

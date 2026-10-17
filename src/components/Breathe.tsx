@@ -16,7 +16,7 @@ import { fx } from '../feedback';
 import { pick, useT } from '../i18n';
 import { Back } from './Icons';
 import { Haptic } from './Haptic';
-import { OtherWays, type Alternative } from './OtherWays';
+import { RoundIntro } from './RoundIntro';
 import { Tuna } from './Tuna';
 
 /** The stage is drawn in a 340 × 340 box: the track around the edge, the bubble and tuna in the middle. */
@@ -33,7 +33,7 @@ const PUFF = 0.07;
 
 /**
  * One round of Bubbles (D54), full screen, in the craving flow: on "Not yet", or right away for a
- * brutal hook. A card with how it works (and `lead` and `others`, when it came straight from the
+ * brutal hook. A card with how it works (and `lead` and `another`, when it came straight from the
  * rating) waits for her to tap Start. Then a short "Ready?", and breath after breath until the round
  * is over or she leaves. A finger anywhere on the screen counts as breathing in.
  *
@@ -42,12 +42,12 @@ const PUFF = 0.07;
 export function BreatheRound({
   calm,
   lead,
-  others,
+  another,
   onEnd,
 }: {
   calm: boolean;
   lead?: string;
-  others?: Alternative[];
+  another?: () => void;
   onEnd: (r: BreatheResult | null) => void;
 }) {
   const t = useT();
@@ -67,8 +67,12 @@ export function BreatheRound({
   const tuna = useRef<HTMLDivElement>(null);
   const session = useRef<Session>(createSession());
   const finger = useRef<number | null>(null);
-  const shownAt = useRef(performance.now());
   const ended = useRef(false);
+
+  const start = () => {
+    startedRef.current = true;
+    setStarted(true);
+  };
 
   const end = () => {
     if (ended.current) return;
@@ -192,26 +196,7 @@ export function BreatheRound({
         <p class="breathe-hint muted small" ref={hint}>{t.breatheTouchHint}</p>
       </div>
       {!started && (
-        <div class="dodge-hint breathe-intro">
-          {lead && <p class="dodge-lead">{lead}</p>}
-          <h2>{t.breatheTitle}</h2>
-          <p>{t.breatheHowTo}</p>
-          <button
-            class="primary"
-            onClick={() => {
-              // A double tap on the previous screen shouldn't start the round before she's read this.
-              if (performance.now() - shownAt.current < 300) return;
-              // The tap also lets iPhone play the round's sounds.
-              fx.tap();
-              startedRef.current = true;
-              setStarted(true);
-            }}
-          >
-            {t.breatheStart}
-            <Haptic />
-          </button>
-          <OtherWays others={others} />
-        </div>
+        <RoundIntro lead={lead} title={t.breatheTitle} howTo={t.breatheHowTo} onStart={start} another={another} />
       )}
     </div>
   );

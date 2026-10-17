@@ -14,6 +14,7 @@ import { CardView, Rating } from './CardView';
 import { BreatheRound } from './Breathe';
 import { DodgeGame, type DodgeScore } from './Dodge';
 import { PackGame, type PackScore } from './Pack';
+import { TrackGame, type TrackScore } from './Track';
 import { Close, FishHook, House, Pin } from './Icons';
 import { Tuna } from './Tuna';
 import { Haptic } from './Haptic';
@@ -25,12 +26,16 @@ type Step = 'before' | 'drop' | 'card' | 'round' | 'check' | 'won' | 'notyet' | 
 type LastRound =
   | { kind: 'dodge'; score: DodgeScore }
   | { kind: 'breathe'; result: BreatheResult }
-  | { kind: 'pack'; score: PackScore };
+  | { kind: 'pack'; score: PackScore }
+  | { kind: 'track'; score: TrackScore };
 
 /** What a hook's rounds add up to, as stored on it. */
-type RoundCounts = Pick<HookEntry, 'rounds' | 'breaths' | 'packs'>;
+type RoundCounts = Pick<HookEntry, 'rounds' | 'breaths' | 'packs' | 'tracks'>;
 
 type Strings = ReturnType<typeof useT>;
+
+/** Postcards (D53) are hidden for now: no button on the win screen, and none is drawn. */
+const POSTCARDS = false;
 
 /** How long a new screen ignores taps (see `guard`). */
 const SETTLE_MS = 300;
@@ -54,6 +59,9 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   // round went if she did one after her last card, for the check and win screens.
   const [activity, setActivity] = useState<Activity>('dodge');
   const [played, setPlayed] = useState<Activity[]>([]);
+  // Every round put in front of her this hook, oldest first, so "Give me another game" cycles through
+  // all of them rather than flipping between two.
+  const [shown, setShown] = useState<Activity[]>([]);
   const [counts, setCounts] = useState<RoundCounts>({});
   const [lastRound, setLastRound] = useState<LastRound | null>(null);
   const [note, setNote] = useState('');
@@ -75,7 +83,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
 
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
   useEffect(() => {
-    if (step !== 'won') return;
+    if (step !== 'won' || !POSTCARDS) return;
     const lang = data.settings.lang;
     const last = cardById(completed[completed.length - 1] ?? '');
     makePostcard({
@@ -122,25 +130,30 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
         return `${t.breatheTitle} · ${r.result.breaths} ${t.breathsTaken(r.result.breaths)}`;
       case 'pack':
         return `${t.packTitle} · ${r.score.crates} ${t.crates(r.score.crates)}`;
+      case 'track':
+        return `${t.trackTitle} · ${t.trackLine(r.score.correct, r.score.targets)}`;
     }
   };
   // The tap also lets iPhone play the round's sounds.
   const toRound = (next: Activity) => () => {
     fx.tap();
-    setActivity(next);
-    setStep('round');
+    showRound(next);
   };
+  function showRound(a: Activity) {
+    setActivity(a);
+    setShown((s) => [...s, a]);
+    setStep('round');
+  }
 
   /** A brutal hook starts with a round, at random, but never the same one three times in a row (D54). */
   function startBrutal() {
     const a = pickActivity(data.settings.brutalPicks);
     update((d) => ({ ...d, settings: { ...d.settings, brutalPicks: rememberPick(d.settings.brutalPicks, a) } }));
-    setActivity(a);
-    setStep('round');
+    showRound(a);
   }
 
   function endRound(r: LastRound | null) {
-    // Leaving before her first touch goes back without counting a round: to the rating if she came
+    // Leaving before she starts goes back without counting a round: to the rating if she came
     // straight from it, so she can change it, otherwise to "Not yet".
     if (!r && fromRating) {
       // Straight after a snag (D57), back to its last screen.
@@ -155,21 +168,15 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
     setStep('check');
   }
 
-  /** The round on screen, with its line and ways out when it was picked straight from the rating. */
+  /** The round on screen, with its line and "Give me another game" when it was picked from the rating. */
   function round() {
-    const text = roundText(t, activity);
-    // One other round, the one picked least lately, and a card: never a long list at the worst moment (D51).
-    const other = alternatives(activity, data.settings.brutalPicks)[0];
+    // The next game is the one she's seen least lately, so tapping again goes round all of them.
+    const other = alternatives(activity, [...data.settings.brutalPicks, ...shown])[0];
     const props = {
       calm: data.settings.reducedMotion,
       // Straight after a snag there was no rating: Bubbles gets its own line, the others none (D57).
-      lead: !fromRating ? undefined : !regroup ? text.brutal(before ?? GAME_FROM) : activity === 'breathe' ? t.breatheAfterSnag : undefined,
-      others: fromRating
-        ? [
-            ...(other ? [{ label: roundText(t, other).instead, onPick: guard(toRound(other)) }] : []),
-            { label: t.drawCard, onPick: guard(draw) },
-          ]
-        : undefined,
+      lead: !fromRating ? undefined : !regroup ? roundText(t, activity).brutal(before ?? GAME_FROM) : activity === 'breathe' ? t.breatheAfterSnag : undefined,
+      another: fromRating && other ? guard(toRound(other)) : undefined,
     };
     switch (activity) {
       case 'dodge':
@@ -179,8 +186,8 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
         return <BreatheRound key="breathe" {...props} onEnd={(r) => endRound(r && { kind: 'breathe', result: r })} />;
       case 'pack':
         return <PackGame key="pack" {...props} onEnd={(s) => endRound(s && { kind: 'pack', score: s })} />;
-      default:
-        return null;
+      case 'track':
+        return <TrackGame key="track" {...props} onEnd={(s) => endRound(s && { kind: 'track', score: s })} />;
     }
   }
 
@@ -283,8 +290,8 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
     setNote('');
     setReasons([]);
     setRegroup(true);
-    setActivity('breathe');
-    setStep('round');
+    setShown([]);
+    showRound('breathe');
   }
 
   return (
@@ -473,7 +480,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           <div class="stack">
             <button class="primary big" onClick={guard(onExit)}>{t.backToTank}<Haptic /></button>
             {/* Hidden if the drawing failed: there's nothing to send. */}
-            {postcard !== 'failed' && (
+            {POSTCARDS && postcard !== 'failed' && (
               <button
                 class="secondary"
                 disabled={!postcard}
@@ -607,17 +614,17 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   );
 }
 
-/** Each activity's lines: its "· N min" offer, its "X instead" link, and a brutal hook's lead. */
+/** Each activity's lines: its "· N min" offer on "Not yet", and a brutal hook's lead. */
 function roundText(t: Strings, a: Activity) {
   switch (a) {
     case 'dodge':
-      return { offer: t.dodgeOffer, instead: t.dodgeInstead, brutal: t.dodgeBrutal };
+      return { offer: t.dodgeOffer, brutal: t.dodgeBrutal };
     case 'breathe':
-      return { offer: t.breatheOffer, instead: t.breatheInstead, brutal: t.breatheBrutal };
+      return { offer: t.breatheOffer, brutal: t.breatheBrutal };
     case 'pack':
-      return { offer: t.packOffer, instead: t.packInstead, brutal: t.packBrutal };
+      return { offer: t.packOffer, brutal: t.packBrutal };
     case 'track':
-      throw new Error('School Tracker is not built yet');
+      return { offer: t.trackOffer, brutal: t.trackBrutal };
   }
 }
 
@@ -630,6 +637,8 @@ function addRound(c: RoundCounts, r: LastRound): RoundCounts {
       return { ...c, breaths: (c.breaths ?? 0) + r.result.breaths };
     case 'pack':
       return { ...c, packs: (c.packs ?? 0) + 1 };
+    case 'track':
+      return { ...c, tracks: (c.tracks ?? 0) + 1 };
   }
 }
 
@@ -657,6 +666,13 @@ function RoundSummary({ round: r }: { round: LastRound }) {
         <p class="dodge-summary">
           {t.packSummary(r.score.crates)}
           <span class="muted small">{r.score.pieces} {t.fishPacked(r.score.pieces)}</span>
+        </p>
+      );
+    case 'track':
+      return (
+        <p class="dodge-summary">
+          {t.trackSummary(r.score.correct, r.score.targets)}
+          <span class="muted small">{t.trackTrials(r.score.trials)}</span>
         </p>
       );
   }

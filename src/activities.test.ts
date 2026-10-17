@@ -89,6 +89,20 @@ describe('the other ways out of a round', () => {
     expect(alternatives(null, ['dodge'], THREE)).toEqual(['breathe', 'pack', 'dodge']);
   });
 
+  it('"Give me another game" goes round every game before repeating one', () => {
+    // As in the flow: the rounds shown this hook come after her earlier picks.
+    for (const enabled of [TWO, THREE, FOUR]) {
+      const picks: Activity[] = ['breathe', 'dodge'];
+      const shown: Activity[] = ['dodge'];
+      for (let i = 0; i < enabled.length * 3; i++) {
+        shown.push(alternatives(shown.at(-1), [...picks, ...shown], enabled)[0]);
+      }
+      for (let i = 0; i + enabled.length <= shown.length; i++) {
+        expect(new Set(shown.slice(i, i + enabled.length)).size).toBe(enabled.length);
+      }
+    }
+  });
+
   it('"Not yet" offers two: the ones she didn\'t just do, least recently picked first', () => {
     // Two activities: both, the one she didn't just do first (D54).
     expect(notYetRounds('dodge', [], TWO)).toEqual(['breathe', 'dodge']);
