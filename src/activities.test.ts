@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { alternatives, notYetRounds, pickActivity, rememberPick, type Activity } from './activities';
+import { alternatives, eligible, ENABLED, notYetRounds, pickActivity, rememberPick, type Activity } from './activities';
 import { parseBackup } from './storage';
 
 const TWO: Activity[] = ['dodge', 'breathe'];
 const THREE: Activity[] = ['dodge', 'breathe', 'pack'];
 const FOUR: Activity[] = ['dodge', 'breathe', 'pack', 'track'];
+const FIVE: Activity[] = ['dodge', 'breathe', 'pack', 'track', 'run'];
 
 /** A seeded random, so runs are the same every time. */
 function seeded(seed = 1) {
@@ -122,5 +123,39 @@ describe('the other ways out of a round', () => {
       settings: { brutalPicks: ['dodge', 'breathe'] },
     });
     expect(parseBackup(old).settings.brutalPicks).toEqual(['dodge', 'breathe']);
+  });
+});
+
+describe('rounds that are only there sometimes (D58)', () => {
+  const home = { place: 'home' as const, movementRounds: true };
+
+  it('offers Current Run only at home, with movement rounds on', () => {
+    expect(eligible(home, FIVE)).toEqual(FIVE);
+    expect(eligible({ ...home, place: 'out' }, FIVE)).toEqual(FOUR);
+    expect(eligible({ ...home, movementRounds: false }, FIVE)).toEqual(FOUR);
+    expect(eligible(home)).toEqual([...ENABLED]);
+  });
+
+  it('never picks or offers it when it is left out', () => {
+    const open = eligible({ ...home, place: 'out' }, FIVE);
+    const { counts } = longestRun(open, 500);
+    expect(counts.run).toBeUndefined();
+    expect(alternatives('dodge', [], open)).not.toContain('run');
+    for (const last of [...open, null]) expect(notYetRounds(last, ['run'], open)).not.toContain('run');
+  });
+
+  it('with five, still never the same three in a row, picks all of them, and "Not yet" offers two', () => {
+    const { longest, counts } = longestRun(FIVE, 1000);
+    expect(longest).toBeLessThan(3);
+    for (const a of FIVE) expect(counts[a]).toBeGreaterThan(120);
+    expect(notYetRounds('run', ['run'], FIVE)).toEqual(['dodge', 'breathe']);
+    expect(alternatives('run', ['dodge', 'breathe', 'pack', 'track'], FIVE)[0]).toBe('dodge');
+  });
+
+  it('turns movement rounds on for an older save without the setting', () => {
+    const old = JSON.stringify({ app: 'off-the-hook', schemaVersion: 2, settings: { place: 'home' } });
+    expect(parseBackup(old).settings.movementRounds).toBe(true);
+    const off = JSON.stringify({ app: 'off-the-hook', schemaVersion: 2, settings: { movementRounds: false } });
+    expect(parseBackup(off).settings.movementRounds).toBe(false);
   });
 });

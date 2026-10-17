@@ -27,7 +27,7 @@ describe('storage', () => {
     expect(restored.seabed).toEqual(data.seabed);
   });
 
-  it('keeps rounds of Net Packing and School Tracker through a backup, and loads older hooks without them untouched', () => {
+  it('keeps rounds of Net Packing, School Tracker and Current Run through a backup, and loads older hooks without them untouched', () => {
     const old = {
       id: '1',
       startedAt: '2026-10-01T10:00:00.000Z',
@@ -43,10 +43,10 @@ describe('storage', () => {
     const data = parseBackup(backup({ hooks: [old] }));
     expect(data.hooks).toEqual([old]);
     const { rounds: _r, breaths: _b, ...plain } = old;
-    data.hooks.push({ ...plain, id: '2', packs: 2, tracks: 1 });
+    data.hooks.push({ ...plain, id: '2', packs: 2, tracks: 1, runs: 1 });
     const restored = parseBackup(makeBackup(data));
     expect(restored.hooks[0]).toEqual(old);
-    expect(restored.hooks[1]).toMatchObject({ packs: 2, tracks: 1 });
+    expect(restored.hooks[1]).toMatchObject({ packs: 2, tracks: 1, runs: 1 });
   });
 
   it('starts counting pets at zero for old backups, and keeps the count through a restore (D49)', () => {

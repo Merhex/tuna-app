@@ -387,6 +387,33 @@ const en = {
   trackLine: (correct: number, targets: number): string => `${correct} of ${targets} tunas`,
   trackLog: (n: number): string => (n === 1 ? 'School Tracker' : `School Tracker ×${n}`),
 
+  // Current Run (D58): swim up a river by moving. Only at home, and only with movement rounds on.
+  runOffer: 'Current Run · 5 min',
+  runTitle: 'Current Run',
+  runHowTo:
+    'Phone in your hand or pocket, and get moving: march on the spot, dance, swing your arms. Swim when the river runs, rest when it slows. Five minutes. Go at your own pace, and stop if anything hurts.',
+  runEnd: 'End the round',
+  runHoldEnd: 'Hold to end the round',
+  runHoldHint: 'Keep holding to stop',
+  runBrutal: (n: number): string => `${n === 8 ? 'An' : 'A'} ${n}? Time to swim it off.`,
+  runPhase: {
+    warm: 'Warm up, easy does it',
+    swim: 'Swim!',
+    drift: 'Drift and breathe',
+    cool: 'Cool down, nice and easy',
+  } as Record<'warm' | 'swim' | 'drift' | 'cool', string>,
+  runCatching: 'You’ve caught the current.',
+  runPulling: 'The current’s pulling. Swim!',
+  runGuided: 'No motion sensor here, so just move however you like. The tuna will trust you.',
+  // After a round: kind and brief, no numbers, nothing about how hard she went.
+  runSummary: 'You swam against the current for a few minutes.',
+  runSummaryGuided: 'You moved with the tuna.',
+  runSummaryNote: 'Moving can help a craving pass.',
+  runLine: 'upstream and back',
+  runLog: (n: number): string => (n === 1 ? 'Current Run' : `Current Run ×${n}`),
+  movementRounds: 'Movement rounds',
+  movementRoundsNote: 'Rounds that get you moving, only at home. Turn off if you’d rather not.',
+
 
   // The home screen's 3D tank (D55): "Visit my school" under the button pulls back to the whole tank.
   visitSchool: 'Visit my school',
@@ -759,6 +786,31 @@ const cs: Strings = {
   trackTrials: (n) => `${n} ${csPlural(n, 'sledované hejno', 'sledovaná hejna', 'sledovaných hejn')}`,
   trackLine: (correct, targets) => `${correct}/${targets} tuňáků`,
   trackLog: (n) => (n === 1 ? 'Hlídej hejno' : `Hlídej hejno ×${n}`),
+
+  runOffer: 'Proti proudu · 5 min',
+  runTitle: 'Proti proudu',
+  runHowTo:
+    'Telefon v ruce nebo v kapse a hýbej se: pochoduj na místě, tancuj, mávej rukama. Když řeka teče, plav, když zpomalí, odpočiň si. Pět minut. Svým tempem, a když tě něco bolí, přestaň.',
+  runEnd: 'Ukončit kolo',
+  runHoldEnd: 'Podrž a ukonči kolo',
+  runHoldHint: 'Drž dál a kolo skončí',
+  runBrutal: (n) => `${n}? Tenhle odplaveme.`,
+  runPhase: {
+    warm: 'Rozehřej se, v klidu',
+    swim: 'Plav!',
+    drift: 'Nech se nést a dýchej',
+    cool: 'Zvolni, pěkně v klidu',
+  },
+  runCatching: 'Chytila jsi proud.',
+  runPulling: 'Proud táhne. Plav!',
+  runGuided: 'Tady není snímač pohybu, tak se hýbej, jak chceš. Tuňák ti věří.',
+  runSummary: 'Pár minut jsi plavala proti proudu.',
+  runSummaryGuided: 'Hýbala ses s tuňákem.',
+  runSummaryNote: 'Pohyb může pomoct, aby chuť přešla.',
+  runLine: 'proti proudu a zpátky',
+  runLog: (n) => (n === 1 ? 'Proti proudu' : `Proti proudu ×${n}`),
+  movementRounds: 'Kola s pohybem',
+  movementRoundsNote: 'Kola, při kterých se hýbeš, jen doma. Vypni, pokud nechceš.',
 
 
   visitSchool: 'Navštiv své hejno',

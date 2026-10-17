@@ -26,12 +26,13 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 | **Bubbles:** two minutes of slow breathing with the tuna (in 4, out 6). A brutal hook starts with it or Dodge the hooks at random, with the other or a card one tap away; “Not yet” offers both | D54 | |
 | **3D home screen:** her school (one tuna per hook beaten), her decorations and the tuna she pets, in 3D; “Visit my school” pulls back to the whole tank | D55 | |
 | **The treasure chest in the tank:** a sunken chest in the middle of her school; opening the treasure (or tapping the chest in “Visit my school”) swims the camera down to it and the lid opens over the page | D56 | |
+| **Current Run:** a 5-minute round that gets her moving: the tuna swims up a river as hard as she marches, dances or swings her arms, sensed by the phone's motion sensor (or guided without one). Only at home, and off in Settings if she'd rather | D58 | |
 
 ## Next, ranked
 
 | # | Feature | Impact | Effort | Notes |
 | ---: | --- | --- | --- | --- |
-| 1 | **Cards that work for her.** Show “your best lures” (cards with the biggest drop in hook strength) in the Logbook, and weight them a little higher in the draw. | Medium | Small | The data is already stored (D10). Attribution is fuzzy when a hook used several cards: count only the last completed card, or only one-card hooks. Brutal hooks can also be split by game (`rounds`) and breathing (`breaths`), which are picked at random (D54). |
+| 1 | **Cards that work for her.** Show “your best lures” (cards with the biggest drop in hook strength) in the Logbook, and weight them a little higher in the draw. | Medium | Small | The data is already stored (D10). Attribution is fuzzy when a hook used several cards: count only the last completed card, or only one-card hooks. Brutal hooks can also be split by round (`rounds`, `breaths`, `packs`, `tracks` and `runs`), which are picked at random (D54), so exercise (D58) can be compared with the others. |
 | 2 | **Bottles from the app's maker**, unlocking at milestones or washing up at random. | Medium | Medium | Phase 3. Milestone IDs are permanent (D41), so bottles can key on them. Waits on Q3. |
 | 3 | **Lifeline / flare.** One tap on “Not yet” to ask someone for a text. | Medium | Small to large | Phase 3's flare needs a push server (D22). A cheaper version opens Messages with a ready-made text (an `sms:` link), no server. Waits on Q3. |
 | 4 | **Messages in a bottle.** Her own reasons, written on good days, shown during hard ones. | Medium | Small | Phase 2. |
@@ -48,5 +49,5 @@ What's shipped, what's next and what was ruled out. Ranked by how much it helps 
 
 ## Open before release
 
-- A native speaker's read of the Czech in the new cards, the milestones, the decoration names, the quit-date question and the Jungkook jokes, the Jungkook, Japan, Korea and China treasure items, the pet counter, Dodge the hooks, the daydream cards, the postcards, Bubbles, “Visit my school” and the tap-the-chest hint (D32, D45, D46, D49, D50, D51, D52, D53, D54, D55, D56).
-- A test on a real iPhone: sounds, vibrations, the install flow and the postcard share sheet can't be checked in a desktop browser (see [qa-log.md](qa-log.md)). Also the 3D home screen (D55): how smooth it is, battery, and coming back after a long time in the background; and the swim down to the treasure chest (D56), including how the chest follows the page when scrolling.
+- A native speaker's read of the Czech in the new cards, the milestones, the decoration names, the quit-date question and the Jungkook jokes, the Jungkook, Japan, Korea and China treasure items, the pet counter, Dodge the hooks, the daydream cards, the postcards, Bubbles, “Visit my school”, the tap-the-chest hint and Current Run (D32, D45, D46, D49, D50, D51, D52, D53, D54, D55, D56, D58).
+- A test on a real iPhone: sounds, vibrations, the install flow and the postcard share sheet can't be checked in a desktop browser (see [qa-log.md](qa-log.md)). Also the 3D home screen (D55): how smooth it is, battery, and coming back after a long time in the background; and the swim down to the treasure chest (D56), including how the chest follows the page when scrolling. And Current Run (D58): tuning `still` and `brisk` with the readings overlay (`?motion=1`, or hold the river icon for two seconds) (standing still reads 0, marching in hand and in a pocket reads brisk), the motion permission from Start, the screen staying on for all 5 minutes in the installed app, and press and hold in a pocket.

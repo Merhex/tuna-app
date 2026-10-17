@@ -63,6 +63,16 @@ export function Crate({ size = 22 }: P) {
   );
 }
 
+/** Three waves of a running river, for Current Run. */
+export function River({ size = 22 }: P) {
+  const wave = (y: number) => `M2.5 ${y}c2.4-2 4.8-2 7.2 0s4.8 2 7.2 0 3.6-1.5 4.8-1`;
+  return (
+    <svg {...base(size)} viewBox="0 0 24 24">
+      <path d={`${wave(7)} ${wave(12)} ${wave(17)}`} />
+    </svg>
+  );
+}
+
 /** Two little fish swimming together, for School Tracker. */
 export function SchoolIcon({ size = 22 }: P) {
   const fish = 'M6 12c2.4-3.6 5.2-5.5 8.3-5.5 3 0 5.6 2.2 7.2 5.5-1.6 3.3-4.2 5.5-7.2 5.5-3.1 0-5.9-1.9-8.3-5.5zM6 12 2.5 8.5v7z';

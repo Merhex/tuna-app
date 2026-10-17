@@ -269,6 +269,24 @@ export const fx = {
       tone(ac, { freq: 392, start: 0.16, dur: 0.3, gain: 0.045 });
     });
   },
+  /** Current Run (D58): a swim begins. A soft swell rising, like the river picking up. */
+  runSwim() {
+    cue([[0, 30]], (ac) => {
+      swell(ac, { freq: 220, to: 330, dur: 1.2, gain: 0.06 });
+      noise(ac, { dur: 0.6, from: 400, to: 1800, gain: 0.03 });
+    });
+  },
+  /** Current Run: the swim is over, drift and breathe. The swell falls again. */
+  runDrift() {
+    cue([[0, 20]], (ac) => swell(ac, { freq: 330, to: 220, dur: 1.4, gain: 0.05 }));
+  },
+  /** Current Run: she's caught the current. A quiet pair of bubbles, every few seconds. No vibration. */
+  runCurrent() {
+    cue([], (ac) => {
+      bubble(ac, 0, 520);
+      bubble(ac, 0.09, 640);
+    });
+  },
   /** ...or a joke it really shouldn't have: dun, dun, DUNNN. */
   ominous() {
     cue([[0, 120], [300, 120], [650, 400]], (ac) => {
