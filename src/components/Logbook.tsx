@@ -5,7 +5,7 @@ import { dailyTrend, dayKey, ratedHooks, trendChange } from '../stats';
 import { useApp } from '../state';
 import { averagePullDrop, schoolSize, type HookEntry } from '../storage';
 import { DumbbellChart, fmt, Legend, TrendChart } from './Charts';
-import { Back, BubbleIcon, Crate, FishHook, Heart, SchoolIcon } from './Icons';
+import { Back, BubbleIcon, Crate, FishHook, Heart, River, SchoolIcon } from './Icons';
 import { RarityFish } from './RarityFish';
 import { MiniTuna, Tuna } from './Tuna';
 import { Haptic } from './Haptic';
@@ -132,7 +132,7 @@ function HistoryRow({ hook }: { hook: HookEntry }) {
           <span class="history-time">{time}</span>
           <span class="history-result">{label}</span>
         </div>
-        {cards.length > 0 || hook.rounds || hook.breaths || hook.packs || hook.tracks ? (
+        {cards.length > 0 || hook.rounds || hook.breaths || hook.packs || hook.tracks || hook.runs ? (
           <ul class="history-cards">
             {cards.map((c, i) => (
               <li key={`${c.id}-${i}`}>
@@ -162,6 +162,12 @@ function HistoryRow({ hook }: { hook: HookEntry }) {
               <li class="history-game">
                 <span class="history-game-icon"><SchoolIcon size={22} /></span>
                 <span>{t.trackLog(hook.tracks)}</span>
+              </li>
+            )}
+            {!!hook.runs && (
+              <li class="history-game">
+                <span class="history-game-icon"><River size={22} /></span>
+                <span>{t.runLog(hook.runs)}</span>
               </li>
             )}
           </ul>

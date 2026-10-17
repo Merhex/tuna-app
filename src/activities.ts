@@ -1,16 +1,36 @@
+import type { Settings } from './storage';
+
 /**
- * The rounds a brutal hook (8 to 10) can start with (D54): Dodge the hooks, Bubbles, Net Packing and
- * School Tracker. One is picked at random so none wears thin, but never the same one three
- * times in a row, which would feel broken. A new round is one more entry in `ACTIVITIES` and
+ * The rounds a brutal hook (8 to 10) can start with (D54): Dodge the hooks, Bubbles, Net Packing,
+ * School Tracker and Current Run. One is picked at random so none wears thin, but never the same one
+ * three times in a row, which would feel broken. A new round is one more entry in `ACTIVITIES` and
  * `ENABLED`, plus its own component (see `components/HookFlow.tsx`).
  */
-export type Activity = 'dodge' | 'breathe' | 'pack' | 'track';
+export type Activity = 'dodge' | 'breathe' | 'pack' | 'track' | 'run';
 
 /** Every activity, in the fixed order used to break ties. */
-export const ACTIVITIES: readonly Activity[] = ['dodge', 'breathe', 'pack', 'track'];
+export const ACTIVITIES: readonly Activity[] = ['dodge', 'breathe', 'pack', 'track', 'run'];
 
-/** The ones that can be picked. */
-export const ENABLED: readonly Activity[] = ['dodge', 'breathe', 'pack', 'track'];
+/** The ones that can be picked, if they're `eligible` right now. */
+export const ENABLED: readonly Activity[] = ['dodge', 'breathe', 'pack', 'track', 'run'];
+
+/**
+ * The enabled activities she can be given right now. Current Run gets her moving, so only at home and
+ * only while movement rounds are on in Settings (D58). Pass the result as `enabled` to the helpers below.
+ */
+export function eligible(
+  settings: Pick<Settings, 'place' | 'movementRounds'>,
+  enabled: readonly Activity[] = ENABLED,
+): Activity[] {
+  return enabled.filter((a) => {
+    switch (a) {
+      case 'run':
+        return settings.place === 'home' && settings.movementRounds;
+      default:
+        return true;
+    }
+  });
+}
 
 /** `recent` is her last picks, newest last. */
 export function pickActivity(

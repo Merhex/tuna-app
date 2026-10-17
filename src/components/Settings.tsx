@@ -94,6 +94,12 @@ export function Settings({
           }}
         />
         <Toggle label={t.reducedMotion} checked={data.settings.reducedMotion} onChange={(v) => set('reducedMotion', v)} />
+        <Toggle
+          label={t.movementRounds}
+          note={t.movementRoundsNote}
+          checked={data.settings.movementRounds}
+          onChange={(v) => set('movementRounds', v)}
+        />
         <div class="row">
           <span>{t.language}</span>
           <div class="segmented compact">

@@ -152,3 +152,25 @@ Still open:
 - Sounds, vibrations and the real install flow need a real iPhone. The Czech needs a native speaker's read.
 - On short phones the All / Favourites switch sits over the seabed decorations. It stays readable, and the seabed is backdrop by design (D43).
 - Content, for a decision rather than a fix: a few at-home cards assume she's gaming or watching a series ("Controller down…", "Pause the game…", "Before the next episode autoplays…"). Drawn at other times, they cost her one throw-back.
+
+---
+
+# Current Run (D58)
+
+## Pass 1
+
+Checked in Chromium at iPhone SE (375×667) and iPhone 13 (390×844) sizes, with simulated motion readings (a 2 Hz march, then holding still) and with the motion sensor removed:
+
+- **From a 9:** “Give me another game” cycles through all five rounds, Current Run included. Its card fits, with the brutal line, how-to and safety line.
+- **Sensed:** the warm-up, then “Swim!” in gold with the countdown; marching gives “You've caught the current.”, bubbles behind the tuna and the river rushing past; holding still gives “The current's pulling. Swim!” and the tuna drifts back. Nothing overlaps at either size.
+- **Ending:** a tap on the back button during the round does nothing; holding it fills the button, shows “Keep holding to stop” and ends the round after a second. Ended inside the first minute, it goes back to the rating with nothing recorded.
+- **Guided** (no sensor): the one-line note shows for a few seconds, the full plan runs, and the check screen says “You moved with the tuna.” Yes goes to the win screen (“Current Run · upstream and back”) and the hook is saved with `runs: 1`.
+- **Out and about, or with movement rounds off:** ten taps of “Give me another game” never show Current Run.
+- **Settings:** the “Movement rounds” toggle with its note. **Logbook:** the history row and the chart detail say “Current Run”.
+- No console errors.
+
+Not verifiable without a real phone:
+
+- Whether `still` and `brisk` suit real movement (in a hand, a trouser pocket, a jacket pocket); see the checklist in [current-run.md](tickets/current-run.md), C5.
+- The iPhone permission prompt from Start, the wake lock in the installed app for the whole 5 minutes, sounds with the silent switch, coming back from the background, and press and hold with the phone in a pocket.
+- The Czech.

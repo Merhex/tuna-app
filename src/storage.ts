@@ -38,6 +38,8 @@ export interface HookEntry {
   packs?: number;
   /** Rounds of School Tracker she played; absent when none. */
   tracks?: number;
+  /** Rounds of Current Run (D58); absent when none. */
+  runs?: number;
   result: HookResult;
   baitNote?: string;
   /** On a slip: what was going on (D57); absent when she picked nothing. */
@@ -64,6 +66,8 @@ export interface Settings {
   milestoneSeen: number;
   /** What her last brutal hooks started with, newest last, so it's never the same three times running (D54). */
   brutalPicks: Activity[];
+  /** Whether rounds that get her moving (Current Run, D58) can come up. They're only ever at home. */
+  movementRounds: boolean;
 }
 
 export interface AppData {
@@ -112,6 +116,7 @@ export function defaultData(): AppData {
       place: 'home',
       milestoneSeen: 0,
       brutalPicks: [],
+      movementRounds: true,
     },
     quitDate: null,
     treasure: null,

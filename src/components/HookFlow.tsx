@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { alternatives, notYetRounds, pickActivity, rememberPick, type Activity } from '../activities';
+import { alternatives, eligible, notYetRounds, pickActivity, rememberPick, type Activity } from '../activities';
 import type { BreatheResult } from '../breathe';
 import { CARDS, cardById, fitsPlace, PLACES, type Card } from '../cards';
 import { drawCard, FAVOURITES_MIN } from '../draw';
@@ -15,6 +15,7 @@ import { BreatheRound } from './Breathe';
 import { DodgeGame, type DodgeScore } from './Dodge';
 import { PackGame, type PackScore } from './Pack';
 import { TrackGame, type TrackScore } from './Track';
+import { RunGame, type RunScore } from './Run';
 import { Close, FishHook, House, Pin } from './Icons';
 import { Tuna } from './Tuna';
 import { Haptic } from './Haptic';
@@ -27,10 +28,11 @@ type LastRound =
   | { kind: 'dodge'; score: DodgeScore }
   | { kind: 'breathe'; result: BreatheResult }
   | { kind: 'pack'; score: PackScore }
-  | { kind: 'track'; score: TrackScore };
+  | { kind: 'track'; score: TrackScore }
+  | { kind: 'run'; score: RunScore };
 
 /** What a hook's rounds add up to, as stored on it. */
-type RoundCounts = Pick<HookEntry, 'rounds' | 'breaths' | 'packs' | 'tracks'>;
+type RoundCounts = Pick<HookEntry, 'rounds' | 'breaths' | 'packs' | 'tracks' | 'runs'>;
 
 type Strings = ReturnType<typeof useT>;
 
@@ -80,6 +82,8 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   const recorded = useRef(false);
   const slipId = useRef('');
   const streak = data.quitDate ? streakOf(data.hooks, data.quitDate) : null;
+  // The rounds she can be given right now: Current Run only at home, with movement rounds on (D58).
+  const open = eligible(data.settings);
 
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
   useEffect(() => {
@@ -132,6 +136,8 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
         return `${t.packTitle} · ${r.score.crates} ${t.crates(r.score.crates)}`;
       case 'track':
         return `${t.trackTitle} · ${t.trackLine(r.score.correct, r.score.targets)}`;
+      case 'run':
+        return `${t.runTitle} · ${t.runLine}`;
     }
   };
   // The tap also lets iPhone play the round's sounds.
@@ -147,7 +153,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
 
   /** A brutal hook starts with a round, at random, but never the same one three times in a row (D54). */
   function startBrutal() {
-    const a = pickActivity(data.settings.brutalPicks);
+    const a = pickActivity(data.settings.brutalPicks, Math.random, open);
     update((d) => ({ ...d, settings: { ...d.settings, brutalPicks: rememberPick(d.settings.brutalPicks, a) } }));
     showRound(a);
   }
@@ -171,7 +177,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
   /** The round on screen, with its line and "Give me another game" when it was picked from the rating. */
   function round() {
     // The next game is the one she's seen least lately, so tapping again goes round all of them.
-    const other = alternatives(activity, [...data.settings.brutalPicks, ...shown])[0];
+    const other = alternatives(activity, [...data.settings.brutalPicks, ...shown], open)[0];
     const props = {
       calm: data.settings.reducedMotion,
       // Straight after a snag there was no rating: Bubbles gets its own line, the others none (D57).
@@ -188,6 +194,8 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
         return <PackGame key="pack" {...props} onEnd={(s) => endRound(s && { kind: 'pack', score: s })} />;
       case 'track':
         return <TrackGame key="track" {...props} onEnd={(s) => endRound(s && { kind: 'track', score: s })} />;
+      case 'run':
+        return <RunGame key="run" {...props} onEnd={(s) => endRound(s && { kind: 'run', score: s })} />;
     }
   }
 
@@ -508,7 +516,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
             <button class="primary big" onClick={guard(draw)}>{drawn.length ? t.drawAnother : t.drawCard}<Haptic /></button>
             {/* For a craving that outlasts a card (D50): two rounds, not the one she just did, the one
                 picked least lately first (D54). */}
-            {notYetRounds(lastRound?.kind, [...data.settings.brutalPicks, ...played]).map((a) => (
+            {notYetRounds(lastRound?.kind, [...data.settings.brutalPicks, ...played], open).map((a) => (
               <button key={a} class="secondary big" onClick={guard(toRound(a))}>
                 {roundText(t, a).offer}
                 <Haptic />
@@ -625,6 +633,8 @@ function roundText(t: Strings, a: Activity) {
       return { offer: t.packOffer, brutal: t.packBrutal };
     case 'track':
       return { offer: t.trackOffer, brutal: t.trackBrutal };
+    case 'run':
+      return { offer: t.runOffer, brutal: t.runBrutal };
   }
 }
 
@@ -639,6 +649,8 @@ function addRound(c: RoundCounts, r: LastRound): RoundCounts {
       return { ...c, packs: (c.packs ?? 0) + 1 };
     case 'track':
       return { ...c, tracks: (c.tracks ?? 0) + 1 };
+    case 'run':
+      return { ...c, runs: (c.runs ?? 0) + 1 };
   }
 }
 
@@ -673,6 +685,14 @@ function RoundSummary({ round: r }: { round: LastRound }) {
         <p class="dodge-summary">
           {t.trackSummary(r.score.correct, r.score.targets)}
           <span class="muted small">{t.trackTrials(r.score.trials)}</span>
+        </p>
+      );
+    case 'run':
+      // No numbers, and nothing about how hard she went. Guided, nothing about effort at all.
+      return (
+        <p class="dodge-summary">
+          {r.score.sensed ? t.runSummary : t.runSummaryGuided}
+          <span class="muted small">{t.runSummaryNote}</span>
         </p>
       );
   }

@@ -129,12 +129,18 @@ export function DumbbellChart({ hooks }: { hooks: Rated[] }) {
 function used(
   h: Rated,
   lang: Lang,
-  t: { dodgeRounds: (n: number) => string; packLog: (n: number) => string; trackLog: (n: number) => string },
+  t: {
+    dodgeRounds: (n: number) => string;
+    packLog: (n: number) => string;
+    trackLog: (n: number) => string;
+    runLog: (n: number) => string;
+  },
 ) {
   const names = (h.completed ?? []).map((id) => cardById(id)?.title[lang]).filter(Boolean);
   if (h.rounds) names.push(t.dodgeRounds(h.rounds));
   if (h.packs) names.push(t.packLog(h.packs));
   if (h.tracks) names.push(t.trackLog(h.tracks));
+  if (h.runs) names.push(t.runLog(h.runs));
   return names.length ? ` · ${names.join(', ')}` : '';
 }
 

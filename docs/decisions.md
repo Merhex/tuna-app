@@ -2,7 +2,7 @@
 
 Every product and technical decision, numbered. Code comments refer to these numbers.
 
-**Last number used: D57.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
+**Last number used: D58.** D1–D38, T1, T2 and the questions Q1–Q8 come from the original decision record (a private artifact, which also holds the personal context behind them). They are summarised here; D39 onwards are written here first.
 
 Status: **Decided**, **Proposed** (suggested, not confirmed), **Open** (needs an answer), **Superseded**.
 
@@ -420,3 +420,28 @@ The middle of the tank, inside the ring her school swims round, was empty. A sma
 *Why:* resetting everything after a slip invites “I’ve failed anyway” (D11), but a count that never moves can feel dishonest, and some people want a clean day 1. Letting her choose each time, while keeping her best streak and everything she has earned, keeps both. Tagging the bait turns a slip into something to learn from.
 
 *Code:* `streakOf` in `src/streak.ts`; the three screens and `breatheAgain` in `src/components/HookFlow.tsx`; `SLIP_REASONS`, `reasons` and `freshStart` in `src/storage.ts`; the numbers in the `Milestones` component in `src/components/Treasure.tsx`; the row in `src/components/Logbook.tsx`; tests in `src/streak.test.ts`.
+
+## D58 · Current Run: a round that gets her moving
+
+**Decided, built.** Extends D54. Tickets: [current-run.md](tickets/current-run.md).
+
+A fifth round for a brutal hook, and the first that asks her to move her body. The tuna swims up a river against the current, as fast as she moves: marching on the spot, dancing, stairs or arm swings, with the phone in a hand or pocket. The phone's motion sensor reads how hard she's moving.
+
+- **About five minutes** (285 s): a 30 s easy warm-up, four 45 s swims with 15 s drifts between them, and a 30 s easy cool-down. Longer than the other rounds (2½ min) because the exercise studies used bouts of that length; “Not yet” says “Current Run · 5 min”.
+- **The current.** In a swim, moving pushes the tuna upstream and stopping lets the current carry it back, slowly, and never past where the round began. Easy phases never push back. It's timed, not a race: no finish line to reach or miss (D38), and no fail.
+- **Brisk, not hard.** Moving harder than brisk gives nothing extra (intensity stops at 1), so nobody is pushed past comfortable. It isn't a fitness tracker.
+- **Any movement counts.** It measures how much the phone moves (the size of the acceleration, with gravity filtered out), not steps, so it never says she's doing it wrong, and which way the phone is held doesn't matter.
+- **Only at home** (D39): marching on the spot in public isn't something to ask at a craving. Out and about it is never picked or offered.
+- **She can switch it off:** “Movement rounds” in Settings (an injury, a bad day, no space). Off means it never comes up. On by default; older saves load with it on.
+- **Start asks for the motion sensor.** iPhone only allows the question during a tap, so it's asked from the Start button. If she says no, there's no sensor, or no readings arrive within 2 s, the round runs **guided**: the same plan, and the tuna trusts her (“No motion sensor here, so just move however you like.”).
+- **The screen stays on** (Screen Wake Lock), because motion readings stop when it sleeps.
+- **Ending it once it's going takes press and hold** (1 s, the back button fills up), so a phone in a pocket can't end it. Before Start, a tap goes back as in the other rounds.
+- **It counts as a round after a minute.** Leaving sooner is like leaving before starting (back to the rating if she came straight from it, D51).
+- **Nothing about effort is kept or shown.** No steps, minutes or bests (D11, D38). The check screen says “You swam against the current for a few minutes.” (or “You moved with the tuna.” when guided, claiming nothing about effort), with “Moving can help a craving pass.” below. The tuna talks about the current, never about her (“The current's pulling. Swim!”).
+- **Stored as `runs` on the hook** (rounds of Current Run), shown in the Logbook's history and chart. Absent when none.
+- **Tuning** is in `MOTION_SETTINGS` (`still` and `brisk`) and `RUN_SETTINGS`. The defaults are deliberately easy to reach and need a check on a real phone: opening the app with `?motion=1`, or holding the river icon at the top for two seconds (the installed app has no address bar), shows the live readings during the round.
+- The Czech needs a native speaker's read (D32).
+
+*Why:* short bouts of brisk exercise are among the best-supported ways to ease cravings, during and for a short while after: minutes, not hours (Taylor, Katomeri & Ussher 2007; Ussher et al., Cochrane 2019; mostly tobacco studies). It works on a different channel from the other rounds: a change in body state and mood, plus distraction, rather than a mental load competing with craving imagery (D50). So it's the best candidate for the cravings the other rounds don't shift, and `runs` with the before and after ratings lets the Logbook data say whether it does. The app makes no health claim beyond “moving can help a craving pass”.
+
+*Code:* `eligible` in `src/activities.ts`; the motion signal in `src/motion.ts`; permission, readings and the wake lock in `src/sensors.ts`; the rules in `src/run.ts` (`RUN_SETTINGS`); the round in `src/components/Run.tsx`; the flow in `src/components/HookFlow.tsx`; `runs` and `movementRounds` in `src/storage.ts`; the toggle in `src/components/Settings.tsx`; the history line in `src/components/Logbook.tsx` and `src/components/Charts.tsx`; the sounds in `src/feedback.ts`; tests in `src/motion.test.ts`, `src/run.test.ts` and `src/activities.test.ts`.

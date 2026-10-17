@@ -176,7 +176,7 @@ Wire it in and add everything around it, following exactly what was done for Sch
 - Comments: mention the decision number where the code depends on it, as the rest of the codebase does.
 
 **Device tuning (needs a person with a real iPhone; an agent can't do it).** Write this as a checklist in the PR or issue so the product owner or a tester can run it:
-1. Open the installed app with `?motion=1`. Stand still holding the phone: intensity ≈ 0. March on the spot at a normal pace, phone in hand: it should reach "brisk" within a few seconds and stay there. Repeat with the phone in a trouser pocket and in a jacket pocket.
+1. Start a Current Run and hold the river icon at the top for two seconds (or open the app in Safari with `?motion=1`) to show the readings. Stand still holding the phone: intensity ≈ 0. March on the spot at a normal pace, phone in hand: it should reach "brisk" within a few seconds and stay there. Repeat with the phone in a trouser pocket and in a jacket pocket.
 2. Slow, gentle swaying, walking about the room, and arm swings should all land somewhere sensible between still and brisk.
 3. Adjust `still` and `brisk` in `MOTION_SETTINGS` if marching doesn't reach 1 or standing reads above 0. Record the values and the phone model in the PR.
 4. Confirm: the permission prompt appears from the Start tap; the screen stays on for the full 5 minutes (wake lock, installed PWA); the sounds respect the silent switch; coming back from the background doesn't jump ahead; press-and-hold ends it and a tap in a pocket does not.
