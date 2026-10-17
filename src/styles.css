@@ -1407,6 +1407,8 @@ button:has(> .haptic-switch) { position: relative; }
 }
 .tank.on { opacity: 1; visibility: visible; transition: opacity 0.8s ease; }
 .tank.settled { transition: none; }
+/* Visit my school: in front of the page, so drags reach it (the top bar and the card are above it). */
+.tank-front .tank { z-index: 1; }
 /* Once the tank covers it, the backdrop behind stops drawing. */
 .ocean-off .ocean { display: none; }
 /* The drawn seabed, until the tank is ready (or without 3D). */
