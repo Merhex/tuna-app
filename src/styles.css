@@ -234,7 +234,7 @@ p { margin: 0; }
   .hook-button { width: min(72vw, 260px, 38dvh); font-size: 1.6rem; }
 }
 
-.school { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+.school { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: -1; }
 .swimmer {
   position: absolute;
   left: 0;
@@ -1095,7 +1095,7 @@ button:has(> .haptic-switch) { position: relative; }
 }
 .nav-btn .icon-label { font-size: 0.72rem; font-weight: 700; line-height: 1; }
 .home .topbar { min-height: 60px; }
-.home .topbar .icon-btn:not(.nav-btn) { width: 52px; height: 52px; border-radius: 16px; }
+.home .topbar .icon-btn:not(.nav-btn, .swim-back) { width: 52px; height: 52px; border-radius: 16px; }
 
 /* ---------- Sunken Treasure ---------- */
 .treasure .screen-title { font-size: 1.25rem; }
@@ -1390,52 +1390,55 @@ button:has(> .haptic-switch) { position: relative; }
 .other-ways { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0 14px; pointer-events: auto; }
 .other-ways .link { padding: 8px 4px; min-height: 40px; }
 
-/* ---------- Visit my school (3D prototype) ---------- */
-/* Small and quiet on purpose: only whoever is testing it should find it. */
-.lab-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  margin: -8px 0 -8px 2px;
-  vertical-align: middle;
-  border-radius: 50%;
-  color: var(--muted);
-  opacity: 0.5;
+/* ---------- The 3D tank (D55) ---------- */
+/* Behind every screen, shown only on the home screen. It fades in the first time; after that it's
+   there as soon as the home screen is. */
+.tank {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: -1;
+  touch-action: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.8s ease, visibility 0s linear 0.8s;
 }
-.proto-badge {
-  padding: 4px 12px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--surface);
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.tank.on { opacity: 1; visibility: visible; transition: opacity 0.8s ease; }
+.tank.settled { transition: none; }
+/* Once the tank covers it, the backdrop behind stops drawing. */
+.ocean-off .ocean { display: none; }
+/* The drawn seabed, until the tank is ready (or without 3D). */
+.floor { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.tuna-pet.in-3d .tuna { opacity: 0; transition: opacity 0.8s ease; }
+
+/* Visit my school: the buttons fade and the screen lets drags through to the tank. */
+.visit-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: -6px; }
+/* Short phones: a little less space between things, so the visit button fits without scrolling. */
+@media (max-height: 700px) {
+  .home-center { gap: 12px; }
+  .visit-btn { min-height: 34px; margin-top: -4px; }
 }
-.s3d-canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; touch-action: none; }
-/* The screen sits over the canvas and lets drags through to it, except on its buttons. */
-.s3d { height: 100dvh; min-height: 0; overflow: hidden; z-index: 1; pointer-events: none; }
-.s3d button, .s3d .group { pointer-events: auto; }
-.s3d-home, .s3d-wide { transition: opacity 0.5s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
-.s3d.wide .s3d-home { opacity: 0; transform: scale(0.9); }
-/* Hidden buttons never catch a tap or a drag (inert does this too, where the phone supports it). */
-.s3d.wide .s3d-home button { pointer-events: none; }
-.s3d-wide {
+@media (max-height: 600px) {
+  .home-center { gap: 9px; }
+}
+.home .home-center, .school-card { transition: opacity 0.5s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.home.wide { pointer-events: none; }
+.home.wide .topbar button, .home.wide .toast button { pointer-events: auto; }
+.home.wide .home-center { opacity: 0; transform: scale(0.9); }
+/* Hidden buttons never catch a tap (inert does this too, where the phone supports it). */
+.home.wide .home-center button { pointer-events: none; }
+.school-card {
   position: absolute;
   left: max(16px, env(safe-area-inset-left, 0px));
   right: max(16px, env(safe-area-inset-right, 0px));
   bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
   margin: 0;
-  gap: 4px;
+  gap: 2px;
+  z-index: 2;
   background: rgba(6, 23, 36, 0.55);
 }
-.s3d.home .s3d-wide { opacity: 0; transform: translateY(24px); pointer-events: none; }
-.s3d-count { font-family: var(--display); font-weight: 700; font-size: 1.1rem; display: flex; flex-direction: column; }
-.s3d-count small { font-family: var(--sans); font-weight: 600; font-size: 0.82rem; }
-.s3d-wide .row { min-height: 40px; }
-.s3d-wide .segmented.compact button { padding: 6px 10px; }
-.visit-btn { display: inline-flex; align-items: center; gap: 8px; margin-top: -6px; }
-.s3d-failed { margin-top: 16px; text-align: center; pointer-events: auto; }
+.home:not(.wide) .school-card { opacity: 0; transform: scale(0.94); pointer-events: none; }
+.school-card-count { font-family: var(--display); font-weight: 700; font-size: 1.1rem; display: flex; flex-direction: column; }
+.school-card-count small { font-family: var(--sans); font-weight: 600; font-size: 0.82rem; }

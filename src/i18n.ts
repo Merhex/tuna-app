@@ -340,20 +340,12 @@ const en = {
   bubblesCaught: (n: number): string => (n === 1 ? 'bubble caught' : 'bubbles caught'),
   continueWarn: 'Your collection could get lost if the browser clears its data.',
 
-  // Visit my school: a 3D prototype, opened from the small fish next to the version in Settings.
-  school3dOpen: 'Visit my school (3D prototype)',
-  prototype: 'Prototype',
+  // The home screen's 3D tank (D55): "Visit my school" under the button pulls back to the whole tank.
   visitSchool: 'Visit my school',
   swimBack: 'Swim back',
-  school3dTuna: 'Tuna',
-  school3dMine: (n: number): string => `Mine (${n})`,
-  school3dSeabed: 'Seabed',
-  school3dSeabedMine: 'Mine',
-  school3dSeabedAll: 'Everything',
   school3dDrag: 'Drag to look around',
   school3dCalm: 'With less motion on, the school holds still. Drag to look around',
   school3dShown: (n: number): string => `${n} swimming here, the rest just out of sight.`,
-  school3dFailed: 'This phone couldn’t draw the 3D tank.',
 };
 
 type Strings = typeof en;
@@ -680,19 +672,11 @@ const cs: Strings = {
   bubblesCaught: (n) => csPlural(n, 'chycená bublina', 'chycené bubliny', 'chycených bublin'),
   continueWarn: 'Pokud prohlížeč smaže data, můžeš přijít o sbírku.',
 
-  school3dOpen: 'Navštiv své hejno (3D prototyp)',
-  prototype: 'Prototyp',
   visitSchool: 'Navštiv své hejno',
   swimBack: 'Zpátky',
-  school3dTuna: 'Tuňáci',
-  school3dMine: (n) => `Moji (${n})`,
-  school3dSeabed: 'Mořské dno',
-  school3dSeabedMine: 'Moje',
-  school3dSeabedAll: 'Všechno',
   school3dDrag: 'Táhni prstem a rozhlédni se',
   school3dCalm: 'S méně animacemi hejno stojí. Táhni prstem a rozhlédni se',
   school3dShown: (n) => `${n} jich plave tady, ostatní jsou kousek dál.`,
-  school3dFailed: 'Tenhle telefon 3D akvárium nezvládl vykreslit.',
 };
 
 export const STRINGS: Record<Lang, Strings> = { en, cs };

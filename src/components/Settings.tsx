@@ -4,7 +4,7 @@ import { fx } from '../feedback';
 import { localeOf, useT } from '../i18n';
 import { isIOS } from '../platform';
 import { useApp } from '../state';
-import { Back, Download, Fish, FishHook, Phone, Upload } from './Icons';
+import { Back, Download, FishHook, Phone, Upload } from './Icons';
 import { Haptic } from './Haptic';
 import { isStandalone } from '../platform';
 import { makeBackup, parseBackup, type Settings as S } from '../storage';
@@ -14,12 +14,10 @@ export function Settings({
   onClose,
   showInstall,
   showIntro,
-  showSchool3d,
 }: {
   onClose: () => void;
   showInstall: () => void;
   showIntro: () => void;
-  showSchool3d: () => void;
 }) {
   const t = useT();
   const { data, update } = useApp();
@@ -151,8 +149,6 @@ export function Settings({
         <p class="muted small version">
           {t.version} {__APP_VERSION__} ·{' '}
           {new Date(__BUILD_TIME__).toLocaleString(localeOf(data.settings.lang), { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
-          {/* Visit my school (3D prototype): small and quiet on purpose, so it's only found by whoever is testing it. */}
-          <button class="lab-btn" onClick={() => { fx.tap(); showSchool3d(); }} aria-label={t.school3dOpen}><Fish size={16} /><Haptic /></button>
         </p>
       </section>
     </main>

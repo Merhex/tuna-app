@@ -1,3 +1,4 @@
+import { PerspectiveCamera, Vector3 } from 'three';
 import { describe, expect, it } from 'vitest';
 import { MILESTONES } from './milestones';
 import {
@@ -7,6 +8,8 @@ import {
   fovFor,
   HOME_VIEW,
   makeLanes,
+  MASCOT,
+  mascotSpot,
   SCHOOL3D_SETTINGS,
   shownTuna,
   SPOTS_3D,
@@ -127,5 +130,40 @@ describe('the tuna', () => {
     // About 2 long, nose towards +x, so a lane's size is its length.
     expect(box.max.x - box.min.x).toBeGreaterThan(1.9);
     expect(box.max.x - box.min.x).toBeLessThan(2.6);
+  });
+});
+
+describe('the big tuna', () => {
+  const screen = { width: 390, height: 844 };
+  const fov = fovFor(screen.width / screen.height);
+  const homeCamera = () => {
+    const cam = new PerspectiveCamera(fov, screen.width / screen.height, 0.1, 200);
+    const c = cameraAt(HOME_VIEW);
+    cam.position.set(c.x, c.y, c.z);
+    cam.lookAt(0, HOME_VIEW.targetY, 0);
+    cam.updateMatrixWorld();
+    return cam;
+  };
+  const toScreen = (p: Vector3, cam: PerspectiveCamera) => {
+    const q = p.clone().project(cam);
+    return { x: ((q.x + 1) / 2) * screen.width, y: ((1 - q.y) / 2) * screen.height };
+  };
+
+  it('swims exactly where the drawing is on the home screen, at its size', () => {
+    const cam = homeCamera();
+    for (const box of [{ x: 118, y: 160, width: 130, height: 78 }, { x: 20, y: 600, width: 96, height: 58 }]) {
+      const spot = mascotSpot(box, screen, fov);
+      const middle = toScreen(new Vector3(spot.x, spot.y, spot.z), cam);
+      expect(middle.x).toBeCloseTo(box.x + box.width * MASCOT.middle, 3);
+      expect(middle.y).toBeCloseTo(box.y + box.height / 2, 3);
+      // Its length, laid across the screen at that depth, is the drawn fish's length.
+      const end = toScreen(new Vector3(spot.x + spot.length, spot.y, spot.z), cam);
+      expect(Math.abs(end.x - middle.x)).toBeCloseTo(box.width * MASCOT.fill, 0);
+    }
+  });
+
+  it('stays in front of the school, so no tuna swims through it', () => {
+    const spot = mascotSpot({ x: 118, y: 160, width: 130, height: 78 }, screen, fov);
+    expect(Math.hypot(spot.x, spot.z) - spot.length / 2).toBeGreaterThan(SWIM_BAND.outer);
   });
 });

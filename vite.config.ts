@@ -22,8 +22,8 @@ export default defineConfig({
     __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
   },
   build: {
-    // The Visit my school prototype's chunk carries three.js (about 575 kB, 150 kB gzipped). It's only
-    // loaded when the prototype opens, so the usual 500 kB warning doesn't apply.
+    // The 3D tank's chunk (D55) carries three.js (about 585 kB, 150 kB gzipped). It loads just after the
+    // home screen shows, not with it, so the usual 500 kB warning doesn't apply.
     chunkSizeWarningLimit: 650,
   },
   plugins: [

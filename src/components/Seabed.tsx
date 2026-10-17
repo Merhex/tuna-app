@@ -5,17 +5,17 @@ import { coralLook, markSeen, withEarned } from '../seabed';
 import { useApp } from '../state';
 
 /**
- * The home screen's seabed (D43): sand and seaweed, plus a decoration for every milestone she has
- * reached. A new one sparkles once, the first time she sees it. Everything here is backdrop: behind
- * the school, nothing to tap, hidden from screen readers.
+ * Earns the decorations she has reached (D43) and returns the ones that are new on this visit, in
+ * timeline order, for their sparkle; they're marked as seen straight away. Used by the home screen,
+ * whether it shows the 3D tank (D55) or the drawn seabed below.
  */
-export function Seabed() {
+export function useSeabed(): string[] {
   const { data, update } = useApp();
   const [sparkling, setSparkling] = useState<string[]>([]);
   const earned = data.seabed.earned;
 
-  // Earn what's been reached. Only here, on the home screen, so a date she merely scrolls past in a
-  // date picker never earns anything (earned is for good). Checked again every minute in case the day
+  // Earn what's been reached. Only on the home screen, so a date she merely scrolls past in a date
+  // picker never earns anything (earned is for good). Checked again every minute in case the day
   // turns over while the app is open.
   useEffect(() => {
     const earn = () =>
@@ -28,13 +28,25 @@ export function Seabed() {
     return () => clearInterval(id);
   }, []);
 
-  // New decorations sparkle on this visit, in timeline order, and are marked as seen straight away.
   const unseen = MILESTONES.filter((m) => earned[m.id] && !earned[m.id].seen).map((m) => m.id);
   useEffect(() => {
     if (!unseen.length) return;
     setSparkling((s) => [...s, ...unseen.filter((id) => !s.includes(id))]);
     update((d) => ({ ...d, seabed: markSeen(d.seabed, unseen) }));
   }, [unseen.join()]);
+
+  return sparkling;
+}
+
+/**
+ * The drawn seabed (D43): sand and seaweed, plus a decoration for every milestone she has reached,
+ * with `sparkling` ones (see useSeabed) sparkling. The home screen shows it until the 3D tank is
+ * ready, and instead of it on a phone without 3D. Everything here is backdrop: behind the school,
+ * nothing to tap, hidden from screen readers.
+ */
+export function Seabed({ sparkling }: { sparkling: string[] }) {
+  const { data } = useApp();
+  const earned = data.seabed.earned;
 
   const coral = coralLook(data.seabed.coralMonths);
   const layer = (which: 'back' | 'front') =>
