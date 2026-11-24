@@ -50,7 +50,7 @@ export class Tank {
   /** The decorations' materials and shapes, freed and made afresh when they change. */
   private decoKit = new Kit();
   private decoKey = '';
-  private tuna = -1;
+  private tuna = '';
   /** Decorations that have had their sparkle while the app is open. */
   private sparkled = new Set<string>();
 
@@ -91,7 +91,7 @@ export class Tank {
     this.mascot = new Mascot(this.kit);
     this.sparkles = new Sparkles(this.kit);
     this.chest = new Chest(this.kit, { star: this.kit.keep(texture(drawStar)), glow: this.kit.keep(texture(drawGlow)) });
-    this.scene.add(this.school.mesh, this.decos, this.mascot.object, this.sparkles.group, this.chest.object);
+    this.scene.add(this.school.object, this.decos, this.mascot.object, this.sparkles.group, this.chest.object);
     this.applyView(HOME_VIEW);
     // A phone can take the 3D away (low memory, a long time in the background). Then the home screen
     // goes back to the drawn seabed until it's given back.
@@ -126,10 +126,12 @@ export class Tank {
     this.dirty = true;
   }
 
-  setTuna(n: number) {
-    if (n === this.tuna) return;
-    this.tuna = n;
-    this.school.setCount(n);
+  /** A plain tuna for each day off it, a gold-striped one for each craving beaten (see shownSchool). */
+  setTuna(days: number, cravings: number) {
+    const key = `${days}|${cravings}`;
+    if (key === this.tuna) return;
+    this.tuna = key;
+    this.school.setCount(days, cravings);
     this.dirty = true;
   }
 

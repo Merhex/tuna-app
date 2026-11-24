@@ -1,5 +1,6 @@
 /**
- * The home screen's 3D tank (D55): one swimming tuna for every hook she has beaten, her milestone
+ * The home screen's 3D tank (D55): one swimming tuna for every day off it and a gold-striped one
+ * for every hook she has beaten, her milestone
  * decorations (D43) on the sand, the tuna she pets in front, and the treasure chest in the middle
  * (D56). "Visit my school" pulls the camera back to show the whole place; the treasure screen swims
  * it down to the chest.
@@ -35,6 +36,19 @@ export const SCHOOL3D_SETTINGS = {
 
 /** How many tuna to draw for a school of this size. */
 export const shownTuna = (school: number) => Math.max(0, Math.min(Math.floor(school), SCHOOL3D_SETTINGS.maxTuna));
+
+/**
+ * How many of each kind to draw: plain tuna for her days off it, gold-striped ones for the cravings
+ * she has beat. Past the most drawn, both kinds shrink in proportion, so the mix still looks like hers.
+ */
+export function shownSchool(days: number, cravings: number): { days: number; cravings: number } {
+  days = Math.max(0, Math.floor(days));
+  cravings = Math.max(0, Math.floor(cravings));
+  const total = shownTuna(days + cravings);
+  if (total === days + cravings) return { days, cravings };
+  const c = Math.round((cravings * total) / (days + cravings));
+  return { days: total - c, cravings: c };
+}
 
 /**
  * Where the tuna swim: round the middle, between these distances from it and these heights. These

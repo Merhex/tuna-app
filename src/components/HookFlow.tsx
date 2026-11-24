@@ -8,8 +8,8 @@ import { localeOf, pick, useT } from '../i18n';
 import { makePostcard, sharePostcard } from '../postcard';
 import { useApp } from '../state';
 import { cravingInProgress } from '../updates';
-import { schoolSize, SLIP_REASONS, type AppData, type HookEntry, type HookResult, type SlipReason } from '../storage';
-import { streakOf } from '../streak';
+import { SLIP_REASONS, type AppData, type HookEntry, type HookResult, type SlipReason } from '../storage';
+import { schoolOf, streakOf } from '../streak';
 import { CardView, Rating } from './CardView';
 import { BreatheRound } from './Breathe';
 import { DodgeGame, type DodgeScore } from './Dodge';
@@ -98,7 +98,7 @@ export function HookFlow({ onExit }: { onExit: () => void }) {
           ? `${last.title[lang]} · ${t.rarity[last.rarity]}`
           : '',
       pull: before !== undefined && after !== undefined ? { label: t.pullChange, before, after } : undefined,
-      school: t.postcardSchool(schoolSize(data)),
+      school: t.postcardSchool(schoolOf(data).total),
       date: new Intl.DateTimeFormat(localeOf(lang), { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date()),
     }).then(setPostcard, () => setPostcard('failed'));
   }, [step]);

@@ -1,6 +1,6 @@
 # Off the Hook
 
-A tuna-themed web app that helps Tuna ride out vape cravings. Tap **There's a hook!**, draw a silly side-quest card, do it, and build an aquarium of cards along the way. Every craving beaten adds a tuna to her school.
+A tuna-themed web app that helps Tuna ride out vape cravings. Tap **There's a hook!**, draw a silly side-quest card, do it, and build an aquarium of cards along the way. Every day off it adds a tuna to her school, and every craving beaten adds a gold-striped one.
 
 The roadmap, design decisions and milestone sources live in [`docs/`](docs/). That folder isn't part of the app: only the built `dist/` is deployed.
 
@@ -15,7 +15,7 @@ The roadmap, design decisions and milestone sources live in [`docs/`](docs/). Th
 - **Daydream cards** walk her through picturing something she'd love, from Kyoto tea to front row at Jungkook in Seoul. They work anywhere ([D52](docs/decisions.md)).
 - **Postcards:** the win screen can send a picture of the win through the share sheet. It never mentions vaping, and nothing leaves the phone unless she picks someone ([D53](docs/decisions.md)).
 - **Dodge the hooks and Bubbles:** a 2½-minute game and two minutes of slow breathing with the tuna (in 4, out 6). A brutal hook (8 to 10) starts with one of them at random, and "Not yet" offers both ([D50, D51, D54](docs/decisions.md)). Timings are in `DODGE_SETTINGS` (`src/dodge.ts`) and `BREATHE_SETTINGS` (`src/breathe.ts`).
-- **A 3D tank on the home screen.** Her school swims behind the button, one tuna per hook beaten (up to 200 drawn), with her milestone decorations on the sand and the tuna she pets in front, all in 3D. “Visit my school” under the button pulls back to the whole tank; drag to look around, or tap the treasure chest in the middle to open the treasure. three.js loads just after the app opens, so the button never waits: once 3D has worked on a phone, it opens with just the water and the button and the tank fades in; a phone without 3D keeps the drawn seabed ([D55](docs/decisions.md)). Tuning is in `SCHOOL3D_SETTINGS` (`src/school3d.ts`); the scene is in `src/tank/`.
+- **A 3D tank on the home screen.** Her school swims behind the button: a tuna for every day off it and a gold-striped one for every hook beaten (up to 200 drawn, [D59](docs/decisions.md)), with her milestone decorations on the sand and the tuna she pets in front, all in 3D. “Visit my school” under the button pulls back to the whole tank; drag to look around, or tap the treasure chest in the middle to open the treasure. three.js loads just after the app opens, so the button never waits: once 3D has worked on a phone, it opens with just the water and the button and the tank fades in; a phone without 3D keeps the drawn seabed ([D55](docs/decisions.md)). Tuning is in `SCHOOL3D_SETTINGS` (`src/school3d.ts`); the scene is in `src/tank/`.
 - **Getting snagged:** the quiet “I got snagged” link asks what the bait was (quick taps and a note), lets her choose to start a fresh streak or keep it, and offers two minutes of breathing. Only the streak can reset; the quit date, milestones, treasure and school never do. The treasure shows current and best streak once there's been a snag ([D57](docs/decisions.md)).
 - **Sounds and vibrations** are generated in code (no audio files) and can be turned off in Settings. On iPhone, vibrations need iOS 18+.
 

@@ -11,7 +11,11 @@ type Slide = { title: string; body: string; terms?: { word: string; meaning: str
 
 const en = {
   hookButton: "There’s a hook!",
-  school: (n: number) => (n === 0 ? 'Beat a hook and your first tuna joins your school.' : `Your school: ${n} tuna`),
+  /** Her school: `n` tuna in all, `striped` of them for cravings beaten (the rest are days off it). */
+  school: (n: number, striped = 0) =>
+    n === 0
+      ? 'Every day off it and every hook you beat adds a tuna to your school.'
+      : `Your school: ${n} tuna${striped ? ` · ${striped} gold-striped` : ''}`,
   taglines: [
     'Keep swimming.',
     "Don’t end up in a can. 🥫",
@@ -121,7 +125,7 @@ const en = {
     },
     {
       title: 'Your school and your aquarium',
-      body: 'Every hook you beat adds a tuna to your school. Every card you complete goes into your aquarium. Nothing is ever taken away, and everything stays private on your phone.',
+      body: 'Every day off it adds a tuna to your school, and every hook you beat adds one with a gold stripe. Every card you complete goes into your aquarium. Nothing is ever taken away, and everything stays private on your phone.',
     },
   ] as Slide[],
   next: 'Next',
@@ -430,10 +434,10 @@ type Strings = typeof en;
 
 const cs: Strings = {
   hookButton: 'Je tu háček!',
-  school: (n) =>
+  school: (n, striped = 0) =>
     n === 0
-      ? 'Poraz háček a do hejna se přidá první tuňák.'
-      : `Tvoje hejno: ${n} ${csPlural(n, 'tuňák', 'tuňáci', 'tuňáků')}`,
+      ? 'Za každý den bez toho a každý poražený háček se do hejna přidá tuňák.'
+      : `Tvoje hejno: ${n} ${csPlural(n, 'tuňák', 'tuňáci', 'tuňáků')}${striped ? ` · ${striped} se zlatým pruhem` : ''}`,
   taglines: [
     'Plav dál.',
     'Neskonči v konzervě. 🥫',
@@ -537,7 +541,7 @@ const cs: Strings = {
     },
     {
       title: 'Tvoje hejno a akvárium',
-      body: 'Za každý poražený háček se k tvému hejnu přidá tuňák. Každá splněná karta putuje do akvária. Nic ti nikdy nevezmeme a všechno zůstává jen v tvém telefonu.',
+      body: 'Za každý den bez toho se k tvému hejnu přidá tuňák a za každý poražený háček tuňák se zlatým pruhem. Každá splněná karta putuje do akvária. Nic ti nikdy nevezmeme a všechno zůstává jen v tvém telefonu.',
     },
   ],
   next: 'Dál',

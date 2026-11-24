@@ -16,6 +16,7 @@ import {
   MASCOT,
   mascotSpot,
   SCHOOL3D_SETTINGS,
+  shownSchool,
   shownTuna,
   SPOTS_3D,
   SWIM_BAND,
@@ -127,7 +128,33 @@ describe('camera', () => {
   });
 });
 
+describe('how many of each kind swim', () => {
+  it('draws them all while they fit', () => {
+    expect(shownSchool(10, 3)).toEqual({ days: 10, cravings: 3 });
+  });
+
+  it('keeps the mix when there are more than fit', () => {
+    const max = SCHOOL3D_SETTINGS.maxTuna;
+    const shown = shownSchool(300, 100);
+    expect(shown.days + shown.cravings).toBe(max);
+    expect(shown.cravings).toBe(max / 4);
+  });
+});
+
 describe('the tuna', () => {
+  it('has a gold-striped kind for cravings beaten, just as light', () => {
+    const plain = tunaGeometry();
+    const striped = tunaGeometry(true);
+    expect(striped.getAttribute('position').count / 3).toBeLessThan(1000);
+    const gold = (g: typeof plain) => {
+      const c = g.getAttribute('color');
+      let n = 0;
+      for (let i = 0; i < c.count; i++) if (c.getX(i) > 0.8 && c.getZ(i) < 0.15) n++;
+      return n;
+    };
+    expect(gold(striped)).toBeGreaterThan(gold(plain));
+  });
+
   it('stays light, since up to 200 are drawn every frame', () => {
     const geo = tunaGeometry();
     expect(geo.getAttribute('position').count / 3).toBeLessThan(1000);
