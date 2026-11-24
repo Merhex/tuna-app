@@ -152,7 +152,8 @@ describe('the tuna', () => {
       for (let i = 0; i < c.count; i++) if (c.getX(i) > 0.8 && c.getZ(i) < 0.15) n++;
       return n;
     };
-    expect(gold(striped)).toBeGreaterThan(gold(plain));
+    expect(gold(plain)).toBe(0);
+    expect(gold(striped)).toBeGreaterThan(0);
   });
 
   it('stays light, since up to 200 are drawn every frame', () => {

@@ -20,6 +20,8 @@ export const BODY = '#4f8fbf';
 const BELLY = '#d4e3ec';
 const FIN = '#f2c14e';
 const SIDE_FIN = '#3f78a3';
+/** A day tuna's fins: grey, so only the craving tuna carry gold. */
+const GREY_FIN = '#8d9ba6';
 const EYE = '#ffffff';
 const PUPIL = '#0b1f2e';
 
@@ -81,17 +83,20 @@ export function tunaTail(color = BODY): BufferGeometry {
   return flat(tail, 0.05, color);
 }
 
-/** The yellow dorsal and anal fins, the finlets towards the tail and the little blue side fins. */
-export function tunaFins(): BufferGeometry[] {
+/**
+ * The dorsal and anal fins, the finlets towards the tail and the little blue side fins. The fins
+ * are yellow (the mascot and the craving tuna) or `fin` (grey for a plain day tuna).
+ */
+export function tunaFins(fin = FIN): BufferGeometry[] {
   const parts = [
-    flat(triangle([[0.12, 0.42], [-0.18, 0.86], [-0.36, 0.38]]), 0.05, FIN),
-    flat(triangle([[0.02, -0.38], [-0.22, -0.74], [-0.34, -0.33]]), 0.05, FIN),
+    flat(triangle([[0.12, 0.42], [-0.18, 0.86], [-0.36, 0.38]]), 0.05, fin),
+    flat(triangle([[0.02, -0.38], [-0.22, -0.74], [-0.34, -0.33]]), 0.05, fin),
   ];
   for (const [x, s] of [[-0.5, 1], [-0.66, 0.85]] as const) {
     const h = 0.11 * s;
     const top = TUNA.height * taperAt(x) * Math.sqrt(1 - (x / TUNA.half) ** 2) - 0.03;
-    parts.push(flat(triangle([[x + 0.05, top], [x - 0.04, top + h], [x - 0.08, top]]), 0.035, FIN));
-    parts.push(flat(triangle([[x + 0.05, -top], [x - 0.04, -top - h], [x - 0.08, -top]]), 0.035, FIN));
+    parts.push(flat(triangle([[x + 0.05, top], [x - 0.04, top + h], [x - 0.08, top]]), 0.035, fin));
+    parts.push(flat(triangle([[x + 0.05, -top], [x - 0.04, -top - h], [x - 0.08, -top]]), 0.035, fin));
   }
   for (const side of [1, -1]) {
     const fin = new SphereGeometry(1, 6, 3);
@@ -115,10 +120,10 @@ export function merge(parts: BufferGeometry[]): BufferGeometry {
 /**
  * One tuna of the school, all in one geometry: the body, tail and fins, and big eyes on both sides
  * with a dark pupil looking forward. Kept light: up to 200 of these are drawn every frame. A day
- * tuna is plain; a craving tuna (`striped`) has a gold stripe down each side and a gold tail.
+ * tuna is plain blue and grey, with no gold at all; a craving tuna (`striped`) has a gold stripe down each side and a gold tail.
  */
 export function tunaGeometry(striped = false): BufferGeometry {
-  const parts = [striped ? tunaBody(18, 15, true) : tunaBody(18, 11), tunaTail(striped ? FIN : BODY), ...tunaFins()];
+  const parts = [striped ? tunaBody(18, 15, true) : tunaBody(18, 11), tunaTail(striped ? FIN : BODY), ...tunaFins(striped ? FIN : GREY_FIN)];
   for (const side of [1, -1]) {
     const eye = new SphereGeometry(0.15, 9, 6);
     eye.translate(0.56, 0.1, side * 0.29);
