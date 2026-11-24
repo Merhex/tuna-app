@@ -447,3 +447,15 @@ A fifth round for a brutal hook, and the first that asks her to move her body. T
 *Why:* short bouts of brisk exercise are among the best-supported ways to ease cravings, during and for a short while after: minutes, not hours (Taylor, Katomeri & Ussher 2007; Ussher et al., Cochrane 2019; mostly tobacco studies). It works on a different channel from the other rounds: a change in body state and mood, plus distraction, rather than a mental load competing with craving imagery (D50). So it's the best candidate for the cravings the other rounds don't shift, and `runs` with the before and after ratings lets the Logbook data say whether it does. The app makes no health claim beyond “moving can help a craving pass”.
 
 *Code:* `eligible` in `src/activities.ts`; the motion signal in `src/motion.ts`; permission, readings and the wake lock in `src/sensors.ts`; the rules in `src/run.ts` (`RUN_SETTINGS`); the round in `src/components/Run.tsx`; the flow in `src/components/HookFlow.tsx`; `runs` and `movementRounds` in `src/storage.ts`; the toggle in `src/components/Settings.tsx`; the history line in `src/components/Logbook.tsx` and `src/components/Charts.tsx`; the sounds in `src/feedback.ts`; tests in `src/motion.test.ts`, `src/run.test.ts` and `src/activities.test.ts`.
+
+## D59 · A tuna for every day, a gold-striped one for every hook beaten
+
+The school used to grow only with hooks beaten. Now it grows every day too:
+
+- **One plain tuna per day off it**, counted from the quit date: `swamFree` from D57, so the days she got snagged don't add one. Nothing is stored; it's worked out from the quit date and the hooks.
+- **One gold-striped tuna per hook beaten**, as before: same shape, with a gold stripe down each side and a gold tail, so they stand out a little without looking like a different fish.
+- **Nothing is taken away** (D11): a fresh start resets the streak, not the school.
+- **Past the 200 drawn**, both kinds shrink in proportion so the mix still looks like hers. The drawn (non-3D) school does the same within its 36.
+- The count under the button says how many are gold-striped (“Your school: 28 tuna · 8 gold-striped”). The postcard's “Tuna no. N” is the whole school.
+
+*Code:* `schoolOf` in `src/streak.ts`; `shownSchool` in `src/school3d.ts`; the two kinds in `School` (`src/tank/tuna.ts`); `MiniTuna`'s `striped` in `src/components/Tuna.tsx`; `src/components/Home.tsx`; tests in `src/streak.test.ts` and `src/school3d.test.ts`.

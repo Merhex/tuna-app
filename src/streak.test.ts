@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { HookEntry } from './storage';
-import { streakOf } from './streak';
+import { schoolOf, streakOf } from './streak';
 
 /** A hook on a local day (YYYY-MM-DD), at noon. */
 const hook = (day: string, result: HookEntry['result'], freshStart?: boolean): HookEntry => {
@@ -44,5 +44,21 @@ describe('streak (D57)', () => {
   it('ignores snags from before the quit date', () => {
     const s = streakOf([hook('2026-09-20', 'slipped', true)], '2026-10-01', now);
     expect(s).toEqual({ current: 30, best: 30, swamFree: 30, hasSlips: false });
+  });
+});
+
+describe('her school', () => {
+  it('has a tuna for every day off it and one for every hook beaten', () => {
+    const hooks = [hook('2026-10-21', 'passed'), hook('2026-10-25', 'passed'), hook('2026-10-26', 'notyet')];
+    expect(schoolOf({ hooks, quitDate: '2026-10-21' }, now)).toEqual({ days: 10, cravings: 2, total: 12 });
+  });
+
+  it("doesn't count the days she got snagged, and a fresh start takes nothing away", () => {
+    const hooks = [hook('2026-10-25', 'passed'), hook('2026-10-26', 'slipped', true)];
+    expect(schoolOf({ hooks, quitDate: '2026-10-21' }, now)).toEqual({ days: 9, cravings: 1, total: 10 });
+  });
+
+  it('is just the hooks beaten without a quit date', () => {
+    expect(schoolOf({ hooks: [hook('2026-10-25', 'passed')], quitDate: null }, now)).toEqual({ days: 0, cravings: 1, total: 1 });
   });
 });

@@ -3,6 +3,7 @@ import {
   CircleGeometry,
   DynamicDrawUsage,
   ExtrudeGeometry,
+  Group,
   InstancedBufferAttribute,
   InstancedMesh,
   Object3D,
@@ -31,8 +32,15 @@ export const TUNA = { half: 0.92, height: 0.52, width: 0.44, tailTip: -1.42, tai
 /** How much the body narrows at `x` towards the tail (1 at the middle and in front). */
 export const taperAt = (x: number) => 1 - 0.72 * Math.max(0, -x / TUNA.half) ** 1.6;
 
-/** The body: a stretched ball, slimmer towards the tail, with a pale belly like the drawing. */
-export function tunaBody(segments: number, rings: number): BufferGeometry {
+/** Where the gold stripe of a craving tuna runs: along the side, from behind the eye to the tail. */
+const inStripe = (x: number, y: number) =>
+  x > TUNA.tailRoot + 0.05 && x < 0.42 && Math.abs(y / (TUNA.height * taperAt(x)) - 0.05) < 0.2;
+
+/**
+ * The body: a stretched ball, slimmer towards the tail, with a pale belly like the drawing. A
+ * craving tuna (`striped`) also has a gold stripe along each side.
+ */
+export function tunaBody(segments: number, rings: number, striped = false): BufferGeometry {
   const body = new SphereGeometry(1, segments, rings);
   const p = body.getAttribute('position');
   for (let i = 0; i < p.count; i++) {
@@ -42,7 +50,7 @@ export function tunaBody(segments: number, rings: number): BufferGeometry {
   }
   body.computeVertexNormals();
   // The belly is below a line that rises a little towards the tail.
-  return paint(body, (x, y) => (y < -0.16 - 0.06 * x ? BELLY : BODY));
+  return paint(body, (x, y) => (striped && inStripe(x, y) ? FIN : y < -0.16 - 0.06 * x ? BELLY : BODY));
 }
 
 const flat = (shape: Shape, depth: number, color: string) => {
@@ -59,15 +67,18 @@ const triangle = (pts: [number, number][]) => {
   return s;
 };
 
-/** The forked tail, the body's colour, from its root at x = -0.82 to its tips at x = -1.42. */
-export function tunaTail(): BufferGeometry {
+/**
+ * The forked tail, from its root at x = -0.82 to its tips at x = -1.42: the body's colour, or gold
+ * for a craving tuna.
+ */
+export function tunaTail(color = BODY): BufferGeometry {
   const tail = new Shape();
   tail.moveTo(TUNA.tailRoot, 0);
   tail.quadraticCurveTo(-1.05, 0.25, TUNA.tailTip, 0.6);
   tail.quadraticCurveTo(-1.3, 0.2, -1.2, 0);
   tail.quadraticCurveTo(-1.3, -0.2, TUNA.tailTip, -0.6);
   tail.quadraticCurveTo(-1.05, -0.25, TUNA.tailRoot, 0);
-  return flat(tail, 0.05, BODY);
+  return flat(tail, 0.05, color);
 }
 
 /** The yellow dorsal and anal fins, the finlets towards the tail and the little blue side fins. */
@@ -103,10 +114,11 @@ export function merge(parts: BufferGeometry[]): BufferGeometry {
 
 /**
  * One tuna of the school, all in one geometry: the body, tail and fins, and big eyes on both sides
- * with a dark pupil looking forward. Kept light: up to 200 of these are drawn every frame.
+ * with a dark pupil looking forward. Kept light: up to 200 of these are drawn every frame. A day
+ * tuna is plain; a craving tuna (`striped`) has a gold stripe down each side and a gold tail.
  */
-export function tunaGeometry(): BufferGeometry {
-  const parts = [tunaBody(18, 11), tunaTail(), ...tunaFins()];
+export function tunaGeometry(striped = false): BufferGeometry {
+  const parts = [striped ? tunaBody(18, 15, true) : tunaBody(18, 11), tunaTail(striped ? FIN : BODY), ...tunaFins()];
   for (const side of [1, -1]) {
     const eye = new SphereGeometry(0.15, 9, 6);
     eye.translate(0.56, 0.1, side * 0.29);
@@ -121,18 +133,20 @@ export function tunaGeometry(): BufferGeometry {
 }
 
 /**
- * The school: every tuna in one draw call. Each one follows its lane (school3d.ts); the tail beat
- * is done on the graphics card, bending the tail end of the body from side to side.
+ * The school: a plain tuna for every day she has stayed off it and a gold-striped one for every
+ * craving she has beaten, each kind in one draw call. Each one follows its lane (school3d.ts); the
+ * tail beat is done on the graphics card, bending the tail end of the body from side to side.
  */
 export class School {
-  readonly mesh: InstancedMesh;
-  private lanes: Lane[] = [];
+  /** Both kinds of tuna. */
+  readonly object = new Group();
+  private plain: InstancedMesh;
+  private striped: InstancedMesh;
+  private lanes: { mesh: InstancedMesh; lanes: Lane[] }[] = [];
   private dummy = new Object3D();
   private time = { value: 0 };
 
   constructor(kit: Kit) {
-    const max = SCHOOL3D_SETTINGS.maxTuna;
-    const geo = kit.keep(tunaGeometry());
     const material = kit.painted();
     const time = this.time;
     material.onBeforeCompile = (shader) => {
@@ -155,42 +169,63 @@ export class School {
           transformed.z += sin(beat) * 0.035;`,
         );
     };
-    this.mesh = new InstancedMesh(geo, material, max);
-    this.mesh.instanceMatrix.setUsage(DynamicDrawUsage);
-    // They swim all over, so the usual check for being off screen would be wrong.
-    this.mesh.frustumCulled = false;
-    this.mesh.count = 0;
-    geo.setAttribute('aPhase', new InstancedBufferAttribute(new Float32Array(max), 1));
-    geo.setAttribute('aBeat', new InstancedBufferAttribute(new Float32Array(max), 1));
+    const make = (striped: boolean) => {
+      const max = SCHOOL3D_SETTINGS.maxTuna;
+      const geo = kit.keep(tunaGeometry(striped));
+      geo.setAttribute('aPhase', new InstancedBufferAttribute(new Float32Array(max), 1));
+      geo.setAttribute('aBeat', new InstancedBufferAttribute(new Float32Array(max), 1));
+      const mesh = new InstancedMesh(geo, material, max);
+      mesh.instanceMatrix.setUsage(DynamicDrawUsage);
+      // They swim all over, so the usual check for being off screen would be wrong.
+      mesh.frustumCulled = false;
+      mesh.count = 0;
+      return mesh;
+    };
+    this.plain = make(false);
+    this.striped = make(true);
+    this.object.add(this.plain, this.striped);
     this.dummy.rotation.order = 'YZX';
   }
 
-  /** How many tuna swim. The first ones keep their lanes as the number changes. */
-  setCount(n: number) {
-    const count = Math.min(n, SCHOOL3D_SETTINGS.maxTuna);
-    this.lanes = makeLanes(count);
-    const phase = this.mesh.geometry.getAttribute('aPhase') as InstancedBufferAttribute;
-    const beat = this.mesh.geometry.getAttribute('aBeat') as InstancedBufferAttribute;
-    this.lanes.forEach((l, i) => {
-      phase.setX(i, l.beatPhase);
-      beat.setX(i, l.beat);
-    });
-    phase.needsUpdate = beat.needsUpdate = true;
-    this.mesh.count = count;
+  /**
+   * How many of each kind swim. The craving tuna take the first lanes, so they keep theirs as the
+   * days go by.
+   */
+  setCount(plain: number, striped: number) {
+    const max = SCHOOL3D_SETTINGS.maxTuna;
+    striped = Math.min(striped, max);
+    plain = Math.min(plain, max - striped);
+    const lanes = makeLanes(plain + striped);
+    this.lanes = [
+      { mesh: this.striped, lanes: lanes.slice(0, striped) },
+      { mesh: this.plain, lanes: lanes.slice(striped) },
+    ];
+    for (const { mesh, lanes } of this.lanes) {
+      const phase = mesh.geometry.getAttribute('aPhase') as InstancedBufferAttribute;
+      const beat = mesh.geometry.getAttribute('aBeat') as InstancedBufferAttribute;
+      lanes.forEach((l, i) => {
+        phase.setX(i, l.beatPhase);
+        beat.setX(i, l.beat);
+      });
+      phase.needsUpdate = beat.needsUpdate = true;
+      mesh.count = lanes.length;
+    }
   }
 
   /** Puts every tuna where it is at time `t` (seconds). */
   update(t: number) {
     this.time.value = t;
     const d = this.dummy;
-    this.lanes.forEach((l, i) => {
-      const pose = swimPose(l, t);
-      d.position.set(pose.x, pose.y, pose.z);
-      d.rotation.set(0, pose.yaw, pose.pitch);
-      d.scale.setScalar(l.size / 2);
-      d.updateMatrix();
-      this.mesh.setMatrixAt(i, d.matrix);
-    });
-    this.mesh.instanceMatrix.needsUpdate = true;
+    for (const { mesh, lanes } of this.lanes) {
+      lanes.forEach((l, i) => {
+        const pose = swimPose(l, t);
+        d.position.set(pose.x, pose.y, pose.z);
+        d.rotation.set(0, pose.yaw, pose.pitch);
+        d.scale.setScalar(l.size / 2);
+        d.updateMatrix();
+        mesh.setMatrixAt(i, d.matrix);
+      });
+      mesh.instanceMatrix.needsUpdate = true;
+    }
   }
 }

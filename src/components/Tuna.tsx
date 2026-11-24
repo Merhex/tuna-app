@@ -54,12 +54,14 @@ export function Tuna({ mood = 'happy', size = 120, class: cls = '' }: { mood?: M
 }
 
 /** A tiny tuna for the school on the home screen. Faces right. */
-export function MiniTuna({ size = 28 }: { size?: number }) {
+/** A small tuna. A craving tuna (`striped`) has a gold stripe down its side and a gold tail. */
+export function MiniTuna({ size = 28, striped = false }: { size?: number; striped?: boolean }) {
   return (
     <svg width={size} height={size * 0.5} viewBox="0 0 60 30" aria-hidden="true">
-      <path d="M10 15 L0 5 L3 15 L0 25 Z" fill="var(--tuna-body)" />
+      <path d="M10 15 L0 5 L3 15 L0 25 Z" fill={striped ? 'var(--tuna-fin)' : 'var(--tuna-body)'} />
       <ellipse cx="32" cy="15" rx="22" ry="10" fill="var(--tuna-body)" />
       <path d="M12 17 Q32 28 54 17 Q32 22 12 17 Z" fill="var(--tuna-belly)" />
+      {striped && <path d="M13 14 Q28 11 42 13 Q28 16.5 13 14 Z" fill="var(--tuna-fin)" />}
       <circle cx="46" cy="12" r="2.4" fill="#fff" />
     </svg>
   );
